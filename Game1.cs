@@ -21,9 +21,17 @@ namespace GGJ_DisasterMode
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
 
+        KeyboardState oldKeyboardState;
+        KeyboardState currentKeyboardState;
+
+        MouseState oldMouseState;
+        MouseState currentMouseState;
+
         public Game1()
         {
             graphics = new GraphicsDeviceManager(this);
+            graphics.PreferredBackBufferHeight = 720;
+            graphics.PreferredBackBufferWidth = 1280;
             Content.RootDirectory = "Content";
         }
 
@@ -35,7 +43,11 @@ namespace GGJ_DisasterMode
         /// </summary>
         protected override void Initialize()
         {
-            // TODO: Add your initialization logic here
+            currentKeyboardState = Keyboard.GetState();
+            oldKeyboardState = currentKeyboardState;
+
+            currentMouseState = Mouse.GetState();
+            oldMouseState = currentMouseState;
 
             base.Initialize();
         }
@@ -68,11 +80,19 @@ namespace GGJ_DisasterMode
         /// <param name="gameTime">Provides a snapshot of timing values.</param>
         protected override void Update(GameTime gameTime)
         {
-            // Allows the game to exit
-            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed)
-                this.Exit();
+            currentKeyboardState = Keyboard.GetState();
+            currentMouseState = Mouse.GetState();
 
-            // TODO: Add your update logic here
+            // Allows the game to exit
+            if (currentKeyboardState.IsKeyDown(Keys.Escape))
+            {
+                this.Exit();
+            }
+
+
+
+            oldMouseState = currentMouseState;
+            oldKeyboardState = currentKeyboardState;
 
             base.Update(gameTime);
         }
