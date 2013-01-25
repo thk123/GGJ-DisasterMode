@@ -1,0 +1,6 @@
+C:\Users\Adrir\Documents\Visual Studio 2008\Projects\GGJ-DisasterMode\GGJ-DisasterMode\bin\x86\Debug\GGJ-DisasterMode.exe
+C:\Users\Adrir\Documents\Visual Studio 2008\Projects\GGJ-DisasterMode\GGJ-DisasterMode\bin\x86\Debug\GGJ-DisasterMode.pdb
+C:\Users\Adrir\Documents\Visual Studio 2008\Projects\GGJ-DisasterMode\GGJ-DisasterMode\obj\x86\Debug\ResolveAssemblyReference.cache
+C:\Users\Adrir\Documents\Visual Studio 2008\Projects\GGJ-DisasterMode\GGJ-DisasterMode\obj\x86\Debug\Microsoft.Xna.Framework.RuntimeProfile.txt
+C:\Users\Adrir\Documents\Visual Studio 2008\Projects\GGJ-DisasterMode\GGJ-DisasterMode\obj\x86\Debug\GGJ-DisasterMode.exe
+C:\Users\Adrir\Documents\Visual Studio 2008\Projects\GGJ-DisasterMode\GGJ-DisasterMode\obj\x86\Debug\GGJ-DisasterMode.pdb
