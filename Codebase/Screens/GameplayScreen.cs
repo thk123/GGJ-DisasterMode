@@ -66,7 +66,7 @@ namespace GGJ_DisasterMode.Codebase.Screens
             if (content == null)
                 content = new ContentManager(ScreenManager.Game.Services, "Content");
 
-            this.gameController = new GameplayManager(content);
+            this.gameController = new GameplayManager(content, this);
             this.gameController.LoadContent(content);
 
 
@@ -105,10 +105,10 @@ namespace GGJ_DisasterMode.Codebase.Screens
 
             bool missionRunning = true;
 
-            if (IsActive)
-            {
+            /*if (IsActive)
+            {*/
                 gameController.Update(gameTime, out missionRunning);
-            }
+            //}
 
             if (!missionRunning)
             {
@@ -157,7 +157,7 @@ namespace GGJ_DisasterMode.Codebase.Screens
         {
             // This game has a blue background. Why? Because!
             ScreenManager.GraphicsDevice.Clear(ClearOptions.Target,
-                                               Color.White, 0, 0);
+                                               new Color(139, 123, 94), 0, 0);
 
             Viewport viewport = ScreenManager.GraphicsDevice.Viewport;
             Rectangle fullscreen = new Rectangle(0, 0, viewport.Width, viewport.Height);

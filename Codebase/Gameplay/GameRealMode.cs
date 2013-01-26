@@ -36,6 +36,7 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
         {
             Idle,
             SelectingDestionation,
+            DisplayingListen,
         }
         RealTimeState realTimeState;
         GameAction actionToPoint;
@@ -78,6 +79,12 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
             {
                 civ.ProcessDay();
                 civ.UpdateTemperature(TemperatureManager.Temperature);
+            }
+
+            if (realTimeState == RealTimeState.SelectingDestionation)
+            {
+                actionToPoint.CancelPlaceAction();
+                realTimeState = RealTimeState.Idle;
             }
         }
 
@@ -174,11 +181,17 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
                 //And replensh the ui
                 actions.Add(GameAction.CreateNewActionFromAction(droppedAction, GetUiPosition(droppedAction.ActionType)));
 
-                //Are we done for today?
-                if (actionsRemaining == 0)
+                AudioResultsScreen resultsScreen = new AudioResultsScreen(new List<Civilian>(), gridLocation.Y >= 9);
+
+                parentScreen.ScreenManager.AddScreen(resultsScreen, parentScreen.ControllingPlayer);
+
+                realTimeState = RealTimeState.DisplayingListen;
+
+                //Are we done for today? -- NO PEOPLE CAN STILL MOVE
+                /*if (actionsRemaining == 0)
                 {
                     EndDay();
-                }
+                }*/
             }
         }
         
@@ -192,7 +205,7 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
             
             foreach (Actions.GameAction action in actions)
             {
-                action.Draw(spriteBatch);
+                action.Draw(spriteBatch, gameMode == GameMode.REALTIME && realTimeState == RealTimeState.Idle);
             }
 
             Vector2 halfTextLength = defaultFont.MeasureString(actionsRemaining.ToString()) * 0.5f;

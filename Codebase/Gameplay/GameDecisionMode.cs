@@ -54,7 +54,7 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
         {
             foreach (Dropoffs.Dropoff dropoff in dropoffs)
             {
-                dropoff.Draw(gameTime, spriteBatch);
+                dropoff.Draw(gameTime, spriteBatch, gameMode == GameMode.DECISION);
             }
         }
 
@@ -156,7 +156,7 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
                 default:
                     break;
             }
-            return new Rectangle(uiOffset + 128 + ((34 + 16) * i), 383 + ((34 + 16)* j), 17, 17);
+            return new Rectangle(uiOffset + 130 + ((34 + 25) * i), 393 + ((34 + 16)* j), 34, 34);
         }
 
     }

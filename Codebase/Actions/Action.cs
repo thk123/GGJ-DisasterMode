@@ -97,6 +97,11 @@ namespace GGJ_DisasterMode.Codebase.Actions
             ActionState = Actions.ActionState.Active;
         }
 
+        public void CancelPlaceAction()
+        {
+            EndDrag(uiLocation);
+        }
+
         public void Update(GameTime gameTime)
         {
         }

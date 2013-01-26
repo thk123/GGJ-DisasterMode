@@ -44,10 +44,12 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
         }
         DragState currentState;
 
+        GameScreen parentScreen;
 
-        public GameplayManager(ContentManager content)
+        public GameplayManager(ContentManager content, GameScreen screen)
         {
             this.gameMode = GameMode.REALTIME;
+            this.parentScreen = screen;
             this.missionRunning = true;
 
             StartDay();
@@ -60,6 +62,7 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
         public void LoadContent(ContentManager content)
         {
             gameFont = content.Load<SpriteFont>("Fonts//gamefont");
+            uiTexture = content.Load<Texture2D>("Graphics//UI//GUI_temp");
             Dropoffs.ClockDrawer.LoadContent(content);
             LoadContentReal(content);
             LoadContentDecision(content);
@@ -91,11 +94,12 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
         {
             spriteBatch.Begin();
             grid.Draw(spriteBatch);
-            if (this.gameMode == GameMode.REALTIME)
+            spriteBatch.Draw(uiTexture, new Vector2(uiOffset, 9), Color.White);
+            //if (this.gameMode == GameMode.REALTIME)
             {
                 DrawReal(gameTime, spriteBatch);
             }
-            else if (this.gameMode == GameMode.DECISION)
+            //else if (this.gameMode == GameMode.DECISION)
             {
                 DrawDecision(gameTime, spriteBatch);
             }

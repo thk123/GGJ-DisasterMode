@@ -126,7 +126,7 @@ namespace GGJ_DisasterMode.Codebase
             if (newStaticLocation.HasValue)
             {
                 staticPosition = newStaticLocation.Value;
-                
+                    
                 //We have put the entity down
                 if (Redraggable)
                 {
@@ -152,12 +152,19 @@ namespace GGJ_DisasterMode.Codebase
             
         }
 
-        public virtual void Draw(SpriteBatch spriteBatch)
+        public virtual void Draw(SpriteBatch spriteBatch, bool buttonEnabled)
         {
             switch (dragState)
             {
                 case DragState.Idle:
-                    spriteBatch.Draw(staticTexture, currentPosition, new Color(Color.White, 0.1f));
+                    if (buttonEnabled)
+                    {
+                        spriteBatch.Draw(staticTexture, currentPosition, Color.White);
+                    }
+                    else
+                    {
+                        spriteBatch.Draw(staticTexture, currentPosition, Color.White * 0.2f);
+                    }
                     break;
                 case DragState.Done:
                     break;
