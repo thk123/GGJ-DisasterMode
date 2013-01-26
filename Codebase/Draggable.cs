@@ -157,7 +157,7 @@ namespace GGJ_DisasterMode.Codebase
             switch (dragState)
             {
                 case DragState.Idle:
-                    spriteBatch.Draw(staticTexture, currentPosition, Color.White * 0.1f);
+                    spriteBatch.Draw(staticTexture, currentPosition, new Color(Color.White, 0.1f));
                     break;
                 case DragState.Done:
                     break;
