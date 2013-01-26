@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using GGJ_DisasterMode.Codebase.Screens;
+using GGJ_DisasterMode.Codebase.Characters;
 
 namespace GGJ_DisasterMode.Codebase.Gameplay
 {
@@ -19,6 +20,12 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
     {
         private int realVariable;
         private GameGrid grid;
+        private Matrix gridTransformMatrix;
+
+        private List<Civilian> civilians;
+
+        
+        
 
         private const int actionCount = 2;
         private Actions.Action[] actions;
@@ -43,15 +50,34 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
         {
             Texture2D pixelTexture = content.Load<Texture2D>("graphics//pixel");
             this.grid = new GameGrid(pixelTexture, 9, 9, 32, 31, 18, 18, 1, Color.Black);
-
+            
             foreach (Actions.Action action in actions)
             {
                 action.LoadContent(content);
             }
+            this.civilians = new List<Civilian>();          
+            PopulateCivilians(this.civilians, pixelTexture);
+           
+        }
+
+        private void PopulateCivilians(List<Civilian> civilians, Texture2D texture)
+        {
+            Random randomGen = new Random(1000);
+
+            for (int i = 0; i < 500; i++)
+            {
+                civilians.Add(new ChildCharacter(randomGen.Next(0, Civilian.SCALE_FACTOR), 
+                    randomGen.Next(0, Civilian.SCALE_FACTOR), texture));
+            }
+
+            civilians.Add(new ChildCharacter(0, 0, texture));
+            civilians.Add(new ChildCharacter(1800, 0, texture));
+            civilians.Add(new ChildCharacter(0, 1800, texture));
+            civilians.Add(new ChildCharacter(1800, 1800, texture));
 
             
         }
-        
+
         public void UpdateReal(GameTime gameTime, out bool missionRunning)
         {
             foreach (Actions.Action action in actions)
@@ -68,10 +94,17 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
         {
             spriteBatch.Begin();
             grid.Draw(spriteBatch);
+
+            foreach (Civilian civilian in civilians)
+            {
+                civilian.Draw(spriteBatch, this.gridTransformMatrix);
+            }
+            
             foreach (Actions.Action action in actions)
             {
                 action.Draw(spriteBatch);
             }
+
             spriteBatch.End();
 
         }

@@ -180,7 +180,7 @@ namespace GGJ_DisasterMode.Codebase.Dropoffs
             }
         }
 
-        public virtual void UseDropoff(CharacterClass character)
+        public virtual void UseDropoff(Civilian character)
         {
             --RemainingUses;
             if (RemainingUses == 0)
