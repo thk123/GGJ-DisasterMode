@@ -25,14 +25,22 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
         private void LoadContentDecision(ContentManager content)
         {
             dropoffs = new List<Dropoff>();
-            dropoffs.Add(new BasicFoodDropoff(GetNextStoreSlot()));
-            dropoffs.Add(new BasicFoodDropoff(GetNextStoreSlot()));
-            dropoffs.Add(new BasicFoodDropoff(GetNextStoreSlot()));
+
+            Dropoff.InitTypes(content);
+            foreach (KeyValuePair<DropoffType, DropoffProperties> entry in Dropoff.dropoffTypes)
+            {
+                dropoffs.Add(new Dropoff(entry.Value, GetStoreSlot(entry.Key)));
+            }
 
             foreach (Dropoff dropoff in dropoffs)
             {
                 dropoff.LoadContent(content);
             }
+        }
+
+        private void DropoffPlaced(Dropoffs.Dropoff dropoff)
+        {
+            dropoffs.Add(Dropoffs.Dropoff.CreateNewDropoffFromDropoff(dropoff, GetStoreSlot(dropoff.DropoffType)));
         }
 
         private void UpdateDecision(GameTime gameTime, out bool missionRunning)
@@ -71,18 +79,64 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
             return draggables;
         }
 
-        int i = 0;
-        int j = 0;
-        private Rectangle GetNextStoreSlot()
+        private Rectangle GetStoreSlot(DropoffType dropoffType)
         {
-            Rectangle r = new Rectangle(uiOffset + 128 + ((34 + 16) * i), 383 + ((34 + 16)* j), 17, 17);
-            i += 1 % 5;
-            if (i == 0)
+            int i = -1;
+            int j = -1;
+            switch (dropoffType)
             {
-                ++j;
+                case DropoffType.Dropoff_Health_Low:
+                    i = 1;
+                    j = 0;
+                    break;
+                case DropoffType.Dropoff_Food_Low:
+                    i = 2;
+                    j = 0;
+                    break;
+                case DropoffType.Dropoff_Water_Low:
+                    i = 3;
+                    j = 0;
+                    break;
+                case DropoffType.Dropoff_Temperature_Low:
+                    i = 0;
+                    j = 0;
+                    break;
+                case DropoffType.Dropoff_Health_Medium:
+                    i = 1;
+                    j = 1;
+                    break;
+                case DropoffType.Dropoff_Food_Medium:
+                    i = 2;
+                    j = 1;
+                    break;
+                case DropoffType.Dropoff_Water_Medium:
+                    i = 3;
+                    j = 1;
+                    break;
+                case DropoffType.Dropoff_Temperature_Medium:
+                    i = 0;
+                    j = 1;
+                    break;
+                case DropoffType.Dropoff_Health_High:
+                    i = 1;
+                    j = 2;
+                    break;
+                case DropoffType.Dropoff_Food_High:
+                    i = 2;
+                    j = 2;
+                    break;
+                case DropoffType.Dropoff_Water_High:
+                    i = 3;
+                    j = 2;
+                    break;
+                case DropoffType.Dropoff_Temperature_High:
+                    i = 0;
+                    j = 2;
+                    break;
+                default:
+                    break;
             }
-
-            return r;
+            return new Rectangle(uiOffset + 128 + ((34 + 16) * i), 383 + ((34 + 16)* j), 17, 17);
         }
 
     }

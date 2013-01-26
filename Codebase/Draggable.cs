@@ -13,6 +13,7 @@ namespace GGJ_DisasterMode.Codebase
         {
             Idle, 
             Dragging,
+            Done, 
         }
 
         DragState dragState;
@@ -21,14 +22,22 @@ namespace GGJ_DisasterMode.Codebase
         Rectangle currentPosition;
         Rectangle? forcedLocation;
 
-        Texture2D staticTexture;
-        Texture2D draggingTexture;
+        protected Texture2D staticTexture;
+        protected Texture2D draggingTexture;
+
+        protected bool Redraggable
+        {
+            get;
+            set;
+        }
 
         public Draggable(Rectangle staticPosition)
         {
             currentPosition = staticPosition;
             this.staticPosition = staticPosition;
             dragState = DragState.Idle;
+
+            Redraggable = true;
         }
 
         public void SetContent(Texture2D staticTexture)
@@ -53,14 +62,21 @@ namespace GGJ_DisasterMode.Codebase
 
         public bool AttemptBeginDrag(Point mousePosition)
         {
-            if (currentPosition.Contains(mousePosition))
+            if (dragState == DragState.Idle)
             {
-                dragState = DragState.Dragging;
-                currentPosition.X = mousePosition.X - (int)(draggingTexture.Width / 2.0f);
-                currentPosition.Y = mousePosition.Y - (int)(draggingTexture.Height / 2.0f);
-                currentPosition.Width = draggingTexture.Width;
-                currentPosition.Height = draggingTexture.Height;
-                return true;
+                if (currentPosition.Contains(mousePosition))
+                {
+                    dragState = DragState.Dragging;
+                    currentPosition.X = mousePosition.X - (int)(draggingTexture.Width / 2.0f);
+                    currentPosition.Y = mousePosition.Y - (int)(draggingTexture.Height / 2.0f);
+                    currentPosition.Width = draggingTexture.Width;
+                    currentPosition.Height = draggingTexture.Height;
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
             }
             else
             {
@@ -109,7 +125,14 @@ namespace GGJ_DisasterMode.Codebase
 
             currentPosition = staticPosition;
 
-            dragState = DragState.Idle;
+            if (Redraggable)
+            {
+                dragState = DragState.Idle;
+            }
+            else
+            {
+                dragState = DragState.Done;
+            }
         }
 
         public virtual void Draw(SpriteBatch spriteBatch)
@@ -117,6 +140,7 @@ namespace GGJ_DisasterMode.Codebase
             switch (dragState)
             {
                 case DragState.Idle:
+                case DragState.Done:
                     spriteBatch.Draw(staticTexture, currentPosition, Color.White);
                     break;
                 case DragState.Dragging:

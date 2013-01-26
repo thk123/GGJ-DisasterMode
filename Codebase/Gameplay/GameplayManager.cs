@@ -155,6 +155,15 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
                         //Drop the dropoff in this grid
                         currentlyDragging.EndDrag(grid.GetGridRectangleFromGridPoint(gridPoint.Value), null);
                         currentState = DragState.Idle;
+
+                        if (gameMode == GameMode.REALTIME)
+                        {
+                            ActionPlaced((Actions.Action)currentlyDragging);
+                        }
+                        else
+                        {
+                            DropoffPlaced((Dropoffs.Dropoff)currentlyDragging);
+                        }
                     }
                     else
                     {
@@ -166,7 +175,6 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
             }
             
         }
-
 
         private void UpdateTime(GameTime gameTime)
         {
