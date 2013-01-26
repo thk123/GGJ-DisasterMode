@@ -44,7 +44,7 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
         /// Lets the game respond to player input. Unlike the Update method,
         /// this will only be called when the gameplay screen is active.
         /// </summary>
-        private void HandleInputDecision(GamePadState gamePadState)
+        private void HandleInputDecision(InputState gamePadState)
         {
 
         }
