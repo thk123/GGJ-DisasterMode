@@ -8,9 +8,10 @@ using GGJ_DisasterMode.Codebase.Screens;
 
 namespace GGJ_DisasterMode.Codebase.Gameplay
 {
-    public class GameplayManager
+    public partial class GameplayManager
     {
         private Vector2 cursorPosition;
+        private GameMode gameMode;
 
         private SpriteFont gameFont;
         private ContentManager content;
@@ -23,19 +24,39 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
 
         public GameplayManager(ContentManager content)
         {
+            this.gameMode = GameMode.REALTIME;
             this.missionRunning = true;
+        }
+
+        private enum GameMode
+        {
+            REALTIME, DECISION
         }
 
         public void Update(GameTime gameTime, out bool missionRunning)
         {
+            if (this.gameMode == GameMode.REALTIME)
+            {
+                UpdateReal(gameTime, out missionRunning);
+            }
+            else if (this.gameMode == GameMode.DECISION)
+            {
+                UpdateDecision(gameTime, out missionRunning);
+            }
+            
             missionRunning = this.missionRunning;
         }
 
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            spriteBatch.Begin();
-
-            spriteBatch.End();
+            if (this.gameMode == GameMode.REALTIME)
+            {
+                DrawReal(gameTime, spriteBatch);
+            }
+            else if (this.gameMode == GameMode.DECISION)
+            {
+                DrawDecision(gameTime, spriteBatch);
+            }
         }
 
         /// <summary>
@@ -49,6 +70,11 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
 
             if (gamePadState.Buttons.Y == ButtonState.Pressed)
                 this.missionRunning = false;
+
+            if (this.gameMode == GameMode.DECISION)
+            {
+                HandleInputDecision(gamePadState);
+            }
             
         }
     }
