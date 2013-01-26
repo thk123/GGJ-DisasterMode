@@ -35,6 +35,8 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
             this.gameMode = GameMode.REALTIME;
             this.missionRunning = true;
             remainingTime = decisionMaxDuration;
+
+            ConstructReal();
         }
 
             
@@ -84,17 +86,21 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
         /// Lets the game respond to player input. Unlike the Update method,
         /// this will only be called when the gameplay screen is active.
         /// </summary>
-        public void HandleInput(GamePadState gamePadState)
+        public void HandleInput(InputState gamePadState)
         {
             if (gamePadState == null)
                 throw new ArgumentNullException("input");
 
-            if (gamePadState.Buttons.Y == ButtonState.Pressed)
-                this.missionRunning = false;
+            /*if (gamePadState.Buttons.Y == ButtonState.Pressed)
+                this.missionRunning = false;*/
 
             if (this.gameMode == GameMode.DECISION)
             {
                 HandleInputDecision(gamePadState);
+            }
+            else
+            {
+                HandleInputReal(gamePadState);
             }
             
         }

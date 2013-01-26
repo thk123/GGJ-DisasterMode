@@ -86,6 +86,13 @@ namespace GGJ_DisasterMode.Codebase.Screens
                 gridPoint.X = (int)xPos;
                 gridPoint.Y = (int)yPos;
 
+                
+                if (gridPoint.X >= cellCountX || gridPoint.X < 0
+                    || gridPoint.Y >= cellCountY || gridPoint.Y < 0)
+                {
+                    return null;
+                }
+
                 return gridPoint;
             }
             else
@@ -93,6 +100,11 @@ namespace GGJ_DisasterMode.Codebase.Screens
                 // We are not inside the grid
                 return null;
             }
+        }
+
+        public Rectangle GetGridRectangleFromGridPoint(Point p)
+        {
+            return new Rectangle((p.X * cellWidth) + xPosition, (p.Y * cellHeight) + yPosition, cellWidth, cellHeight);
         }
     }
 }

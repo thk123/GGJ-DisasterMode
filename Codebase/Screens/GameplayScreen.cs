@@ -146,7 +146,7 @@ namespace GGJ_DisasterMode.Codebase.Screens
             }
             else
             {
-                gameController.HandleInput(gamePadState);
+                gameController.HandleInput(input);
             }
         }
 
