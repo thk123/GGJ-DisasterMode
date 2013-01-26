@@ -107,7 +107,7 @@ namespace GGJ_DisasterMode.Codebase.Screens
 
             /*if (IsActive)
             {*/
-                gameController.Update(gameTime, out missionRunning);
+                gameController.Update(gameTime, IsActive, out missionRunning);
             //}
 
             if (!missionRunning)

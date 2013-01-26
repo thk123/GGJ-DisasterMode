@@ -27,7 +27,7 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
         private GraphicsDevice graphics;
 
 
-        TimeSpan realTimeMaxDuration = new TimeSpan(0, 0, 1);
+        TimeSpan realTimeMaxDuration = new TimeSpan(0, 0, 30);
         TimeSpan decisionMaxDuration = new TimeSpan(0, 0, 10);
 
         TimeSpan remainingTime;
@@ -74,11 +74,11 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
         }
 
 
-        public void Update(GameTime gameTime, out bool missionRunning)
+        public void Update(GameTime gameTime, bool active, out bool missionRunning)
         {
             if (this.gameMode == GameMode.REALTIME)
             {
-                UpdateReal(gameTime, out missionRunning);
+                UpdateReal(gameTime, out missionRunning, active);
             }
             else if (this.gameMode == GameMode.DECISION)
             {

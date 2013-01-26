@@ -65,9 +65,19 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
 
         private void DecisionProcessEndDay()
         {
+            List<Dropoff> decayedDropoffs = new List<Dropoff>();
             foreach (Dropoffs.Dropoff dropoff in dropoffs)
             {
                 dropoff.ProcessDay();
+                if (dropoff.CurrentState == DropoffState.Decayed)
+                {
+                    decayedDropoffs.Add(dropoff);
+                }
+            }
+
+            foreach (Dropoff decayedDropoff in decayedDropoffs)
+            {
+                dropoffs.Remove(decayedDropoff);
             }
         }
 
@@ -78,6 +88,14 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
 
         private void DecisionProcessEndNight()
         {
+            foreach (Dropoff dropoff in dropoffs)
+            {
+                //if we have placed these drops, they then have been ordered
+                if (dropoff.CurrentState == DropoffState.Placed)
+                {
+                    dropoff.FixLocation();
+                }
+            }
         }
 
         /// <summary>

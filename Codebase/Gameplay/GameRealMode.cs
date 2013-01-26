@@ -41,6 +41,7 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
         RealTimeState realTimeState;
         GameAction actionToPoint;
         Point actionToPointLocation;
+        AudioResultsScreen currentResultsScreen;
 
         private const int actionCount = 2;
         private List<Actions.GameAction> actions;
@@ -85,6 +86,10 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
             {
                 actionToPoint.CancelPlaceAction();
                 realTimeState = RealTimeState.Idle;
+            }
+            else if (realTimeState == RealTimeState.DisplayingListen)
+            {
+                currentResultsScreen.ExitScreen();
             }
         }
 
@@ -141,9 +146,12 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
             }
         }
 
-        public void UpdateReal(GameTime gameTime, out bool missionRunning)
+        public void UpdateReal(GameTime gameTime, out bool missionRunning, bool isActive)
         {
-            
+            if (realTimeState == RealTimeState.DisplayingListen && isActive)
+            {
+                realTimeState = RealTimeState.Idle;
+            }
             foreach (Actions.GameAction action in actions)
             {
                 action.Update(gameTime);
@@ -181,9 +189,9 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
                 //And replensh the ui
                 actions.Add(GameAction.CreateNewActionFromAction(droppedAction, GetUiPosition(droppedAction.ActionType)));
 
-                AudioResultsScreen resultsScreen = new AudioResultsScreen(new List<Civilian>(), gridLocation.Y >= 9);
+                currentResultsScreen= new AudioResultsScreen(new List<Civilian>(), gridLocation.Y >= 9);
 
-                parentScreen.ScreenManager.AddScreen(resultsScreen, parentScreen.ControllingPlayer);
+                parentScreen.ScreenManager.AddScreen(currentResultsScreen, parentScreen.ControllingPlayer);
 
                 realTimeState = RealTimeState.DisplayingListen;
 

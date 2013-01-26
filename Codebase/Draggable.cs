@@ -152,6 +152,12 @@ namespace GGJ_DisasterMode.Codebase
             
         }
 
+        public void FixLocation()
+        {
+            dragState = DragState.Done;
+            Redraggable = false;
+        }
+
         public virtual void Draw(SpriteBatch spriteBatch, bool buttonEnabled)
         {
             switch (dragState)
@@ -167,6 +173,7 @@ namespace GGJ_DisasterMode.Codebase
                     }
                     break;
                 case DragState.Done:
+                    spriteBatch.Draw(staticTexture, currentPosition, Color.White);
                     break;
                 case DragState.Dragging:
                     if(forcedLocation == null)
