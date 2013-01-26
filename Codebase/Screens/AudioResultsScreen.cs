@@ -36,6 +36,7 @@ namespace GGJ_DisasterMode.Codebase.Screens
         List<BarEntry>[] data;
 
         Texture2D background;
+        Texture2D closeButton;
         Vector2 uiposition;
 
         Rectangle closeButtonPosition;
@@ -62,7 +63,8 @@ namespace GGJ_DisasterMode.Codebase.Screens
             base.LoadContent();
 
             ContentManager content = new ContentManager(ScreenManager.Game.Services, "Content");
-            background = content.Load<Texture2D>("Graphics//UI//listening_temp");
+            background = content.Load<Texture2D>("Graphics//UI//background");
+            closeButton = content.Load<Texture2D>("Graphics//UI//close");
         }
 
         public override void HandleInput(InputState input)
@@ -84,7 +86,7 @@ namespace GGJ_DisasterMode.Codebase.Screens
             
             spriteBatch.Begin();
             spriteBatch.Draw(background, uiposition, Color.White);
-
+            spriteBatch.Draw(closeButton, closeButtonPosition, Color.White);
             foreach (BarCategory b in Enum.GetValues(typeof(BarCategory)))
             {
                 List<BarEntry> entries = data[(int)b];
