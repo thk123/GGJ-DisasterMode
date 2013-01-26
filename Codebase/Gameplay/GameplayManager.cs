@@ -159,10 +159,12 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
                     Point? gridPoint = grid.GetGridPointFromMousePosition(input.GetMousePosition());
                     if (gridPoint.HasValue)
                     {
-                        //Drop the dropoff in this grid
-                        Rectangle gridRectangle = grid.GetGridRectangleFromGridPoint(gridPoint.Value);
-                        currentlyDragging.EndDrag(gridRectangle, null);
+                        //Drop the dropoff in this grid#
+                        Rectangle cellRect = grid.GetGridRectangleFromGridPoint(gridPoint.Value);
+                        currentlyDragging.EndDrag(cellRect, null);
                         currentState = DragState.Idle;
+                        this.buckets.addWater(cellRect.X + (cellRect.Width / 2), 
+                            cellRect.Y + (cellRect.Height / 2));
 
                         if (gameMode == GameMode.REALTIME)
                         {
@@ -170,7 +172,7 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
                         }
                         else
                         {
-                            DropoffPlaced((Dropoffs.Dropoff)currentlyDragging, gridRectangle);
+                            DropoffPlaced((Dropoffs.Dropoff)currentlyDragging, cellRect);
                         }
                     }
                     else

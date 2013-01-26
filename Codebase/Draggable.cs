@@ -22,6 +22,15 @@ namespace GGJ_DisasterMode.Codebase
         Rectangle currentPosition;
         Rectangle? forcedLocation;
 
+        public Point? Position
+        {
+            get
+            {
+                return new Point(currentPosition.X,
+                    currentPosition.Y);
+            }
+        }
+        
         protected Texture2D staticTexture;
         protected Texture2D draggingTexture;
 
@@ -30,6 +39,7 @@ namespace GGJ_DisasterMode.Codebase
             get;
             set;
         }
+
 
         public Draggable(Rectangle staticPosition)
         {
@@ -147,8 +157,9 @@ namespace GGJ_DisasterMode.Codebase
             switch (dragState)
             {
                 case DragState.Idle:
+                    spriteBatch.Draw(staticTexture, currentPosition, Color.White * 0.1f);
+                    break;
                 case DragState.Done:
-                    spriteBatch.Draw(staticTexture, currentPosition, Color.White);
                     break;
                 case DragState.Dragging:
                     if(forcedLocation == null)

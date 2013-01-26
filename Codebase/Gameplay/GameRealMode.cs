@@ -9,6 +9,9 @@ using Microsoft.Xna.Framework.Input;
 using GGJ_DisasterMode.Codebase.Screens;
 using GGJ_DisasterMode.Codebase.Characters;
 using GGJ_DisasterMode.Codebase.Actions;
+using GGJ_DisasterMode.Codebase.Dropoffs;
+using GGJ_DisasterMode.Codebase.Gameplay.Grid;
+using GGJ_DisasterMode.Codebase.Gameplay.Grid.Resources;
 
 namespace GGJ_DisasterMode.Codebase.Gameplay
 {
@@ -27,6 +30,7 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
 
         SpriteFont defaultFont;
 
+        Buckets buckets;        
 
         enum RealTimeState
         {
@@ -44,7 +48,7 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
         int actionsRemaining;
 
         private void ConstructReal()
-        {
+        {            
             int actionCount =Enum.GetNames(typeof(Actions.ActionType)).Length;
             actions = new List<Actions.GameAction>(actionCount);
 
@@ -98,9 +102,14 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
                 action.LoadContent(content);
             }
             this.civilians = new List<Civilian>();          
-            PopulateCivilians(this.civilians, pixelTexture);
+            
 
             defaultFont = content.Load<SpriteFont>("Fonts//gamefont");
+
+            this.buckets = new Buckets(this.grid, new List<GameAction>(), new List<Civilian>(), 
+                new List<Dropoff>(), new List<Water>());
+
+            PopulateCivilians(this.civilians, pixelTexture);
            
         }
 
@@ -119,15 +128,21 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
             civilians.Add(new ChildCharacter(0, 1800, texture));
             civilians.Add(new ChildCharacter(1800, 1800, texture));
 
-            
+            foreach (Civilian civilian in civilians)
+            {
+                buckets.addNewCivilian(civilian);
+            }
         }
 
         public void UpdateReal(GameTime gameTime, out bool missionRunning)
         {
+            
             foreach (Actions.GameAction action in actions)
             {
                 action.Update(gameTime);
             }
+
+            buckets.PopulateBuckets();
 
             foreach (Civilian civilian in civilians)
             {
