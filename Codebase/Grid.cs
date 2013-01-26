@@ -18,7 +18,7 @@ namespace GGJ_DisasterMode.Codebase
             gridSize = individualGridSize;
         }
 
-        public Point GetGridPointFromMousePosition(Point mousePosition)
+        public Point? GetGridPointFromMousePosition(Point mousePosition)
         {
             if (gridRectangle.Contains(mousePosition))
             {
@@ -40,8 +40,7 @@ namespace GGJ_DisasterMode.Codebase
             }
             else
             {
-                //invalid point, outside the grid
-                return new Point(-1, -1);
+                return null;
             }
         }
 

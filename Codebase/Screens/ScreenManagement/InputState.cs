@@ -28,9 +28,11 @@ namespace GGJ_DisasterMode.Codebase.Screens
 
         public readonly KeyboardState[] CurrentKeyboardStates;
         public readonly GamePadState[] CurrentGamePadStates;
+        public MouseState CurrentMouseState;
 
         public readonly KeyboardState[] LastKeyboardStates;
         public readonly GamePadState[] LastGamePadStates;
+        public MouseState LastMouseState;
 
         public readonly bool[] GamePadWasConnected;
 
@@ -46,9 +48,11 @@ namespace GGJ_DisasterMode.Codebase.Screens
         {
             CurrentKeyboardStates = new KeyboardState[MaxInputs];
             CurrentGamePadStates = new GamePadState[MaxInputs];
+            CurrentMouseState = new MouseState();
 
             LastKeyboardStates = new KeyboardState[MaxInputs];
             LastGamePadStates = new GamePadState[MaxInputs];
+            LastMouseState = new MouseState();
 
             GamePadWasConnected = new bool[MaxInputs];
         }
@@ -79,6 +83,29 @@ namespace GGJ_DisasterMode.Codebase.Screens
                     GamePadWasConnected[i] = true;
                 }
             }
+
+            LastMouseState = CurrentMouseState;
+            CurrentMouseState = Mouse.GetState();
+        }
+
+        public Point GetMouseDelta()
+        {
+            return new Point(CurrentMouseState.X - LastMouseState.X, CurrentMouseState.Y - LastMouseState.Y);
+        }
+
+        public Point GetMousePosition()
+        {
+            return new Point(CurrentMouseState.X, CurrentMouseState.Y); 
+        }
+
+        public bool GetMouseDown()
+        {
+            return CurrentMouseState.LeftButton == ButtonState.Pressed;
+        }
+
+        public bool GetMouseJustDown()
+        {
+            return CurrentMouseState.LeftButton == ButtonState.Pressed && LastMouseState.LeftButton == ButtonState.Released;
         }
 
 
