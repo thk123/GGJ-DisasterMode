@@ -121,3 +121,14 @@ GGJ-DisasterMode.csproj.Debug.cachefile
 obj/x86/Debug/GGJ-DisasterMode.csproj.FileListAbsolute.txt
 obj/x86/Debug/GGJ-DisasterMode.exe
 obj/x86/Debug/GGJ-DisasterMode.pdb
+bin/x86/Debug/GGJ-DisasterMode.exe
+bin/x86/Debug/GGJ-DisasterMode.pdb
+Codebase/Draggable.cs.orig
+Codebase/Gameplay/GameplayManager.cs.orig
+Codebase/Screens/GameGrid.cs.orig
+Content/Content.contentproj
+Content/obj/x86/Debug/ContentPipeline.xml
+GGJ-DisasterMode.csproj
+obj/x86/Debug/GGJ-DisasterMode.csproj.FileListAbsolute.txt
+obj/x86/Debug/GGJ-DisasterMode.exe
+obj/x86/Debug/GGJ-DisasterMode.pdb

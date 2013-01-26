@@ -134,7 +134,7 @@ namespace GGJ_DisasterMode.Codebase.Characters
             const int MAX = 250;
             
             float xGoal, yGoal;
-            int direction = RANDOM.Next(3);
+            int direction = RANDOM.Next(4);
 
             if (direction == 0)
             {

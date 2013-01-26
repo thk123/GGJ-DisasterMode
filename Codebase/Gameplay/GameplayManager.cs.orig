@@ -10,6 +10,8 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
 {
     public partial class GameplayManager
     {
+        const int uiOffset = 585;
+
         private Vector2 cursorPosition;
         private GameMode gameMode;
 
@@ -22,28 +24,35 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
 
         private bool missionRunning;
 
-<<<<<<< HEAD
         private GraphicsDevice graphics;
-=======
 
-        TimeSpan realTimeMaxDuration = new TimeSpan(0, 2, 0);
+
+        TimeSpan realTimeMaxDuration = new TimeSpan(0, 1, 10);
         TimeSpan decisionMaxDuration = new TimeSpan(0, 1, 30);
 
         TimeSpan remainingTime;
->>>>>>> bc78e172d4251045d977fa58280287dd5312ecae
+
+        Draggable currentlyDragging;
+
+        enum DragState
+        {
+            Idle,
+            Dragging,
+        }
+        DragState currentState;
+
 
         public GameplayManager(ContentManager content)
         {
             this.gameMode = GameMode.REALTIME;
             this.missionRunning = true;
+            remainingTime = realTimeMaxDuration;
 
-            remainingTime = decisionMaxDuration;
+            ConstructReal();
         }
-
+  
         public void LoadContent(ContentManager content)
         {
-            
-
             LoadContentReal(content);
             LoadContentDecision(content);
         }
@@ -72,6 +81,8 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
 
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
+            spriteBatch.Begin();
+            grid.Draw(spriteBatch);
             if (this.gameMode == GameMode.REALTIME)
             {
                 DrawReal(gameTime, spriteBatch);
@@ -80,27 +91,94 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
             {
                 DrawDecision(gameTime, spriteBatch);
             }
+            spriteBatch.End();
         }
 
         /// <summary>
         /// Lets the game respond to player input. Unlike the Update method,
         /// this will only be called when the gameplay screen is active.
         /// </summary>
-        public void HandleInput(GamePadState gamePadState)
+        public void HandleInput(InputState input)
         {
-            if (gamePadState == null)
+            if (input == null)
                 throw new ArgumentNullException("input");
 
-            if (gamePadState.Buttons.Y == ButtonState.Pressed)
-                this.missionRunning = false;
+            /*if (gamePadState.Buttons.Y == ButtonState.Pressed)
+                this.missionRunning = false;*/
 
-            if (this.gameMode == GameMode.DECISION)
+            IEnumerable<Draggable> actions = null;
+            if (this.gameMode == GameMode.REALTIME)
             {
-                HandleInputDecision(gamePadState);
+                actions = GetRealDraggables();
+            }
+            else
+            {
+                actions = GetDecisionDraggble();
+            }
+
+            if (currentState == DragState.Idle)
+            {
+                if (input.GetMouseDown())
+                {
+                    //Check if mouse is within any of the dropoff boxes
+                    foreach (Draggable draggable in actions)
+                    {
+                        if (draggable.AttemptBeginDrag(input.GetMousePosition()))
+                        {
+                            currentState = DragState.Dragging;
+                            currentlyDragging = draggable;
+                            break;
+                        }
+                    }
+                }
+            }
+            else if (currentState == DragState.Dragging)
+            {
+                if (input.GetMouseDown())
+                {
+                    //Move the one we are dragging
+                    Point? gridPoint = grid.GetGridPointFromMousePosition(input.GetMousePosition());
+                    Rectangle? lockedRectangle = null;
+                    if (gridPoint.HasValue)
+                    {
+                        lockedRectangle = grid.GetGridRectangleFromGridPoint(gridPoint.Value);
+                    }
+                    currentlyDragging.UpdateDrag(input.GetMouseDelta(), lockedRectangle);
+                }
+                else
+                {
+                    Point? gridPoint = grid.GetGridPointFromMousePosition(input.GetMousePosition());
+                    if (gridPoint.HasValue)
+                    {
+                        //Drop the dropoff in this grid#
+                        Rectangle cellRect = grid.GetGridRectangleFromGridPoint(gridPoint.Value);
+                        currentlyDragging.EndDrag(cellRect, null);
+                        currentState = DragState.Idle;
+<<<<<<< HEAD
+                        this.buckets.addWater(cellRect.X + (cellRect.Width / 2), 
+                            cellRect.Y + (cellRect.Height / 2));
+=======
+
+                        if (gameMode == GameMode.REALTIME)
+                        {
+                            ActionPlaced((Actions.GameAction)currentlyDragging);
+                        }
+                        else
+                        {
+                            DropoffPlaced((Dropoffs.Dropoff)currentlyDragging);
+                        }
+>>>>>>> a1d5aff02524b7607f6a062352eb85fa1f90f185
+                    }
+                    else
+                    {
+                        //Return the object to the shop
+                        currentState = DragState.Idle;
+                        currentlyDragging.EndDrag(null, null);
+                    }
+                }
             }
             
         }
-
 
         private void UpdateTime(GameTime gameTime)
         {
@@ -110,23 +188,38 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
                     remainingTime = remainingTime - gameTime.ElapsedGameTime;
                     if (remainingTime.TotalSeconds < 0.0)
                     {
-                        Console.WriteLine("Switching to decsision");
-                        gameMode = GameMode.DECISION;
-                        remainingTime = decisionMaxDuration;
+                        EndDay();
                     }
                     break;
                 case GameMode.DECISION:
                     remainingTime = remainingTime - gameTime.ElapsedGameTime;
                     if (remainingTime.TotalSeconds < 0.0)
                     {
-                        Console.WriteLine("Switching to realtime");
-                        gameMode = GameMode.REALTIME;
-                        remainingTime = realTimeMaxDuration;
+                        EndNight();
                     }
                     break;
                 default:
                     break;
             }
+        }
+
+        private void EndDay()
+        {
+            // go from day (real time instruction placing) -> night, placing pick ups
+            gameMode = GameMode.DECISION;
+            RealTimeProcessEndDay();
+            remainingTime = decisionMaxDuration;
+
+            
+        }
+
+        private void EndNight()
+        {
+            // go from night (placing pick ups) -> day (real time instruction placing)
+            gameMode = GameMode.REALTIME;
+            remainingTime = realTimeMaxDuration;
+
+            RealTimeProcessStartDay();
         }
     }
 }
