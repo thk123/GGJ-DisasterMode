@@ -79,5 +79,33 @@ namespace GGJ_DisasterMode.Codebase.Screens
                        angle, Vector2.Zero, new Vector2(length, width),
                        SpriteEffects.None, 0);
         }
+
+        public Point? GetGridPointFromMousePosition(Point mousePosition)
+        {
+            Rectangle gridRectangle = new Rectangle(xPosition, yPosition, cellWidth * cellCountX, cellHeight * cellCountY);
+            if (gridRectangle.Contains(mousePosition))
+            {
+                Point gridPoint = new Point();
+                gridPoint.X = mousePosition.X - gridRectangle.X;
+                gridPoint.Y = mousePosition.Y - gridRectangle.Y;
+
+                double xPos = gridPoint.X / (float)cellWidth;
+                double yPos = gridPoint.Y / (float)cellHeight;
+
+                //Round the floating values
+                xPos = Math.Floor(xPos + 0.5f);
+                yPos = Math.Floor(yPos + 0.5f);
+
+                gridPoint.X = (int)xPos;
+                gridPoint.Y = (int)yPos;
+
+                return gridPoint;
+            }
+            else
+            {
+                // We are not inside the grid
+                return null;
+            }
+        }
     }
 }
