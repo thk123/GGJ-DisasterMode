@@ -19,6 +19,8 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
     {
         private int decisionVariable;
 
+        private List<Dropoffs.Dropoff> dropoffs;
+
         private void LoadContentDecision(ContentManager content)
         {
 
@@ -36,7 +38,10 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
         private void DrawDecision(GameTime gameTime, SpriteBatch spriteBatch)
         {
             spriteBatch.Begin();
-
+            foreach (Dropoffs.Dropoff dropoff in dropoffs)
+            {
+                dropoff.Draw(gameTime, spriteBatch);
+            }
             spriteBatch.End();
         }
 
@@ -47,6 +52,11 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
         private void HandleInputDecision(InputState gamePadState)
         {
 
+        }
+
+        private IEnumerable<Draggable> GetDecisionDraggble()
+        {
+            return (IEnumerable<Draggable>)dropoffs;
         }
 
     }

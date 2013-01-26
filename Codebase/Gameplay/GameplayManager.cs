@@ -30,6 +30,16 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
 
         TimeSpan remainingTime;
 
+        Draggable currentlyDragging;
+
+        enum DragState
+        {
+            Idle,
+            Dragging,
+        }
+        DragState currentState;
+
+
         public GameplayManager(ContentManager content)
         {
             this.gameMode = GameMode.REALTIME;
@@ -86,21 +96,69 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
         /// Lets the game respond to player input. Unlike the Update method,
         /// this will only be called when the gameplay screen is active.
         /// </summary>
-        public void HandleInput(InputState gamePadState)
+        public void HandleInput(InputState input)
         {
-            if (gamePadState == null)
+            if (input == null)
                 throw new ArgumentNullException("input");
 
             /*if (gamePadState.Buttons.Y == ButtonState.Pressed)
                 this.missionRunning = false;*/
 
+            IEnumerable<Draggable> actions = null;
             if (this.gameMode == GameMode.DECISION)
             {
-                HandleInputDecision(gamePadState);
+                actions = GetRealDraggables();
             }
             else
             {
-                HandleInputReal(gamePadState);
+                actions = GetRealDraggables();
+            }
+
+            if (currentState == DragState.Idle)
+            {
+                if (input.GetMouseDown())
+                {
+                    //Check if mouse is within any of the dropoff boxes
+                    foreach (Draggable draggable in actions)
+                    {
+                        if (draggable.AttemptBeginDrag(input.GetMousePosition()))
+                        {
+                            currentState = DragState.Dragging;
+                            currentlyDragging = draggable;
+                            break;
+                        }
+                    }
+                }
+            }
+            else if (currentState == DragState.Dragging)
+            {
+                if (input.GetMouseDown())
+                {
+                    //Move the one we are dragging
+                    Point? gridPoint = grid.GetGridPointFromMousePosition(input.GetMousePosition());
+                    Rectangle? lockedRectangle = null;
+                    if (gridPoint.HasValue)
+                    {
+                        lockedRectangle = grid.GetGridRectangleFromGridPoint(gridPoint.Value);
+                    }
+                    currentlyDragging.UpdateDrag(input.GetMouseDelta(), lockedRectangle);
+                }
+                else
+                {
+                    Point? gridPoint = grid.GetGridPointFromMousePosition(input.GetMousePosition());
+                    if (gridPoint.HasValue)
+                    {
+                        //Drop the dropoff in this grid
+                        currentlyDragging.EndDrag(grid.GetGridRectangleFromGridPoint(gridPoint.Value));
+                        currentState = DragState.Idle;
+                    }
+                    else
+                    {
+                        //Return the object to the shop
+                        currentState = DragState.Idle;
+                        currentlyDragging.EndDrag();
+                    }
+                }
             }
             
         }
