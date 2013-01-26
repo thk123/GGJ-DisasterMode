@@ -38,11 +38,13 @@ namespace GGJ_DisasterMode.Codebase
 
             Components.Add(screenManager);
 
-            Components.Add(new GameGrid(this, 224, 9, 32, 31, 18, 18, 1, Color.Pink));
+            
 
             // Activate the first screens.
-            screenManager.AddScreen(new BackgroundScreen(), null);
-            screenManager.AddScreen(new MainMenuScreen(), null);
+
+            screenManager.AddScreen(new GameplayScreen(), PlayerIndex.One);
+            //screenManager.AddScreen(new BackgroundScreen(), null);
+            //screenManager.AddScreen(new MainMenuScreen(), null);
 
             //
             Components.Add(new FrameRateCounter(this));
