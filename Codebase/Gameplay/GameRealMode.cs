@@ -31,7 +31,7 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
         
 
         private const int actionCount = 2;
-        private List<Actions.Action> actions;
+        private List<Actions.GameAction> actions;
 
         const int totalActionsPerDay = 12;
         int actionsReaminings;
@@ -39,12 +39,12 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
         private void ConstructReal()
         {
             int actionCount =Enum.GetNames(typeof(Actions.ActionType)).Length;
-            actions = new List<Actions.Action>(actionCount);
+            actions = new List<Actions.GameAction>(actionCount);
 
             int i = 0;
             foreach (Actions.ActionType type in Enum.GetValues(typeof(Actions.ActionType)))
             {
-                actions.Add(new Actions.Action(type, new Rectangle(uiOffset + 135 - 75 + (200 * i), 155, 150, 150)));
+                actions.Add(new Actions.GameAction(type, new Rectangle(uiOffset + 135 - 75 + (200 * i), 155, 150, 150)));
                 ++i;
             }
 
@@ -67,7 +67,7 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
             Texture2D pixelTexture = content.Load<Texture2D>("graphics//pixel");
             this.grid = new GameGrid(pixelTexture, 9, 9, 32, 31, 18, 18, 1, Color.Black);
             
-            foreach (Actions.Action action in actions)
+            foreach (Actions.GameAction action in actions)
             {
                 action.LoadContent(content);
             }
@@ -98,7 +98,7 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
 
         public void UpdateReal(GameTime gameTime, out bool missionRunning)
         {
-            foreach (Actions.Action action in actions)
+            foreach (Actions.GameAction action in actions)
             {
                 action.Update(gameTime);
             }
@@ -120,7 +120,7 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
                 civilian.Draw(spriteBatch, this.gridTransformMatrix);
             }
             
-            foreach (Actions.Action action in actions)
+            foreach (Actions.GameAction action in actions)
             {
                 action.Draw(spriteBatch);
             }

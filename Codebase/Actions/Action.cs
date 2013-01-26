@@ -20,7 +20,7 @@ namespace GGJ_DisasterMode.Codebase.Actions
         DirectAction,
     }
 
-    class Action : Draggable
+    class GameAction : Draggable
     {
         public Point? ActionPosition
         {
@@ -48,7 +48,7 @@ namespace GGJ_DisasterMode.Codebase.Actions
 
         Rectangle uiLocation;
 
-        public Action(ActionType actionType, Rectangle uiLocation)
+        public GameAction(ActionType actionType, Rectangle uiLocation)
             :base(uiLocation)
         {
             ActionType = actionType;
