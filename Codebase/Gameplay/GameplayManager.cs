@@ -50,8 +50,7 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
 
             ConstructReal();
         }
-
-            
+  
         public void LoadContent(ContentManager content)
         {
             
@@ -154,14 +153,14 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
                     if (gridPoint.HasValue)
                     {
                         //Drop the dropoff in this grid
-                        currentlyDragging.EndDrag(grid.GetGridRectangleFromGridPoint(gridPoint.Value));
+                        currentlyDragging.EndDrag(grid.GetGridRectangleFromGridPoint(gridPoint.Value), null);
                         currentState = DragState.Idle;
                     }
                     else
                     {
                         //Return the object to the shop
                         currentState = DragState.Idle;
-                        currentlyDragging.EndDrag();
+                        currentlyDragging.EndDrag(null, null);
                     }
                 }
             }

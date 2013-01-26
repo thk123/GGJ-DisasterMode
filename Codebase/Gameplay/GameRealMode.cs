@@ -103,6 +103,10 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
                 action.Update(gameTime);
             }
 
+            foreach (Civilian civilian in civilians)
+            {
+                civilian.Update(gameTime);
+            }
 
 
             missionRunning = this.missionRunning;
