@@ -12,10 +12,20 @@ namespace GGJ_DisasterMode.Codebase.Dropoffs
 {
     enum DropoffType
     {
-        Dropoff_Health,
-        Dropoff_Food,
-        Dropoff_Water,
-        Dropoff_Temperature,
+        Dropoff_Health_Low,
+        Dropoff_Food_Low,
+        Dropoff_Water_Low,
+        Dropoff_Temperature_Low,
+
+        Dropoff_Health_Medium,
+        Dropoff_Food_Medium,
+        Dropoff_Water_Medium,
+        Dropoff_Temperature_Medium,
+
+        Dropoff_Health_High,
+        Dropoff_Food_High,
+        Dropoff_Water_High,
+        Dropoff_Temperature_High,
     }
 
     enum DropoffState
@@ -35,12 +45,41 @@ namespace GGJ_DisasterMode.Codebase.Dropoffs
         public int delay;
         public int useCount;
 
-        public string shopTextureLoc;
-        public string gridTextureLoc;
+        public Texture2D shopTexture;
+        public Texture2D draggingTexture;
+        public Texture2D placedTexture;
     }
 
-    abstract class Dropoff : Draggable
+
+    class Dropoff : Draggable
     {
+        public static Dictionary<DropoffType, DropoffProperties> dropoffTypes = new Dictionary<DropoffType, DropoffProperties>();
+        public static void InitTypes(ContentManager content)
+        {
+            dropoffTypes.Add(DropoffType.Dropoff_Food_Low, DropoffPropertiesFile.GetPropertiesFoodLow(content));
+            dropoffTypes.Add(DropoffType.Dropoff_Food_Medium, DropoffPropertiesFile.GetPropertiesFoodMedium(content));
+            dropoffTypes.Add(DropoffType.Dropoff_Food_High, DropoffPropertiesFile.GetPropertiesFoodHigh(content));
+            dropoffTypes.Add(DropoffType.Dropoff_Health_Low, DropoffPropertiesFile.GetPropertiesHealthLow(content));
+            dropoffTypes.Add(DropoffType.Dropoff_Health_Medium, DropoffPropertiesFile.GetPropertiesHealthMedium(content));
+            dropoffTypes.Add(DropoffType.Dropoff_Health_High, DropoffPropertiesFile.GetPropertiesHealthHigh(content));
+            dropoffTypes.Add(DropoffType.Dropoff_Water_Low, DropoffPropertiesFile.GetPropertiesWaterLow(content));
+            dropoffTypes.Add(DropoffType.Dropoff_Water_Medium, DropoffPropertiesFile.GetPropertiesWaterMedium(content));
+            dropoffTypes.Add(DropoffType.Dropoff_Water_High, DropoffPropertiesFile.GetPropertiesWaterHigh(content));
+            dropoffTypes.Add(DropoffType.Dropoff_Temperature_Low, DropoffPropertiesFile.GetPropertiesTempLow(content));
+            dropoffTypes.Add(DropoffType.Dropoff_Temperature_Medium, DropoffPropertiesFile.GetPropertiesTempMedium(content));
+            dropoffTypes.Add(DropoffType.Dropoff_Temperature_High, DropoffPropertiesFile.GetPropertiesTempHigh(content));
+        }
+
+
+
+        public DropoffType DropoffType
+        {
+            get
+            {
+                return dropoffProperties.type;
+            }
+        }
+
         public DropoffState CurrentState
         {
             get;
@@ -68,9 +107,6 @@ namespace GGJ_DisasterMode.Codebase.Dropoffs
 
         DropoffProperties dropoffProperties;
 
-        Texture2D shopTexture;
-        Texture2D gridTexture;
-
         public Dropoff(DropoffProperties properties, Rectangle storeSlot)
             :base(storeSlot)
         {
@@ -81,39 +117,8 @@ namespace GGJ_DisasterMode.Codebase.Dropoffs
 
         public virtual void LoadContent(ContentManager content)
         {
-            shopTexture = content.Load<Texture2D>(dropoffProperties.shopTextureLoc);
-            gridTexture = content.Load<Texture2D>(dropoffProperties.gridTextureLoc);
-
-            base.SetContent(shopTexture, null);
+            base.SetContent(dropoffProperties.shopTexture, dropoffProperties.draggingTexture);
         }
-
-       /* public bool CheckCollisionAgainstShopRectangle(Point p)
-        {
-            return storeSlot.Contains(p);
-        }       
-
-        public void BeginDrag(Point mousePoint)
-        {
-            currentPosition = new Vector2(mousePoint.X, mousePoint.Y);
-            CurrentState = DropoffState.Ordered;
-        }
-
-        public void UpdateDrag(Point mouseDelta)
-        {
-            currentPosition.X += mouseDelta.X;
-            currentPosition.Y += mouseDelta.Y;
-        }
-
-        public void PlaceDropoff(Point gridPoint)
-        {
-            CurrentState = DropoffState.Placed;
-            DaysToDecay = dropoffProperties.duration;
-        }
-
-        public void PutDropoffBackToStore()
-        {
-            CurrentState = DropoffState.Unordered;
-        }*/
 
         public virtual void ProcessDay()
         {
@@ -152,29 +157,7 @@ namespace GGJ_DisasterMode.Codebase.Dropoffs
 
         public virtual void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            base.Draw(spriteBatch);/*
-            switch (CurrentState)
-            {
-                case DropoffState.Unordered:
-                    // Draw the shop image
-                    spriteBatch.Draw(shopTexture, storeSlot, Color.White);
-                    break;
-                case DropoffState.Ordered:
-                    // Draw the shop image as being dragged across the screen
-                    spriteBatch.Draw(shopTexture, currentPosition, Color.White);
-                    break;
-                case DropoffState.Placed:
-                    // Draw the object with countdown on the map
-                    break;
-                case DropoffState.Delivered:
-                    break;
-                case DropoffState.Used:
-                    break;
-                case DropoffState.Decayed:
-                    break;
-                default:
-                    break;
-            }*/
+            base.Draw(spriteBatch);
         }
 
         public virtual void UseDropoff(Civilian character)
@@ -191,6 +174,14 @@ namespace GGJ_DisasterMode.Codebase.Dropoffs
             DaysToDelivery = dropoffProperties.delay;
             DaysToDecay = dropoffProperties.duration;
             RemainingUses = dropoffProperties.useCount;
+        }
+
+        public static Dropoff CreateNewDropoffFromDropoff(Dropoff oldDropoff, Rectangle uiPosition)
+        {
+            Dropoff newDropoff = new Dropoff(Dropoff.dropoffTypes[oldDropoff.dropoffProperties.type], uiPosition);
+            newDropoff.SetContent(oldDropoff.dropoffProperties.shopTexture, oldDropoff.dropoffProperties.draggingTexture);
+
+            return newDropoff;
         }
     }
 }

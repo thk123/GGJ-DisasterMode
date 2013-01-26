@@ -37,7 +37,7 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
         private List<Actions.GameAction> actions;
 
         const int totalActionsPerDay = 12;
-        int actionsReaminings;
+        int actionsRemaining;
 
         private void ConstructReal()
         {            
@@ -47,23 +47,32 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
             int i = 0;
             foreach (Actions.ActionType type in Enum.GetValues(typeof(Actions.ActionType)))
             {
-                actions.Add(new Actions.GameAction(type, new Rectangle(uiOffset + 135 - 75 + (200 * i), 155, 150, 150)));
+                actions.Add(new Actions.GameAction(type, GetUiPosition(type)));
                 ++i;
             }
 
             currentState = DragState.Idle;
             currentlyDragging = null;
+
+            actionsRemaining = totalActionsPerDay;
         }
 
-        public void StartDay()
+        public void RealTimeProcessStartDay()
         {
-            actionsReaminings = totalActionsPerDay;
+            actionsRemaining = totalActionsPerDay;
         }
 
-        public void EndDay()
+        public void RealTimeProcessEndDay()
         {
-
+            TemperatureManager.ProcessDay();
+            foreach (Civilian civ in civilians)
+            {
+                civ.ProcessDay();
+                civ.UpdateTemperature(TemperatureManager.Temperature);
+            }
         }
+
+        
 
         private void LoadContentReal(ContentManager content)
         {
@@ -125,6 +134,21 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
 
             missionRunning = this.missionRunning;
         }
+
+        private void ActionPlaced(GameAction droppedAction)
+        {
+            // Decrease remaining actions
+            --actionsRemaining;
+
+            //And replensh the ui
+            actions.Add(GameAction.CreateNewActionFromAction(droppedAction, GetUiPosition(droppedAction.ActionType)));
+
+            //Are we done for today?
+            if (actionsRemaining == 0)
+            {
+                EndDay();
+            }
+        }
         
         private void DrawReal(GameTime gameTime, SpriteBatch spriteBatch)
         {           
@@ -139,8 +163,8 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
                 action.Draw(spriteBatch);
             }
 
-            Vector2 halfTextLength = defaultFont.MeasureString(actionsReaminings.ToString()) * 0.5f;
-            spriteBatch.DrawString(defaultFont, actionsReaminings.ToString(), new Vector2(uiOffset + 230 - halfTextLength.X, 200 - halfTextLength.Y), Color.Red);
+            Vector2 halfTextLength = defaultFont.MeasureString(actionsRemaining.ToString()) * 0.5f;
+            spriteBatch.DrawString(defaultFont, actionsRemaining.ToString(), new Vector2(uiOffset + 230 - halfTextLength.X, 200 - halfTextLength.Y), Color.Red);
 
         }
 
@@ -157,6 +181,19 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
         private void HandleInputReal(InputState input)
         {
             
+        }
+
+        private Rectangle GetUiPosition(ActionType actionType)
+        {
+            switch (actionType)
+            {
+                case ActionType.ListenAction:
+                    return new Rectangle(uiOffset + 135 - 75 + 200, 155, 150, 150);
+                case ActionType.DirectAction:
+                    return new Rectangle(uiOffset + 135 - 75, 155, 150, 150);
+                default:
+                    throw new Exception("Unrecognised action type");
+            }
         }
 
     }

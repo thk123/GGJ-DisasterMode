@@ -58,6 +58,9 @@ namespace GGJ_DisasterMode.Codebase.Actions
             ActionState = Actions.ActionState.Inactive;
 
             this.uiLocation = uiLocation;
+
+            //once placed, we don't allow the player to mvoe them this go
+            Redraggable = false;
         }
 
         public void LoadContent(ContentManager content)
@@ -100,6 +103,14 @@ namespace GGJ_DisasterMode.Codebase.Actions
 
         public void ProcessDay()
         {
-        }        
+        }
+
+        public static GameAction CreateNewActionFromAction(GameAction oldAction, Rectangle uiLocation)
+        {
+            GameAction newAction = new GameAction(oldAction.ActionType, uiLocation);
+            newAction.SetContent(oldAction.staticTexture, oldAction.draggingTexture);
+
+            return newAction;
+        }
     }
 }
