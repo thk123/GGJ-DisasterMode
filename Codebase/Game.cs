@@ -32,6 +32,7 @@ namespace GGJ_DisasterMode.Codebase
 
             graphics.PreferredBackBufferWidth = 1024;
             graphics.PreferredBackBufferHeight = 576;
+            base.IsMouseVisible = true;
 
             // Create the screen manager component.
             screenManager = new ScreenManager(this);

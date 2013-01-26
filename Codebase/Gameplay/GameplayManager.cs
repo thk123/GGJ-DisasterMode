@@ -24,12 +24,20 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
 
         private GraphicsDevice graphics;
 
+
+        TimeSpan realTimeMaxDuration = new TimeSpan(0, 2, 0);
+        TimeSpan decisionMaxDuration = new TimeSpan(0, 1, 30);
+
+        TimeSpan remainingTime;
+
         public GameplayManager(ContentManager content)
         {
             this.gameMode = GameMode.REALTIME;
             this.missionRunning = true;
+            remainingTime = decisionMaxDuration;
         }
 
+            
         public void LoadContent(ContentManager content)
         {
             
@@ -43,6 +51,7 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
             REALTIME, DECISION
         }
 
+
         public void Update(GameTime gameTime, out bool missionRunning)
         {
             if (this.gameMode == GameMode.REALTIME)
@@ -53,6 +62,8 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
             {
                 UpdateDecision(gameTime, out missionRunning);
             }
+
+            UpdateTime(gameTime);
             
             missionRunning = this.missionRunning;
         }
@@ -86,6 +97,34 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
                 HandleInputDecision(gamePadState);
             }
             
+        }
+
+
+        private void UpdateTime(GameTime gameTime)
+        {
+            switch (gameMode)
+            {
+                case GameMode.REALTIME:
+                    remainingTime = remainingTime - gameTime.ElapsedGameTime;
+                    if (remainingTime.TotalSeconds < 0.0)
+                    {
+                        Console.WriteLine("Switching to decsision");
+                        gameMode = GameMode.DECISION;
+                        remainingTime = decisionMaxDuration;
+                    }
+                    break;
+                case GameMode.DECISION:
+                    remainingTime = remainingTime - gameTime.ElapsedGameTime;
+                    if (remainingTime.TotalSeconds < 0.0)
+                    {
+                        Console.WriteLine("Switching to realtime");
+                        gameMode = GameMode.REALTIME;
+                        remainingTime = realTimeMaxDuration;
+                    }
+                    break;
+                default:
+                    break;
+            }
         }
     }
 }
