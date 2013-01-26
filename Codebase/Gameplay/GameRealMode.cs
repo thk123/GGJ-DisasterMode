@@ -31,7 +31,15 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
         SpriteFont defaultFont;
 
         Buckets buckets;        
-        
+
+        enum RealTimeState
+        {
+            Idle,
+            SelectingDestionation,
+        }
+        RealTimeState realTimeState;
+        GameAction actionToPoint;
+        Point actionToPointLocation;
 
         private const int actionCount = 2;
         private List<Actions.GameAction> actions;
@@ -60,6 +68,7 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
         public void RealTimeProcessStartDay()
         {
             actionsRemaining = totalActionsPerDay;
+            realTimeState = RealTimeState.Idle;
         }
 
         public void RealTimeProcessEndDay()
@@ -70,6 +79,15 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
                 civ.ProcessDay();
                 civ.UpdateTemperature(TemperatureManager.Temperature);
             }
+        }
+
+        public void RealTimeProcessStartNight()
+        {
+
+        }
+
+        public void RealTimeProcessEndNight()
+        {
         }
 
         
@@ -135,18 +153,32 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
             missionRunning = this.missionRunning;
         }
 
-        private void ActionPlaced(GameAction droppedAction)
+        private void ActionPlaced(GameAction droppedAction, Point gridLocation)
         {
-            // Decrease remaining actions
-            --actionsRemaining;
-
-            //And replensh the ui
-            actions.Add(GameAction.CreateNewActionFromAction(droppedAction, GetUiPosition(droppedAction.ActionType)));
-
-            //Are we done for today?
-            if (actionsRemaining == 0)
+            if (droppedAction.ActionType == ActionType.DirectAction)
             {
-                EndDay();
+                //Get some more input
+                realTimeState = RealTimeState.SelectingDestionation;
+                actionToPoint = droppedAction;
+                actionToPointLocation = gridLocation;
+
+            }
+            else
+            {
+                //we are done for this action
+                droppedAction.PlaceAction(gridLocation);
+
+                // Decrease remaining actions
+                --actionsRemaining;
+
+                //And replensh the ui
+                actions.Add(GameAction.CreateNewActionFromAction(droppedAction, GetUiPosition(droppedAction.ActionType)));
+
+                //Are we done for today?
+                if (actionsRemaining == 0)
+                {
+                    EndDay();
+                }
             }
         }
         
@@ -180,7 +212,30 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
 
         private void HandleInputReal(InputState input)
         {
-            
+            if (realTimeState == RealTimeState.SelectingDestionation)
+            {
+                if (input.GetMouseDown())
+                {
+                    Point? mousePoint = grid.GetGridPointFromMousePosition(input.GetMousePosition());
+                    if(mousePoint.HasValue)
+                    {
+                        actionToPoint.PlaceAction(actionToPointLocation, mousePoint.Value);
+
+                        realTimeState = RealTimeState.Idle;
+
+                        --actionsRemaining;
+
+                        //And replensh the ui
+                        actions.Add(GameAction.CreateNewActionFromAction(actionToPoint, GetUiPosition(actionToPoint.ActionType)));
+
+                        //Are we done for today?
+                        if (actionsRemaining == 0)
+                        {
+                            EndDay();
+                        }
+                    }
+                }
+            }
         }
 
         private Rectangle GetUiPosition(ActionType actionType)

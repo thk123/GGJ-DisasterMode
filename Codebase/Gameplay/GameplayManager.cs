@@ -27,12 +27,15 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
         private GraphicsDevice graphics;
 
 
-        TimeSpan realTimeMaxDuration = new TimeSpan(0, 1, 10);
-        TimeSpan decisionMaxDuration = new TimeSpan(0, 1, 30);
+        TimeSpan realTimeMaxDuration = new TimeSpan(0, 0, 1);
+        TimeSpan decisionMaxDuration = new TimeSpan(0, 0, 10);
 
         TimeSpan remainingTime;
 
         Draggable currentlyDragging;
+
+        int dayCount;
+
 
         enum DragState
         {
@@ -46,13 +49,18 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
         {
             this.gameMode = GameMode.REALTIME;
             this.missionRunning = true;
-            remainingTime = realTimeMaxDuration;
+
+            StartDay();
+
+            dayCount = 1;
 
             ConstructReal();
         }
   
         public void LoadContent(ContentManager content)
         {
+            gameFont = content.Load<SpriteFont>("Fonts//gamefont");
+            Dropoffs.ClockDrawer.LoadContent(content);
             LoadContentReal(content);
             LoadContentDecision(content);
         }
@@ -91,6 +99,7 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
             {
                 DrawDecision(gameTime, spriteBatch);
             }
+            DisplayClock(spriteBatch);
             spriteBatch.End();
         }
 
@@ -138,7 +147,7 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
                 {
                     //Move the one we are dragging
                     Point? gridPoint = grid.GetGridPointFromMousePosition(input.GetMousePosition());
-                    Rectangle? lockedRectangle = null;
+                    Rectangle? lockedRectangle = null;  
                     if (gridPoint.HasValue)
                     {
                         lockedRectangle = grid.GetGridRectangleFromGridPoint(gridPoint.Value);
@@ -159,11 +168,11 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
 
                         if (gameMode == GameMode.REALTIME)
                         {
-                            ActionPlaced((Actions.GameAction)currentlyDragging);
+                            ActionPlaced((Actions.GameAction)currentlyDragging, gridPoint.Value);
                         }
                         else
                         {
-                            DropoffPlaced((Dropoffs.Dropoff)currentlyDragging);
+                            DropoffPlaced((Dropoffs.Dropoff)currentlyDragging, cellRect);
                         }
                     }
                     else
@@ -174,6 +183,15 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
                     }
                 }
             }
+
+            if (gameMode == GameMode.REALTIME)
+            {
+                HandleInputReal(input);
+            }
+            else
+            {
+                HandleInputDecision(input);
+            }
             
         }
 
@@ -183,14 +201,14 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
             {
                 case GameMode.REALTIME:
                     remainingTime = remainingTime - gameTime.ElapsedGameTime;
-                    if (remainingTime.TotalSeconds < 0.0)
+                    if (remainingTime.TotalSeconds <= decisionMaxDuration.TotalSeconds)
                     {
                         EndDay();
                     }
                     break;
                 case GameMode.DECISION:
                     remainingTime = remainingTime - gameTime.ElapsedGameTime;
-                    if (remainingTime.TotalSeconds < 0.0)
+                    if (remainingTime.TotalSeconds <= 0.0)
                     {
                         EndNight();
                     }
@@ -200,23 +218,65 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
             }
         }
 
+        private void StartDay()
+        {
+            remainingTime = decisionMaxDuration + realTimeMaxDuration;
+
+            RealTimeProcessStartDay();
+            DecisionProcessStartDay();
+        }
+
         private void EndDay()
         {
             // go from day (real time instruction placing) -> night, placing pick ups
-            gameMode = GameMode.DECISION;
+            
             RealTimeProcessEndDay();
+            DecisionProcessEndDay();
+
+            gameMode = GameMode.DECISION;
             remainingTime = decisionMaxDuration;
 
-            
+            StartNight();
+        }
+
+        private void StartNight()
+        {
+            RealTimeProcessStartNight();
+            DecisionProcessStartNight();
         }
 
         private void EndNight()
         {
+            DecisionProcessEndNight();
+            RealTimeProcessEndNight();
+
             // go from night (placing pick ups) -> day (real time instruction placing)
             gameMode = GameMode.REALTIME;
-            remainingTime = realTimeMaxDuration;
+           
 
-            RealTimeProcessStartDay();
+            ++dayCount;
+
+            StartDay();
+
+        }
+
+
+        private void DisplayClock(SpriteBatch spriteBatch)
+        {
+            string s = string.Format("DAY: {0}", dayCount);
+            Vector2 stringSize = gameFont.MeasureString(s);
+            spriteBatch.DrawString(gameFont, s, new Vector2(uiOffset + 215 - (stringSize.X / 2.0f), 50 - (stringSize.Y / 2.0f)), Color.Red);
+
+            int secondsInADay = 60 * 60 * 24;
+            double secondsRemaining = remainingTime.TotalSeconds;
+            double percentage = secondsRemaining / (decisionMaxDuration.TotalSeconds + realTimeMaxDuration.TotalSeconds);
+            double invervtedPercentage = 1 - percentage;
+            double secondsThrough = secondsInADay * invervtedPercentage;
+            TimeSpan ofADay = new TimeSpan(0, 0, (int)secondsThrough);
+
+            string timer = string.Format("{2}:{1}:{0}", ofADay.Seconds, ofADay.Minutes, ofADay.Hours);
+            Vector2 stringTimeSize = gameFont.MeasureString(timer);
+            spriteBatch.DrawString(gameFont, timer, new Vector2(uiOffset + 215 - (stringTimeSize.X / 2.0f), 100 - (stringTimeSize.Y / 2.0f)), Color.Red);
         }
     }
 }

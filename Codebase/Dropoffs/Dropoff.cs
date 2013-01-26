@@ -70,7 +70,7 @@ namespace GGJ_DisasterMode.Codebase.Dropoffs
             dropoffTypes.Add(DropoffType.Dropoff_Temperature_High, DropoffPropertiesFile.GetPropertiesTempHigh(content));
         }
 
-
+        
 
         public DropoffType DropoffType
         {
@@ -104,6 +104,7 @@ namespace GGJ_DisasterMode.Codebase.Dropoffs
             private set;
         }
 
+        Rectangle gridPosition;
 
         DropoffProperties dropoffProperties;
 
@@ -118,6 +119,12 @@ namespace GGJ_DisasterMode.Codebase.Dropoffs
         public virtual void LoadContent(ContentManager content)
         {
             base.SetContent(dropoffProperties.shopTexture, dropoffProperties.draggingTexture);
+        }
+
+        public virtual void PlaceDropoff(Rectangle gridRectangle)
+        {
+            CurrentState = DropoffState.Placed;
+            gridPosition = gridRectangle;
         }
 
         public virtual void ProcessDay()
@@ -158,6 +165,16 @@ namespace GGJ_DisasterMode.Codebase.Dropoffs
         public virtual void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             base.Draw(spriteBatch);
+
+            
+            if (CurrentState == DropoffState.Placed)
+            {
+                //draw relevant clock
+                Texture2D clockTexture = ClockDrawer.DrawClock(ClockDrawer.GetClockType(DaysToDelivery, dropoffProperties.delay));
+                Vector2 drawPos = new Vector2(gridPosition.Center.X - (clockTexture.Width / 2.0f), gridPosition.Center.Y);
+                drawPos.Y -= 40;
+                spriteBatch.Draw(clockTexture, drawPos,Color.White);
+            }
         }
 
         public virtual void UseDropoff(Civilian character)

@@ -128,6 +128,14 @@ namespace GGJ_DisasterMode.Codebase.Characters
             setRandomGoal();
         }
 
+        public void ProcessDay()
+        {
+            CurrentHunger -= characterProperties.hungerDecay;
+            CurrentThirst -= characterProperties.thirstDecay;
+            CurrentHealth -= characterProperties.healthDecay;
+        }
+
+
         public void setRandomGoal()
         {
             const int MIN = 10;

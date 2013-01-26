@@ -38,16 +38,14 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
             }
         }
 
-        private void DropoffPlaced(Dropoffs.Dropoff dropoff)
+        private void DropoffPlaced(Dropoffs.Dropoff dropoff, Rectangle dropoffPoint)
         {
+            dropoff.PlaceDropoff(dropoffPoint);
             dropoffs.Add(Dropoffs.Dropoff.CreateNewDropoffFromDropoff(dropoff, GetStoreSlot(dropoff.DropoffType)));
         }
 
         private void UpdateDecision(GameTime gameTime, out bool missionRunning)
         {
-
-
-
 
             missionRunning = this.missionRunning;
         }
@@ -58,6 +56,28 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
             {
                 dropoff.Draw(gameTime, spriteBatch);
             }
+        }
+
+        private void DecisionProcessStartDay()
+        {
+
+        }
+
+        private void DecisionProcessEndDay()
+        {
+            foreach (Dropoffs.Dropoff dropoff in dropoffs)
+            {
+                dropoff.ProcessDay();
+            }
+        }
+
+        private void DecisionProcessStartNight()
+        {
+
+        }
+
+        private void DecisionProcessEndNight()
+        {
         }
 
         /// <summary>
