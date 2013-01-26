@@ -27,8 +27,8 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
         private GraphicsDevice graphics;
 
 
-        TimeSpan realTimeMaxDuration = new TimeSpan(0, 0, 30);
-        TimeSpan decisionMaxDuration = new TimeSpan(0, 0, 30);
+        TimeSpan realTimeMaxDuration = new TimeSpan(0, 0, 1);
+        TimeSpan decisionMaxDuration = new TimeSpan(0, 0, 10);
 
         TimeSpan remainingTime;
 
@@ -60,6 +60,7 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
         public void LoadContent(ContentManager content)
         {
             gameFont = content.Load<SpriteFont>("Fonts//gamefont");
+            Dropoffs.ClockDrawer.LoadContent(content);
             LoadContentReal(content);
             LoadContentDecision(content);
         }
@@ -146,7 +147,7 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
                 {
                     //Move the one we are dragging
                     Point? gridPoint = grid.GetGridPointFromMousePosition(input.GetMousePosition());
-                    Rectangle? lockedRectangle = null;
+                    Rectangle? lockedRectangle = null;  
                     if (gridPoint.HasValue)
                     {
                         lockedRectangle = grid.GetGridRectangleFromGridPoint(gridPoint.Value);
@@ -159,16 +160,17 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
                     if (gridPoint.HasValue)
                     {
                         //Drop the dropoff in this grid
-                        currentlyDragging.EndDrag(grid.GetGridRectangleFromGridPoint(gridPoint.Value), null);
+                        Rectangle gridRectangle = grid.GetGridRectangleFromGridPoint(gridPoint.Value);
+                        currentlyDragging.EndDrag(gridRectangle, null);
                         currentState = DragState.Idle;
 
                         if (gameMode == GameMode.REALTIME)
                         {
-                            ActionPlaced((Actions.GameAction)currentlyDragging);
+                            ActionPlaced((Actions.GameAction)currentlyDragging, gridPoint.Value);
                         }
                         else
                         {
-                            DropoffPlaced((Dropoffs.Dropoff)currentlyDragging);
+                            DropoffPlaced((Dropoffs.Dropoff)currentlyDragging, gridRectangle);
                         }
                     }
                     else
@@ -178,6 +180,15 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
                         currentlyDragging.EndDrag(null, null);
                     }
                 }
+            }
+
+            if (gameMode == GameMode.REALTIME)
+            {
+                HandleInputReal(input);
+            }
+            else
+            {
+                HandleInputDecision(input);
             }
             
         }
