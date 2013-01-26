@@ -53,8 +53,6 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
   
         public void LoadContent(ContentManager content)
         {
-            
-
             LoadContentReal(content);
             LoadContentDecision(content);
         }
@@ -184,23 +182,38 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
                     remainingTime = remainingTime - gameTime.ElapsedGameTime;
                     if (remainingTime.TotalSeconds < 0.0)
                     {
-                        Console.WriteLine("Switching to decsision");
-                        gameMode = GameMode.DECISION;
-                        remainingTime = decisionMaxDuration;
+                        EndDay();
                     }
                     break;
                 case GameMode.DECISION:
                     remainingTime = remainingTime - gameTime.ElapsedGameTime;
                     if (remainingTime.TotalSeconds < 0.0)
                     {
-                        Console.WriteLine("Switching to realtime");
-                        gameMode = GameMode.REALTIME;
-                        remainingTime = realTimeMaxDuration;
+                        EndNight();
                     }
                     break;
                 default:
                     break;
             }
+        }
+
+        private void EndDay()
+        {
+            // go from day (real time instruction placing) -> night, placing pick ups
+            gameMode = GameMode.DECISION;
+            RealTimeProcessEndDay();
+            remainingTime = decisionMaxDuration;
+
+            
+        }
+
+        private void EndNight()
+        {
+            // go from night (placing pick ups) -> day (real time instruction placing)
+            gameMode = GameMode.REALTIME;
+            remainingTime = realTimeMaxDuration;
+
+            RealTimeProcessStartDay();
         }
     }
 }

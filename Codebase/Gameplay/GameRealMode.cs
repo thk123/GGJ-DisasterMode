@@ -51,18 +51,25 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
             currentState = DragState.Idle;
             currentlyDragging = null;
 
-            actionsRemaining = 12;
+            actionsRemaining = totalActionsPerDay;
         }
 
-        public void StartDay()
+        public void RealTimeProcessStartDay()
         {
             actionsRemaining = totalActionsPerDay;
         }
 
-        public void EndDay()
+        public void RealTimeProcessEndDay()
         {
-
+            TemperatureManager.ProcessDay();
+            foreach (Civilian civ in civilians)
+            {
+                civ.ProcessDay();
+                civ.UpdateTemperature(TemperatureManager.Temperature);
+            }
         }
+
+        
 
         private void LoadContentReal(ContentManager content)
         {
