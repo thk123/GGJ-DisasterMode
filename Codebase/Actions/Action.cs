@@ -64,7 +64,7 @@ namespace GGJ_DisasterMode.Codebase.Actions
         {
             //Load textures for different types of actions 
             Texture2D uiTexture = content.Load<Texture2D>("Graphics/Dropoffs/Dropoff_FirstAid_Basic");
-            base.SetContent(uiTexture);
+            base.SetContent(uiTexture, null);
         }
 
 
