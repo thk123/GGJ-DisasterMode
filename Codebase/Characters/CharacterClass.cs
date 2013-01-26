@@ -10,6 +10,7 @@ namespace GGJ_DisasterMode.Codebase.Characters
     public abstract class Civilian
     {
         const float ambientTemperatureRange = 10.0f;
+        public static Random RANDOM = new Random(1000);
 
         public const int SCALE_FACTOR = 1800;
 
@@ -71,6 +72,39 @@ namespace GGJ_DisasterMode.Codebase.Characters
             this.color = Color.Black;
 
             ResetLevelsToDefaultValues();
+            setGoal();
+        }
+
+        public void setGoal()
+        {
+            const int MIN = 10;
+            const int MAX = 30;
+            
+            float xGoal, yGoal;
+            int direction = RANDOM.Next(3);
+
+            if (direction == 0)
+            {
+                xGoal = currentPosition.X + RANDOM.Next(MIN, MAX);
+                yGoal = currentPosition.Y + RANDOM.Next(MIN, MAX);
+            }
+            else if (direction == 1)
+            {
+                xGoal = currentPosition.X - RANDOM.Next(MIN, MAX);
+                yGoal = currentPosition.Y - RANDOM.Next(MIN, MAX);
+            }
+            else if (direction == 2)
+            {
+                xGoal = currentPosition.X - RANDOM.Next(MIN, MAX);
+                yGoal = currentPosition.Y + RANDOM.Next(MIN, MAX);
+            }
+            else
+            {
+                xGoal = currentPosition.X + RANDOM.Next(MIN, MAX);
+                yGoal = currentPosition.Y - RANDOM.Next(MIN, MAX);
+            }
+            this.goal = new Vector2(xGoal, yGoal); 
+            
         }
 
         public void UpdateTemperature(float temperature)
@@ -117,7 +151,32 @@ namespace GGJ_DisasterMode.Codebase.Characters
 
         public void Update(GameTime gameTime)
         {
+            if (currentPosition.X < 0)
+            {
+                currentPosition.X += SCALE_FACTOR;
+            }
+            else if (currentPosition.X > SCALE_FACTOR)
+            {
+                currentPosition.X -= SCALE_FACTOR;
+            }
+            if (currentPosition.Y < 0)
+            {
+                currentPosition.Y += SCALE_FACTOR;
+            }
+            else if (currentPosition.Y > SCALE_FACTOR)
+            {
+                currentPosition.Y -= SCALE_FACTOR;
+            }
 
+
+            if ((Math.Abs(currentPosition.X - goal.X) < 2) && (Math.Abs(currentPosition.Y - goal.Y) < 2))
+            {
+                setGoal();
+            }
+
+            Vector2 direction = goal - currentPosition;
+            direction.Normalize();
+            currentPosition += direction;
         }
 
         public void Draw(SpriteBatch spriteBatch, Matrix transform)
