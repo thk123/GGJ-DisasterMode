@@ -10,7 +10,7 @@ using GGJ_DisasterMode.Codebase.Dropoffs;
 
 namespace GGJ_DisasterMode.Codebase.Screens
 {
-    enum DropoffsOderingScreenState
+    /*enum DropoffsOderingScreenState
     {
         Idle, 
         Dragging,
@@ -144,5 +144,5 @@ namespace GGJ_DisasterMode.Codebase.Screens
             //TODO: return actual grid
             return new Grid(new Rectangle(0, 0, 500, 500), 10);
         }
-    }
+    }*/
 }

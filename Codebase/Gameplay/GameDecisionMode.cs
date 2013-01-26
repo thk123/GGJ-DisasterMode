@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using GGJ_DisasterMode.Codebase.Screens;
+using GGJ_DisasterMode.Codebase.Dropoffs;
 
 namespace GGJ_DisasterMode.Codebase.Gameplay
 {
@@ -19,11 +20,19 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
     {
         private int decisionVariable;
 
-        private List<Dropoffs.Dropoff> dropoffs;
+        private List<Dropoff> dropoffs;
 
         private void LoadContentDecision(ContentManager content)
         {
+            dropoffs = new List<Dropoff>();
+            dropoffs.Add(new BasicFoodDropoff(GetNextStoreSlot()));
+            dropoffs.Add(new BasicFoodDropoff(GetNextStoreSlot()));
+            dropoffs.Add(new BasicFoodDropoff(GetNextStoreSlot()));
 
+            foreach (Dropoff dropoff in dropoffs)
+            {
+                dropoff.LoadContent(content);
+            }
         }
 
         private void UpdateDecision(GameTime gameTime, out bool missionRunning)
@@ -37,12 +46,10 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
         
         private void DrawDecision(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            spriteBatch.Begin();
             foreach (Dropoffs.Dropoff dropoff in dropoffs)
             {
                 dropoff.Draw(gameTime, spriteBatch);
             }
-            spriteBatch.End();
         }
 
         /// <summary>
@@ -54,9 +61,28 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
 
         }
 
-        private IEnumerable<Draggable> GetDecisionDraggble()
+        private List<Draggable> GetDecisionDraggble()
         {
-            return (IEnumerable<Draggable>)dropoffs;
+            List<Draggable> draggables = new List<Draggable>();
+            foreach (Draggable d in dropoffs)
+            {
+                draggables.Add(d);
+            }
+            return draggables;
+        }
+
+        int i = 0;
+        int j = 0;
+        private Rectangle GetNextStoreSlot()
+        {
+            Rectangle r = new Rectangle(uiOffset + 128 + ((34 + 16) * i), 383 + ((34 + 16)* j), 17, 17);
+            i += 1 % 5;
+            if (i == 0)
+            {
+                ++j;
+            }
+
+            return r;
         }
 
     }

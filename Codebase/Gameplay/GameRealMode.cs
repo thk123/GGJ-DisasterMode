@@ -28,17 +28,17 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
         
 
         private const int actionCount = 2;
-        private Actions.Action[] actions;
+        private List<Actions.Action> actions;
 
         private void ConstructReal()
         {
             int actionCount =Enum.GetNames(typeof(Actions.ActionType)).Length;
-            actions = new Actions.Action[actionCount];
+            actions = new List<Actions.Action>(actionCount);
 
             int i = 0;
             foreach (Actions.ActionType type in Enum.GetValues(typeof(Actions.ActionType)))
             {
-                actions[i] = new Actions.Action(type, new Rectangle(585 + 60 + (215 * i), 155, 150, 150));
+                actions.Add(new Actions.Action(type, new Rectangle(uiOffset + 60 + (215 * i), 155, 150, 150)));
                 ++i;
             }
 
@@ -91,9 +91,7 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
         }
         
         private void DrawReal(GameTime gameTime, SpriteBatch spriteBatch)
-        {
-            spriteBatch.Begin();
-            grid.Draw(spriteBatch);
+        {           
 
             foreach (Civilian civilian in civilians)
             {
@@ -105,13 +103,16 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
                 action.Draw(spriteBatch);
             }
 
-            spriteBatch.End();
-
         }
 
-        private IEnumerable<Draggable> GetRealDraggables()
+        private List<Draggable> GetRealDraggables()
         {
-            return actions;
+            List<Draggable> draggables = new List<Draggable>();
+            foreach (Draggable d in actions)
+            {
+                draggables.Add(d);
+            }
+            return draggables;
         }
 
         private void HandleInputReal(InputState input)

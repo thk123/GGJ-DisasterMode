@@ -10,6 +10,8 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
 {
     public partial class GameplayManager
     {
+        const int uiOffset = 585;
+
         private Vector2 cursorPosition;
         private GameMode gameMode;
 
@@ -25,7 +27,7 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
         private GraphicsDevice graphics;
 
 
-        TimeSpan realTimeMaxDuration = new TimeSpan(0, 2, 0);
+        TimeSpan realTimeMaxDuration = new TimeSpan(0, 1, 10);
         TimeSpan decisionMaxDuration = new TimeSpan(0, 1, 30);
 
         TimeSpan remainingTime;
@@ -44,7 +46,7 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
         {
             this.gameMode = GameMode.REALTIME;
             this.missionRunning = true;
-            remainingTime = decisionMaxDuration;
+            remainingTime = realTimeMaxDuration;
 
             ConstructReal();
         }
@@ -82,6 +84,8 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
 
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
+            spriteBatch.Begin();
+            grid.Draw(spriteBatch);
             if (this.gameMode == GameMode.REALTIME)
             {
                 DrawReal(gameTime, spriteBatch);
@@ -90,6 +94,7 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
             {
                 DrawDecision(gameTime, spriteBatch);
             }
+            spriteBatch.End();
         }
 
         /// <summary>
@@ -105,13 +110,13 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
                 this.missionRunning = false;*/
 
             IEnumerable<Draggable> actions = null;
-            if (this.gameMode == GameMode.DECISION)
+            if (this.gameMode == GameMode.REALTIME)
             {
                 actions = GetRealDraggables();
             }
             else
             {
-                actions = GetRealDraggables();
+                actions = GetDecisionDraggble();
             }
 
             if (currentState == DragState.Idle)

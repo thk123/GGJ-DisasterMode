@@ -39,7 +39,7 @@ namespace GGJ_DisasterMode.Codebase.Dropoffs
         public string gridTextureLoc;
     }
 
-    abstract class Dropoff
+    abstract class Dropoff : Draggable
     {
         public DropoffState CurrentState
         {
@@ -68,20 +68,14 @@ namespace GGJ_DisasterMode.Codebase.Dropoffs
 
         DropoffProperties dropoffProperties;
 
-        Rectangle storeSlot;
-
-        Vector2 currentPosition;
-
         Texture2D shopTexture;
         Texture2D gridTexture;
 
         public Dropoff(DropoffProperties properties, Rectangle storeSlot)
+            :base(storeSlot)
         {
             CurrentState = DropoffState.Unordered;
             dropoffProperties = properties;
-
-            this.storeSlot = storeSlot;
-
             ResetToDefaultProperties();
         }
 
@@ -89,9 +83,11 @@ namespace GGJ_DisasterMode.Codebase.Dropoffs
         {
             shopTexture = content.Load<Texture2D>(dropoffProperties.shopTextureLoc);
             gridTexture = content.Load<Texture2D>(dropoffProperties.gridTextureLoc);
+
+            base.SetContent(shopTexture, null);
         }
 
-        public bool CheckCollisionAgainstShopRectangle(Point p)
+       /* public bool CheckCollisionAgainstShopRectangle(Point p)
         {
             return storeSlot.Contains(p);
         }       
@@ -117,7 +113,7 @@ namespace GGJ_DisasterMode.Codebase.Dropoffs
         public void PutDropoffBackToStore()
         {
             CurrentState = DropoffState.Unordered;
-        }
+        }*/
 
         public virtual void ProcessDay()
         {
@@ -156,6 +152,7 @@ namespace GGJ_DisasterMode.Codebase.Dropoffs
 
         public virtual void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
+            base.Draw(spriteBatch);/*
             switch (CurrentState)
             {
                 case DropoffState.Unordered:
@@ -177,7 +174,7 @@ namespace GGJ_DisasterMode.Codebase.Dropoffs
                     break;
                 default:
                     break;
-            }
+            }*/
         }
 
         public virtual void UseDropoff(Civilian character)
