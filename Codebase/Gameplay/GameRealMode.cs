@@ -31,15 +31,6 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
         private const int actionCount = 2;
         private Actions.Action[] actions;
 
-        Draggable currentlyDragging;
-
-        enum DragState
-        {
-            Idle,
-            Dragging,
-        }
-        DragState currentState;
-
         private void ConstructReal()
         {
             int actionCount =Enum.GetNames(typeof(Actions.ActionType)).Length;
@@ -119,54 +110,14 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
 
         }
 
+        private IEnumerable<Draggable> GetRealDraggables()
+        {
+            return actions;
+        }
+
         private void HandleInputReal(InputState input)
         {
-            if (currentState == DragState.Idle)
-            {
-                if (input.GetMouseDown())
-                {
-                    //Check if mouse is within any of the dropoff boxes
-                    foreach (Draggable draggable in actions)
-                    {
-                        if (draggable.AttemptBeginDrag(input.GetMousePosition()))
-                        {
-                            currentState = DragState.Dragging;
-                            currentlyDragging = draggable;
-                            break;
-                        }
-                    }
-                }
-            }
-            else if (currentState == DragState.Dragging)
-            {
-                if (input.GetMouseDown())
-                {
-                    //Move the one we are dragging
-                    Point? gridPoint = grid.GetGridPointFromMousePosition(input.GetMousePosition());
-                    Rectangle? lockedRectangle = null;
-                    if (gridPoint.HasValue)
-                    {
-                        lockedRectangle = grid.GetGridRectangleFromGridPoint(gridPoint.Value);
-                    }
-                    currentlyDragging.UpdateDrag(input.GetMouseDelta(), lockedRectangle);
-                }
-                else
-                {
-                    Point? gridPoint = grid.GetGridPointFromMousePosition(input.GetMousePosition());
-                    if (gridPoint.HasValue)
-                    {
-                        //Drop the dropoff in this grid
-                        currentlyDragging.EndDrag(grid.GetGridRectangleFromGridPoint(gridPoint.Value), null);
-                        currentState = DragState.Idle;
-                    }
-                    else
-                    {
-                        //Return the object to the shop
-                        currentState = DragState.Idle;
-                        currentlyDragging.EndDrag(null, null);
-                    }
-                }
-            }
+            
         }
 
     }
