@@ -25,11 +25,16 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
 
         private List<Civilian> civilians;
 
+        SpriteFont defaultFont;
+
         
         
 
         private const int actionCount = 2;
         private List<Actions.Action> actions;
+
+        const int totalActionsPerDay = 12;
+        int actionsReaminings;
 
         private void ConstructReal()
         {
@@ -39,12 +44,22 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
             int i = 0;
             foreach (Actions.ActionType type in Enum.GetValues(typeof(Actions.ActionType)))
             {
-                actions.Add(new Actions.Action(type, new Rectangle(uiOffset + 60 + (215 * i), 155, 150, 150)));
+                actions.Add(new Actions.Action(type, new Rectangle(uiOffset + 135 - 75 + (200 * i), 155, 150, 150)));
                 ++i;
             }
 
             currentState = DragState.Idle;
             currentlyDragging = null;
+        }
+
+        public void StartDay()
+        {
+            actionsReaminings = totalActionsPerDay;
+        }
+
+        public void EndDay()
+        {
+
         }
 
         private void LoadContentReal(ContentManager content)
@@ -58,6 +73,8 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
             }
             this.civilians = new List<Civilian>();          
             PopulateCivilians(this.civilians, pixelTexture);
+
+            defaultFont = content.Load<SpriteFont>("Fonts//gamefont");
            
         }
 
@@ -103,6 +120,9 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
             {
                 action.Draw(spriteBatch);
             }
+
+            Vector2 halfTextLength = defaultFont.MeasureString(actionsReaminings.ToString()) * 0.5f;
+            spriteBatch.DrawString(defaultFont, actionsReaminings.ToString(), new Vector2(uiOffset + 230 - halfTextLength.X, 200 - halfTextLength.Y), Color.Red);
 
         }
 
