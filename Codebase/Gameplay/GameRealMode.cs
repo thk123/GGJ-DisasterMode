@@ -18,7 +18,13 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
     public partial class GameplayManager
     {
         private int realVariable;
+        private GameGrid grid;
 
+        private void LoadContentReal(ContentManager content)
+        {
+            Texture2D pixelTexture = content.Load<Texture2D>("graphics//pixel");
+            this.grid = new GameGrid(pixelTexture, 439, 9, 32, 31, 18, 18, 1, Color.Black);
+        }
         
         public void UpdateReal(GameTime gameTime, out bool missionRunning)
         {
@@ -32,7 +38,7 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
         private void DrawReal(GameTime gameTime, SpriteBatch spriteBatch)
         {
             spriteBatch.Begin();
-
+            grid.Draw(spriteBatch);
             spriteBatch.End();
 
         }

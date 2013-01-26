@@ -19,6 +19,11 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
     {
         private int decisionVariable;
 
+        private void LoadContentDecision(ContentManager content)
+        {
+
+        }
+
         private void UpdateDecision(GameTime gameTime, out bool missionRunning)
         {
 

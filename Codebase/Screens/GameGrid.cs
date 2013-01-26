@@ -8,7 +8,7 @@ using Microsoft.Xna.Framework.Content;
 
 namespace GGJ_DisasterMode.Codebase.Screens
 {   
-    class GameGrid : DrawableGameComponent
+    class GameGrid
     {
         private int xPosition;
         private int yPosition;
@@ -21,10 +21,8 @@ namespace GGJ_DisasterMode.Codebase.Screens
         private Texture2D lineTexture;
         private Color lineColor;
 
-        private SpriteBatch spriteBatch;
+        public GameGrid(Texture2D lineTexture, int xPosition, int yPosition, int cellWidth, int cellHeight, int xCellCount, int yCellCount, float lineWidth, Color lineColor)
 
-        public GameGrid(Game game, int xPosition, int yPosition, int cellWidth, int cellHeight, int xCellCount, int yCellCount, float lineWidth, Color lineColor)
-            : base(game)
         {
             this.xPosition = xPosition;
             this.yPosition = yPosition;
@@ -34,39 +32,28 @@ namespace GGJ_DisasterMode.Codebase.Screens
             this.cellCountY = yCellCount;
             this.lineWidth = lineWidth;
             this.lineColor = lineColor;
+            this.lineTexture = lineTexture;
         }
 
-        protected override void  LoadContent()
-        {
-            this.lineTexture = new Texture2D(GraphicsDevice, 1, 1);
-            lineTexture.SetData(new[] { Color.White });
-
-            this.spriteBatch = new SpriteBatch(GraphicsDevice);
-        }
-
-        public override void Update(GameTime gameTime)
+        public void Update(GameTime gameTime)
         {
             /* Do Nothing */
         }
 
-        public override void Draw(GameTime gameTime)
+        public void Draw(SpriteBatch spriteBatch)
         {
-            this.spriteBatch.Begin();
-
             for (int i = 0; i < this.cellCountX + 1; i++)
             {
-                DrawLine(this.spriteBatch, this.lineTexture, this.lineWidth, this.lineColor,
+                DrawLine(spriteBatch, this.lineTexture, this.lineWidth, this.lineColor,
                     new Vector2(this.xPosition + (i * cellWidth), this.yPosition),
                     new Vector2(this.xPosition + (i * cellWidth), this.yPosition + (cellCountY * cellHeight)));
             }
             for (int i = 0; i < this.cellCountY + 1; i++)
             {
-                DrawLine(this.spriteBatch, this.lineTexture, this.lineWidth, this.lineColor,
+                DrawLine(spriteBatch, this.lineTexture, this.lineWidth, this.lineColor,
                     new Vector2(this.xPosition, this.yPosition + (i * cellHeight)),
                     new Vector2(this.xPosition + (cellCountY * cellWidth), this.yPosition + (i * cellHeight)) );
             }
-
-            this.spriteBatch.End();
         }
 
         private void DrawLine(SpriteBatch batch, Texture2D lineTexture,

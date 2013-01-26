@@ -22,10 +22,20 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
 
         private bool missionRunning;
 
+        private GraphicsDevice graphics;
+
         public GameplayManager(ContentManager content)
         {
             this.gameMode = GameMode.REALTIME;
             this.missionRunning = true;
+        }
+
+        public void LoadContent(ContentManager content)
+        {
+            
+
+            LoadContentReal(content);
+            LoadContentDecision(content);
         }
 
         private enum GameMode

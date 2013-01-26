@@ -67,6 +67,7 @@ namespace GGJ_DisasterMode.Codebase.Screens
                 content = new ContentManager(ScreenManager.Game.Services, "Content");
 
             this.gameController = new GameplayManager(content);
+            this.gameController.LoadContent(content);
 
 
 
