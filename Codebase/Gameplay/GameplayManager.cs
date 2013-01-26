@@ -177,9 +177,7 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
                     }
                     else
                     {
-                        //Return the object to the shop
-                        currentState = DragState.Idle;
-                        currentlyDragging.EndDrag(null, null);
+                        EndDrag();
                     }
                 }
             }
@@ -229,7 +227,9 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
         private void EndDay()
         {
             // go from day (real time instruction placing) -> night, placing pick ups
-            
+            EndDrag();
+           
+
             RealTimeProcessEndDay();
             DecisionProcessEndDay();
 
@@ -247,6 +247,8 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
 
         private void EndNight()
         {
+            EndDrag();
+
             DecisionProcessEndNight();
             RealTimeProcessEndNight();
 
@@ -260,6 +262,15 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
 
         }
 
+        private void EndDrag()
+        {
+            if (currentState == DragState.Dragging)
+            {
+                //Return the object to the shop
+                currentState = DragState.Idle;
+                currentlyDragging.EndDrag();
+            }
+        }
 
         private void DisplayClock(SpriteBatch spriteBatch)
         {
