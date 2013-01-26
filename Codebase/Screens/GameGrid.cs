@@ -111,8 +111,8 @@ namespace GGJ_DisasterMode.Codebase.Screens
                 gridPoint.Y = (int)yPos;
 
                 
-                if (gridPoint.X >= CellCountX || gridPoint.X < 0
-                    || gridPoint.Y >= CellCountY || gridPoint.Y < 0)
+                if (gridPoint.X >= CellCountX - 1 || gridPoint.X < 1
+                    || gridPoint.Y >= CellCountY - 1|| gridPoint.Y < 1)
                 {
                     return null;
                 }
