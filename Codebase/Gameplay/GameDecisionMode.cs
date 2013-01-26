@@ -46,9 +46,6 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
         private void UpdateDecision(GameTime gameTime, out bool missionRunning)
         {
 
-
-
-
             missionRunning = this.missionRunning;
         }
         
@@ -58,6 +55,24 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
             {
                 dropoff.Draw(gameTime, spriteBatch);
             }
+        }
+
+        private void DecisionProcessStartDay()
+        {
+
+        }
+
+        private void DecisionProcessEndDay()
+        {
+        }
+
+        private void DecisionProcessStartNight()
+        {
+
+        }
+
+        private void DecisionProcessEndNight()
+        {
         }
 
         /// <summary>

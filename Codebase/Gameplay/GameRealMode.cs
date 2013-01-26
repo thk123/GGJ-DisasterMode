@@ -69,6 +69,15 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
             }
         }
 
+        public void RealTimeProcessStartNight()
+        {
+
+        }
+
+        public void RealTimeProcessEndNight()
+        {
+        }
+
         
 
         private void LoadContentReal(ContentManager content)
