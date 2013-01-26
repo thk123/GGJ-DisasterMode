@@ -7,29 +7,24 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace GGJ_DisasterMode.Codebase.Characters
 {
-    struct CharacterClassProperties
-    {
-        public float thirstDecay;
-        public float hungerDecay;
-        public float hotTempMultiplier;
-        public float coldTempMultiplier;
-        public float healthDecay;
-
-        public float thirstLevel;
-        public float hungerLevel;
-        public float hotTempLevel;
-        public float coldTempLevel;
-        public float healthLevel;
-
-        public float trustLevel;
-        public float trustMultiplier;
-    }
-
-    abstract class CharacterClass
+    public abstract class Civilian
     {
         const float ambientTemperatureRange = 10.0f;
 
-        CharacterClassProperties characterProperties;
+        public const int SCALE_FACTOR = 1800;
+
+        private Vector2 origin;
+        private Vector2 goal;
+        private Vector2 currentPosition;
+
+        private int currentTimeStep;
+        private int maxTimeStep;
+
+
+        private Texture2D civilianTexture;
+        private Color color;
+
+        CivilianClassProperties characterProperties;
         public float CurrentThirst
         {
             get;
@@ -66,9 +61,14 @@ namespace GGJ_DisasterMode.Codebase.Characters
             private set;
         }
 
-        public CharacterClass(CharacterClassProperties characterProperties)
+        public Civilian(CivilianClassProperties characterProperties, int startX, int startY, Texture2D texture)
         {
             this.characterProperties = characterProperties;
+
+            this.currentPosition = new Vector2(startX, startY);
+            this.civilianTexture = texture;
+
+            this.color = Color.Black;
 
             ResetLevelsToDefaultValues();
         }
@@ -120,8 +120,11 @@ namespace GGJ_DisasterMode.Codebase.Characters
 
         }
 
-        public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        public void Draw(SpriteBatch spriteBatch, Matrix transform)
         {
+            spriteBatch.Draw(this.civilianTexture, new Vector2(14.0f + (this.currentPosition.X * 0.31166f),
+                    14.0f + (this.currentPosition.Y * 0.30166f)), 
+                    null, this.color, 0.0f, new Vector2(), 5.0f, SpriteEffects.None, 1.0f);
         }
 
         private void ResetLevelsToDefaultValues()
@@ -134,5 +137,23 @@ namespace GGJ_DisasterMode.Codebase.Characters
 
             CurrentTrust = characterProperties.trustLevel;
         }
+    }
+
+    public struct CivilianClassProperties
+    {
+        public float thirstDecay;
+        public float hungerDecay;
+        public float hotTempMultiplier;
+        public float coldTempMultiplier;
+        public float healthDecay;
+
+        public float thirstLevel;
+        public float hungerLevel;
+        public float hotTempLevel;
+        public float coldTempLevel;
+        public float healthLevel;
+
+        public float trustLevel;
+        public float trustMultiplier;
     }
 }
