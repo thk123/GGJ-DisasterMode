@@ -56,8 +56,18 @@ namespace GGJ_DisasterMode.Codebase.Dropoffs
         public static Dictionary<DropoffType, DropoffProperties> dropoffTypes = new Dictionary<DropoffType, DropoffProperties>();
         public static void InitTypes(ContentManager content)
         {
-            dropoffTypes.Add(DropoffType.Dropoff_Food_Low, DropoffPropertiesFile.GetPropertiesHealthLow(content));
-            dropoffTypes.Add(DropoffType.Dropoff_Food_Medium, DropoffPropertiesFile.GetPropertiesHealthMedium(content));
+            dropoffTypes.Add(DropoffType.Dropoff_Food_Low, DropoffPropertiesFile.GetPropertiesFoodLow(content));
+            dropoffTypes.Add(DropoffType.Dropoff_Food_Medium, DropoffPropertiesFile.GetPropertiesFoodMedium(content));
+            dropoffTypes.Add(DropoffType.Dropoff_Food_High, DropoffPropertiesFile.GetPropertiesFoodHigh(content));
+            dropoffTypes.Add(DropoffType.Dropoff_Health_Low, DropoffPropertiesFile.GetPropertiesHealthLow(content));
+            dropoffTypes.Add(DropoffType.Dropoff_Health_Medium, DropoffPropertiesFile.GetPropertiesHealthMedium(content));
+            dropoffTypes.Add(DropoffType.Dropoff_Health_High, DropoffPropertiesFile.GetPropertiesHealthHigh(content));
+            dropoffTypes.Add(DropoffType.Dropoff_Water_Low, DropoffPropertiesFile.GetPropertiesWaterLow(content));
+            dropoffTypes.Add(DropoffType.Dropoff_Water_Medium, DropoffPropertiesFile.GetPropertiesWaterMedium(content));
+            dropoffTypes.Add(DropoffType.Dropoff_Water_High, DropoffPropertiesFile.GetPropertiesWaterHigh(content));
+            dropoffTypes.Add(DropoffType.Dropoff_Temperature_Low, DropoffPropertiesFile.GetPropertiesTempLow(content));
+            dropoffTypes.Add(DropoffType.Dropoff_Temperature_Medium, DropoffPropertiesFile.GetPropertiesTempMedium(content));
+            dropoffTypes.Add(DropoffType.Dropoff_Temperature_High, DropoffPropertiesFile.GetPropertiesTempHigh(content));
         }
 
 
