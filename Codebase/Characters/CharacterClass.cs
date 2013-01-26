@@ -72,13 +72,13 @@ namespace GGJ_DisasterMode.Codebase.Characters
             this.color = Color.Black;
 
             ResetLevelsToDefaultValues();
-            setGoal();
+            setRandomGoal();
         }
 
-        public void setGoal()
+        public void setRandomGoal()
         {
             const int MIN = 10;
-            const int MAX = 30;
+            const int MAX = 25;
             
             float xGoal, yGoal;
             int direction = RANDOM.Next(3);
@@ -169,9 +169,14 @@ namespace GGJ_DisasterMode.Codebase.Characters
             }
 
 
-            if ((Math.Abs(currentPosition.X - goal.X) < 2) && (Math.Abs(currentPosition.Y - goal.Y) < 2))
+            if (Vector2.DistanceSquared(currentPosition, goal) > 400)
             {
-                setGoal();
+                setRandomGoal();
+            }
+
+            if ( (RANDOM.Next(100) < 5) && (Math.Abs(currentPosition.X - goal.X) < 2) && (Math.Abs(currentPosition.Y - goal.Y) < 2))
+            {
+                setRandomGoal();
             }
 
             Vector2 direction = goal - currentPosition;

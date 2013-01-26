@@ -20,7 +20,7 @@ namespace GGJ_DisasterMode.Codebase.Actions
         DirectAction,
     }
 
-    class Action : Draggable
+    class GameAction : Draggable
     {
         public Point? ActionPosition
         {
@@ -48,7 +48,7 @@ namespace GGJ_DisasterMode.Codebase.Actions
 
         Rectangle uiLocation;
 
-        public Action(ActionType actionType, Rectangle uiLocation)
+        public GameAction(ActionType actionType, Rectangle uiLocation)
             :base(uiLocation)
         {
             ActionType = actionType;
@@ -105,9 +105,9 @@ namespace GGJ_DisasterMode.Codebase.Actions
         {
         }
 
-        public static Action CreateNewActionFromAction(Action oldAction, Rectangle uiLocation)
+        public static GameAction CreateNewActionFromAction(GameAction oldAction, Rectangle uiLocation)
         {
-            Action newAction = new Action(oldAction.ActionType, uiLocation);
+            GameAction newAction = new GameAction(oldAction.ActionType, uiLocation);
             newAction.SetContent(oldAction.staticTexture, oldAction.draggingTexture);
 
             return newAction;
