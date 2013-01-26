@@ -18,6 +18,57 @@ namespace GGJ_DisasterMode.Codebase.Characters
         private Vector2 goal;
         private Vector2 currentPosition;
 
+        public Vector2? NearestKnownWaterSource
+        {
+            get;
+            private set;
+        }
+
+        public void SetNearestKnownWaterSource(Vector2 waterScreenLocation)
+        {
+            this.NearestKnownWaterSource = 
+                new Vector2( ((waterScreenLocation.X - 14) / 0.31166f),
+                ((waterScreenLocation.Y - 14) / 0.30166f) );
+            this.color = Color.Red;
+        }
+
+
+        public int X
+        {
+            get
+            {
+                return (int) currentPosition.X;
+            }
+        }
+
+        public int Y
+        {
+            get
+            {
+                return (int) currentPosition.Y;
+            }
+        }
+
+        public int DrawableX
+        {
+            get
+            {
+                double floorVal = 14.0 + Math.Floor(currentPosition.X * 0.31166);
+
+                
+                return (int) floorVal;
+            }
+        }
+
+        public int DrawableY
+        {
+            get
+            {
+                double floorVal = 14.0 + Math.Floor(currentPosition.Y * 0.30166);
+                return (int) floorVal;
+            }
+        }
+
         private int currentTimeStep;
         private int maxTimeStep;
 
@@ -71,6 +122,8 @@ namespace GGJ_DisasterMode.Codebase.Characters
 
             this.color = Color.Black;
 
+            this.NearestKnownWaterSource = null;
+
             ResetLevelsToDefaultValues();
             setRandomGoal();
         }
@@ -78,7 +131,7 @@ namespace GGJ_DisasterMode.Codebase.Characters
         public void setRandomGoal()
         {
             const int MIN = 10;
-            const int MAX = 25;
+            const int MAX = 250;
             
             float xGoal, yGoal;
             int direction = RANDOM.Next(3);
@@ -169,19 +222,28 @@ namespace GGJ_DisasterMode.Codebase.Characters
             }
 
 
-            if (Vector2.DistanceSquared(currentPosition, goal) > 400)
+            if (Vector2.DistanceSquared(currentPosition, goal) > 600)
             {
                 setRandomGoal();
             }
 
-            if ( (RANDOM.Next(100) < 5) && (Math.Abs(currentPosition.X - goal.X) < 2) && (Math.Abs(currentPosition.Y - goal.Y) < 2))
+            if (NearestKnownWaterSource.HasValue && 
+                (Vector2.DistanceSquared(currentPosition, NearestKnownWaterSource.Value) > 24000) )
+            {
+                goal = NearestKnownWaterSource.Value;
+            }
+            else if ( (RANDOM.Next(100) < 5) && (Math.Abs(currentPosition.X - goal.X) < 2) && (Math.Abs(currentPosition.Y - goal.Y) < 2))
             {
                 setRandomGoal();
             }
 
             Vector2 direction = goal - currentPosition;
-            direction.Normalize();
-            currentPosition += direction;
+
+            if ( (Vector2.DistanceSquared(goal, currentPosition) > 2.5) )
+            {
+                direction.Normalize();
+                currentPosition += direction;
+            }
         }
 
         public void Draw(SpriteBatch spriteBatch, Matrix transform)

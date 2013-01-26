@@ -9,9 +9,6 @@ using Microsoft.Xna.Framework.Input;
 using GGJ_DisasterMode.Codebase.Screens;
 using GGJ_DisasterMode.Codebase.Characters;
 using GGJ_DisasterMode.Codebase.Actions;
-using GGJ_DisasterMode.Codebase.Dropoffs;
-using GGJ_DisasterMode.Codebase.Gameplay.Grid;
-using GGJ_DisasterMode.Codebase.Gameplay.Grid.Resources;
 
 namespace GGJ_DisasterMode.Codebase.Gameplay
 {
@@ -28,26 +25,21 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
 
         private List<Civilian> civilians;
 
-        SpriteFont defaultFont;
-
-        Buckets buckets;        
+        
         
 
         private const int actionCount = 2;
-        private List<Actions.GameAction> actions;
-
-        const int totalActionsPerDay = 12;
-        int actionsReaminings;
+        private Actions.Action[] actions;
 
         private void ConstructReal()
-        {            
+        {
             int actionCount =Enum.GetNames(typeof(Actions.ActionType)).Length;
-            actions = new List<Actions.GameAction>(actionCount);
+            actions = new Actions.Action[actionCount];
 
             int i = 0;
             foreach (Actions.ActionType type in Enum.GetValues(typeof(Actions.ActionType)))
             {
-                actions.Add(new Actions.GameAction(type, new Rectangle(uiOffset + 135 - 75 + (200 * i), 155, 150, 150)));
+                actions[i] = new Actions.Action(type, new Rectangle(585 + 60 + (215 * i), 155, 150, 150));
                 ++i;
             }
 
@@ -55,33 +47,16 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
             currentlyDragging = null;
         }
 
-        public void StartDay()
-        {
-            actionsReaminings = totalActionsPerDay;
-        }
-
-        public void EndDay()
-        {
-
-        }
-
         private void LoadContentReal(ContentManager content)
         {
             Texture2D pixelTexture = content.Load<Texture2D>("graphics//pixel");
             this.grid = new GameGrid(pixelTexture, 9, 9, 32, 31, 18, 18, 1, Color.Black);
             
-            foreach (Actions.GameAction action in actions)
+            foreach (Actions.Action action in actions)
             {
                 action.LoadContent(content);
             }
             this.civilians = new List<Civilian>();          
-            
-
-            defaultFont = content.Load<SpriteFont>("Fonts//gamefont");
-
-            this.buckets = new Buckets(this.grid, new List<GameAction>(), new List<Civilian>(), 
-                new List<Dropoff>(), new List<Water>());
-
             PopulateCivilians(this.civilians, pixelTexture);
            
         }
@@ -101,62 +76,97 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
             civilians.Add(new ChildCharacter(0, 1800, texture));
             civilians.Add(new ChildCharacter(1800, 1800, texture));
 
-            foreach (Civilian civilian in civilians)
-            {
-                buckets.addNewCivilian(civilian);
-            }
+            
         }
 
         public void UpdateReal(GameTime gameTime, out bool missionRunning)
         {
-            
-            foreach (Actions.GameAction action in actions)
+            foreach (Actions.Action action in actions)
             {
                 action.Update(gameTime);
             }
 
-            buckets.PopulateBuckets();
-
-            foreach (Civilian civilian in civilians)
-            {
-                civilian.Update(gameTime);
-            }
 
 
             missionRunning = this.missionRunning;
         }
         
         private void DrawReal(GameTime gameTime, SpriteBatch spriteBatch)
-        {           
+        {
+            spriteBatch.Begin();
+            grid.Draw(spriteBatch);
 
             foreach (Civilian civilian in civilians)
             {
                 civilian.Draw(spriteBatch, this.gridTransformMatrix);
             }
             
-            foreach (Actions.GameAction action in actions)
+            foreach (Actions.Action action in actions)
             {
                 action.Draw(spriteBatch);
             }
 
-            Vector2 halfTextLength = defaultFont.MeasureString(actionsReaminings.ToString()) * 0.5f;
-            spriteBatch.DrawString(defaultFont, actionsReaminings.ToString(), new Vector2(uiOffset + 230 - halfTextLength.X, 200 - halfTextLength.Y), Color.Red);
+            spriteBatch.End();
 
         }
 
-        private List<Draggable> GetRealDraggables()
+        private IEnumerable<Draggable> GetRealDraggables()
         {
-            List<Draggable> draggables = new List<Draggable>();
-            foreach (Draggable d in actions)
-            {
-                draggables.Add(d);
-            }
-            return draggables;
+            return actions;
         }
 
         private void HandleInputReal(InputState input)
         {
+<<<<<<< HEAD
+            if (currentState == DragState.Idle)
+            {
+                if (input.GetMouseDown())
+                {
+                    //Check if mouse is within any of the dropoff boxes
+                    foreach (Draggable draggable in actions)
+                    {
+                        if (draggable.AttemptBeginDrag(input.GetMousePosition()))
+                        {
+                            currentState = DragState.Dragging;
+                            currentlyDragging = draggable;
+                            break;
+                        }
+                    }
+                }
+            }
+            else if (currentState == DragState.Dragging)
+            {
+                if (input.GetMouseDown())
+                {
+                    //Move the one we are dragging
+                    Point? gridPoint = grid.GetGridPointFromMousePosition(input.GetMousePosition());
+                    Rectangle? lockedRectangle = null;
+                    if (gridPoint.HasValue)
+                    {
+                        lockedRectangle = grid.GetGridRectangleFromGridPoint(gridPoint.Value);
+                    }
+                    currentlyDragging.UpdateDrag(input.GetMouseDelta(), lockedRectangle);
+                }
+                else
+                {
+                    Point? gridPoint = grid.GetGridPointFromMousePosition(input.GetMousePosition());
+                    if (gridPoint.HasValue)
+                    {
+                        //Drop the dropoff in this grid
+                        currentlyDragging.EndDrag(grid.GetGridRectangleFromGridPoint(gridPoint.Value), null);
+                        currentState = DragState.Idle;
+                    }
+                    else
+                    {
+                        //Return the object to the shop
+                        currentState = DragState.Idle;
+                        currentlyDragging.EndDrag(null, null);
+                    }
+                }
+            }
+=======
             
+>>>>>>> 1d232517e82613c590cc417b8ef88be1c6a1bdb3
         }
 
     }

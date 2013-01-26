@@ -93,6 +93,11 @@ namespace GGJ_DisasterMode.Codebase.Screens
 
         public Point? GetGridPointFromMousePosition(Point mousePosition)
         {
+            return GetGridPointFromMousePosition(mousePosition, false);
+        }
+
+        public Point? GetGridPointFromMousePosition(Point mousePosition, bool allowedInEdge)
+        {
             Rectangle gridRectangle = new Rectangle(X, Y, CellWidth * CellCountX, CellHeight * CellCountY);
             if (gridRectangle.Contains(mousePosition))
             {
@@ -104,18 +109,29 @@ namespace GGJ_DisasterMode.Codebase.Screens
                 double yPos = gridPoint.Y / (float)CellHeight;
 
                 //Round the floating values
-                xPos = Math.Floor(xPos + 0.5f);
-                yPos = Math.Floor(yPos + 0.5f);
+                xPos = Math.Floor(xPos);
+                yPos = Math.Floor(yPos);
 
                 gridPoint.X = (int)xPos;
                 gridPoint.Y = (int)yPos;
 
-                
-                if (gridPoint.X >= CellCountX - 1 || gridPoint.X < 1
-                    || gridPoint.Y >= CellCountY - 1|| gridPoint.Y < 1)
+                if (allowedInEdge)
                 {
-                    return null;
+                    if (gridPoint.X >= CellCountX || gridPoint.X < 0
+                        || gridPoint.Y >= CellCountY || gridPoint.Y < 0)
+                    {
+                        return null;
+                    }
                 }
+                else
+                {
+                    if (gridPoint.X >= CellCountX - 1 || gridPoint.X < 1
+                        || gridPoint.Y >= CellCountY - 1 || gridPoint.Y < 1)
+                    {
+                        return null;
+                    }
+                }               
+
 
                 return gridPoint;
             }
