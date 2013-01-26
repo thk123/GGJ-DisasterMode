@@ -31,7 +31,7 @@ namespace GGJ_DisasterMode.Codebase
             dragState = DragState.Idle;
         }
 
-        public void SetContent(Texture2D staticTexture, Texture2D draggingTexture = null)
+        public void SetContent(Texture2D staticTexture, Texture2D draggingTexture)
         {
             this.staticTexture = staticTexture;
             if (draggingTexture == null)
@@ -61,14 +61,14 @@ namespace GGJ_DisasterMode.Codebase
             }
         }
 
-        public void UpdateDrag(Point deltaMouse, Rectangle? fixedLocation = null)
+        public void UpdateDrag(Point deltaMouse, Rectangle? fixedLocation)
         {
             forcedLocation = fixedLocation;
             currentPosition.X += deltaMouse.X;
             currentPosition.Y += deltaMouse.Y;
         }
 
-        public void EndDrag(Rectangle? newStaticLocation = null, Texture2D newStaticTexture = null)
+        public void EndDrag(Rectangle? newStaticLocation, Texture2D newStaticTexture)
         {
             if (newStaticLocation.HasValue)
             {
