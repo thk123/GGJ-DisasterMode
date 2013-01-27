@@ -191,6 +191,21 @@ namespace GGJ_DisasterMode.Codebase.Characters
             }
         }
 
+        Behaviour CurrentBehaviour
+        {
+            get
+            {
+                if (CurrentTrust <= 55.0f)
+                {
+                    return Behaviour.Rebellious;
+                }
+                else
+                {
+                    return Behaviour.Conforming;
+                }
+            }
+        }
+
         public Civilian(CivilianClassProperties characterProperties, int startX, int startY)
         {
             this.characterProperties = characterProperties;
@@ -344,11 +359,6 @@ NearestKnownWaterSource.Value) < 30000)
             }
             else
             {
-                Behaviour CurrentBehaviour = Behaviour.Conforming;
-                if (CurrentTrust <= 33.0f)
-                {
-                    CurrentBehaviour = Behaviour.Rebellious;
-                }
 
                 KnowledgeModel Knowledge = new KnowledgeModel();
                 Knowledge.ClosestWater =
@@ -380,9 +390,9 @@ NearestKnownWaterSource.Value) < 30000)
             if (!IsDead)
             {
                 Rectangle sourceRectangle;
-                if (CurrentTrust < 33.0f)
+                if (CurrentBehaviour == Behaviour.Rebellious)
                 {
-                    sourceRectangle = new Rectangle(45, 0, 15, 15);
+                    sourceRectangle = new Rectangle(30, 0, 15, 15);
                 }
                 else
                 {
@@ -401,6 +411,8 @@ NearestKnownWaterSource.Value) < 30000)
             }
         }
 
+        static Random random = new Random();
+
         private void ResetLevelsToDefaultValues()
         {
             CurrentThirst = characterProperties.thirstLevel;
@@ -409,7 +421,8 @@ NearestKnownWaterSource.Value) < 30000)
             CurrentColdTemp = characterProperties.coldTempLevel;
             CurrentHealth = characterProperties.healthLevel;
 
-            CurrentTrust = characterProperties.trustLevel;
+            CurrentTrust = characterProperties.trustLevel - random.Next(50);
+            Console.WriteLine(CurrentTrust);
         }
     }
 

@@ -127,7 +127,7 @@ namespace GGJ_DisasterMode.Codebase.Screens
 
                 if (!loadThread.IsAlive && finished == false)
                 {
-                    MediaPlayer.Play(base.ScreenManager.LoadingSong);
+                    //MediaPlayer.Play(base.ScreenManager.LoadingSong);
                     loadThread.Start();
                 }
 

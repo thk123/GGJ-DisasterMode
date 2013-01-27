@@ -4,6 +4,8 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Media;
 using GGJ_DisasterMode.Codebase.Screens;
 
 namespace GGJ_DisasterMode.Codebase.Gameplay
@@ -26,6 +28,11 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
 
         private GraphicsDevice graphics;
 
+        SoundEffectInstance mainBackground;
+        SoundEffectInstance background1;
+        SoundEffectInstance background2;
+        SoundEffectInstance background3;
+        SoundEffectInstance background4;
 
         TimeSpan realTimeMaxDuration = new TimeSpan(0, 0, 10);
         TimeSpan decisionMaxDuration = new TimeSpan(0, 0, 10);
@@ -35,6 +42,8 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
         Draggable currentlyDragging;
         
         int dayCount;
+
+        
 
 
         enum DragState
@@ -68,6 +77,38 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
             TemperatureManager.LoadTempManager(content);
             LoadContentReal(content);
             LoadContentDecision(content);
+
+            mainBackground = content.Load<SoundEffect>("Audio//loops//loop0_drone_16bit").CreateInstance();
+            background1 = content.Load<SoundEffect>("Audio//loops//loop1_drums_16bit").CreateInstance();
+            background2 = content.Load<SoundEffect>("Audio//loops//loop2_bass_16bit").CreateInstance();
+            background3 = content.Load<SoundEffect>("Audio//loops//loop3_vox_16bit").CreateInstance();
+            background4 = content.Load<SoundEffect>("Audio//loops//loop4_strings_16bit").CreateInstance();
+
+            mainBackground.IsLooped = true;
+            background1.IsLooped = true;
+            background2.IsLooped = true;
+            background3.IsLooped = true;
+            background4.IsLooped = true;
+
+            mainBackground.Volume = 1.0f;
+            background1.Volume = 0.0f;
+            background2.Volume = 0.0f;
+            background3.Volume = 0.0f;
+            background4.Volume = 0.0f;
+
+            mainBackground.Play();
+            background1.Play();
+            background2.Play();
+            background3.Play();
+            background4.Play();
+
+            /*mainBackground.Play(1.0f, 0.0f, 0.0f);
+            background1.Play(0.0f, 0.0f, 0.0f);
+            background2.Play(0.0f, 0.0f, 0.0f);
+            background3.Play(0.0f, 0.0f, 0.0f);
+            background4.Play(0.0f, 0.0f, 0.0f);*/
+
+
         }
 
         private enum GameMode
@@ -242,6 +283,23 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
 
             RealTimeProcessEndDay();
             DecisionProcessEndDay();
+
+            if (dayCount == 2)
+            {
+                background1.Volume = 1.0f;
+            }
+            else if (dayCount == 3)
+            {
+                background2.Volume = 1.0f;
+            }
+            else if (dayCount == 4)
+            {
+                background3.Volume = 1.0f;
+            }
+            else if (dayCount == 5)
+            {
+                background4.Volume = 1.0f;
+            }
 
             gameMode = GameMode.DECISION;
             remainingTime = decisionMaxDuration;
