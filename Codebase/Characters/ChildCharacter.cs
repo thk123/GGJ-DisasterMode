@@ -26,7 +26,7 @@ namespace GGJ_DisasterMode.Codebase.Characters
             properties.hotTempLevel = 100.0f;
             properties.hotTempMultiplier = 1.0f;
 
-            properties.healthDecay = 10.0f;
+            properties.healthVulnerability = 10.0f;
             properties.healthLevel = 100.0f;
 
             properties.hungerDecay = 15.0f;
@@ -61,7 +61,7 @@ namespace GGJ_DisasterMode.Codebase.Characters
             properties.hotTempLevel = 100.0f;
             properties.hotTempMultiplier = 1.0f;
 
-            properties.healthDecay = 10.0f;
+            properties.healthVulnerability = 10.0f;
             properties.healthLevel = 100.0f;
 
             properties.hungerDecay = 15.0f;
@@ -97,7 +97,7 @@ namespace GGJ_DisasterMode.Codebase.Characters
             properties.hotTempLevel = 100.0f;
             properties.hotTempMultiplier = 1.0f;
 
-            properties.healthDecay = 10.0f;
+            properties.healthVulnerability = 10.0f;
             properties.healthLevel = 100.0f;
 
             properties.hungerDecay = 15.0f;
@@ -132,7 +132,7 @@ namespace GGJ_DisasterMode.Codebase.Characters
             properties.hotTempLevel = 100.0f;
             properties.hotTempMultiplier = 1.0f;
 
-            properties.healthDecay = 10.0f;
+            properties.healthVulnerability = 10.0f;
             properties.healthLevel = 100.0f;
 
             properties.hungerDecay = 15.0f;
@@ -168,7 +168,7 @@ namespace GGJ_DisasterMode.Codebase.Characters
             properties.hotTempLevel = 100.0f;
             properties.hotTempMultiplier = 1.0f;
 
-            properties.healthDecay = 10.0f;
+            properties.healthVulnerability = 10.0f;
             properties.healthLevel = 100.0f;
 
             properties.hungerDecay = 15.0f;
@@ -203,7 +203,7 @@ namespace GGJ_DisasterMode.Codebase.Characters
             properties.hotTempLevel = 100.0f;
             properties.hotTempMultiplier = 1.0f;
 
-            properties.healthDecay = 10.0f;
+            properties.healthVulnerability = 10.0f;
             properties.healthLevel = 100.0f;
 
             properties.hungerDecay = 15.0f;

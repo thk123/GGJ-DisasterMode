@@ -76,10 +76,13 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
         public void RealTimeProcessEndDay()
         {
             TemperatureManager.ProcessDay();
+
+            buckets.ApplyDensityIllnessPenalty();
+
             foreach (Civilian civ in civilians)
             {
-                civ.ProcessDay();
                 civ.UpdateTemperature(TemperatureManager.Temperature);
+                civ.ProcessDay();
             }
 
             if (realTimeState == RealTimeState.SelectingDestionation)

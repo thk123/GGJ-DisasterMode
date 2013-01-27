@@ -201,7 +201,6 @@ namespace GGJ_DisasterMode.Codebase.Characters
         {
             CurrentHunger -= characterProperties.hungerDecay;
             CurrentThirst -= characterProperties.thirstDecay;
-            CurrentHealth -= characterProperties.healthDecay;
 
             if (CurrentHunger <= 0 ||
                 CurrentThirst <= 0 ||
@@ -252,6 +251,11 @@ namespace GGJ_DisasterMode.Codebase.Characters
             {
                 CurrentTrust += trustDelta * Math.Abs(1 / characterProperties.trustMultiplier);
             }            
+        }
+
+        public void ApplyHealthPenalty(float penalty)
+        {
+            CurrentHealth -= penalty * characterProperties.healthVulnerability;
         }
 
 
@@ -360,7 +364,7 @@ namespace GGJ_DisasterMode.Codebase.Characters
         public float hungerDecay;
         public float hotTempMultiplier;
         public float coldTempMultiplier;
-        public float healthDecay;
+        public float healthVulnerability;
 
         public float thirstLevel;
         public float hungerLevel;

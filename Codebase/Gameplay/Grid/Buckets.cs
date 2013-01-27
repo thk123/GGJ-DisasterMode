@@ -327,6 +327,17 @@ namespace GGJ_DisasterMode.Codebase.Gameplay.Grid
             }
         }
 
+        public void ApplyDensityIllnessPenalty()
+        {
+            for (int i = 0; i < buckets.GetLength(0); i++)
+            {
+                for (int j = 0; j < buckets.GetLength(1); j++)
+                {
+                    buckets[i, j].InflictCiviliansHealthPenalty();
+                }
+            }
+        }
+
         public void ClearBuckets()
         {
             foreach (ProcessingBucket bucket in buckets)

@@ -102,6 +102,14 @@ namespace GGJ_DisasterMode.Codebase.Gameplay.Grid
             }
         }
 
+        public void InflictCiviliansHealthPenalty()
+        {
+            foreach (Civilian civilian in civilians)
+            {
+                civilian.ApplyHealthPenalty(civilians.Count);
+            }
+        }
+
         public List<Civilian> GetCivilians()
         {
             return civilians;
