@@ -65,6 +65,7 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
             uiTexture = content.Load<Texture2D>("Graphics//UI//GUI_temp");
             backgroundTexture = content.Load<Texture2D>("Graphics//Backgrounds//background");
             Dropoffs.ClockDrawer.LoadContent(content);
+            TemperatureManager.LoadTempManager(content);
             LoadContentReal(content);
             LoadContentDecision(content);
         }
@@ -97,6 +98,7 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
             spriteBatch.Draw(backgroundTexture, new Rectangle(9, 9, backgroundTexture.Width, backgroundTexture.Height), Color.White);
             grid.Draw(spriteBatch);
             spriteBatch.Draw(uiTexture, new Vector2(uiOffset, 9), Color.White);
+            TemperatureManager.DrawDiamond(spriteBatch, uiOffset);
             //if (this.gameMode == GameMode.REALTIME)
             {
                 DrawReal(gameTime, spriteBatch);

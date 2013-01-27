@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Content;
 
 namespace GGJ_DisasterMode.Codebase
 {
@@ -16,11 +19,18 @@ namespace GGJ_DisasterMode.Codebase
 
         static Random weather = new Random();
 
+        static Texture2D diamondTexture;
+
         public static float Temperature
         {
             get;
             private set;
 
+        }
+
+        public static void LoadTempManager(ContentManager content)
+        {
+            diamondTexture = content.Load<Texture2D>("Graphics//GUIElements//temperatureGauge");
         }
 
         public static void ProcessDay()
@@ -45,9 +55,14 @@ namespace GGJ_DisasterMode.Codebase
             Console.WriteLine(Temperature);
         }
 
-        static float GetAmbientTemperatureRange()
+        public static float GetAmbientTemperatureRange()
         {
             return 10.0f;
+        }
+
+        public static void DrawDiamond(SpriteBatch spriteBatch, float uiOffset)
+        {
+            spriteBatch.Draw(diamondTexture, new Vector2(uiOffset + 392 + 9 - (diamondTexture.Width / 2.0f), 59 + 200 + (Temperature*4)), Color.White);
         }
     }
 }

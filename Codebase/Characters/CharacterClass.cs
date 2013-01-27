@@ -175,7 +175,7 @@ namespace GGJ_DisasterMode.Codebase.Characters
 
         public void UpdateTemperature(float temperature)
         {
-            if (Math.Abs(temperature) > ambientTemperatureRange)
+            if (Math.Abs(temperature) > TemperatureManager.GetAmbientTemperatureRange())
             {
                 if (temperature < 0)
                 {
