@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using GGJ_DisasterMode.Codebase.Characters.Decision;
 
@@ -118,6 +119,11 @@ namespace GGJ_DisasterMode.Codebase.Characters
 
 
         private Texture2D civilianTexture;
+        public Texture2D GraphTexture
+        {
+            get;
+            private set;
+        }
         private Color color;
 
         CivilianClassProperties characterProperties;
@@ -170,12 +176,12 @@ namespace GGJ_DisasterMode.Codebase.Characters
             }
         }
 
-        public Civilian(CivilianClassProperties characterProperties, int startX, int startY, Texture2D texture)
+        public Civilian(CivilianClassProperties characterProperties, int startX, int startY)
         {
             this.characterProperties = characterProperties;
 
             this.currentPosition = new Vector2(startX, startY);
-            this.civilianTexture = texture;
+            
 
             this.color = Color.Black;
 
@@ -183,6 +189,12 @@ namespace GGJ_DisasterMode.Codebase.Characters
 
             ResetLevelsToDefaultValues();
             this.goal = DecisionProcessing.RandomGoal(currentPosition);
+        }
+
+        public void LoadContent(ContentManager content)
+        {
+            this.civilianTexture = content.Load<Texture2D>(characterProperties.dotTexturePath);
+            this.GraphTexture = content.Load<Texture2D>(characterProperties.graphTexturePath);
         }
 
         public void ProcessDay()
@@ -322,7 +334,7 @@ namespace GGJ_DisasterMode.Codebase.Characters
             {
                 spriteBatch.Draw(this.civilianTexture, new Vector2(14.0f + (this.currentPosition.X * 0.31166f),
                         14.0f + (this.currentPosition.Y * 0.30166f)),
-                        null, this.color, 0.0f, new Vector2(), 5.0f, SpriteEffects.None, 1.0f);
+                        null, Color.White, 0.0f, new Vector2(), 1.0f, SpriteEffects.None, 1.0f);
             }
             else
             {
@@ -358,5 +370,8 @@ namespace GGJ_DisasterMode.Codebase.Characters
 
         public float trustLevel;
         public float trustMultiplier;
+
+        public string dotTexturePath;
+        public string graphTexturePath;
     }
 }
