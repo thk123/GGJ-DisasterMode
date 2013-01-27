@@ -174,7 +174,7 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
                 default:
                     break;
             }
-            return new Rectangle(uiOffset + 130 + ((34 + 25) * i), 393 + ((34 + 16)* j), 34, 34);
+            return new Rectangle(uiOffset + 130 + 2 +((34 + 25) * i), 393 + 2 + ((34 + 16)* j), 32, 31);
         }
 
     }

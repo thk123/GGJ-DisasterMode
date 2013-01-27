@@ -89,21 +89,24 @@ namespace GGJ_DisasterMode.Codebase.Screens
             spriteBatch.Begin();
             spriteBatch.Draw(background, uiposition, Color.White);
             spriteBatch.Draw(closeButton, closeButtonPosition, Color.White);
+            
             foreach (BarCategory b in Enum.GetValues(typeof(BarCategory)))
             {
+                
                 //if (b == BarCategory.category_tooHot)
                 {
                     List<BarEntry> entries = data[(int)b];
-                    float xOffset = 0.0f;
+                    float xOffsetSize = 88.0f / (float)entries.Count;
+                    float xOffset = -44.0f;
                     foreach (BarEntry barEntry in entries)
                     {
                         Vector2 position = GetStartPoint(b);
                         position.Y += (1 - (barEntry.value / 100.0f)) * 150.0f;
                         position.X += xOffset;
-                        spriteBatch.Draw(face/*barEntry.graphIcon*/, position, Color.White);
+                        spriteBatch.Draw(barEntry.graphIcon, position, Color.White);
 
                         //Loop the offset
-                        xOffset += 12.0f;
+                        xOffset += xOffsetSize;
                         if (xOffset >= 44.0f)
                             xOffset = -44.0f;
                     }
@@ -117,11 +120,11 @@ namespace GGJ_DisasterMode.Codebase.Screens
         {
             foreach (Civilian popMemeber in civilians)
             {
-                AddDataPoint(BarCategory.category_tooCold, popMemeber.CurrentColdTemp, null);
-                AddDataPoint(BarCategory.category_tooHot, popMemeber.CurrentHotTemp, null);
-                AddDataPoint(BarCategory.category_thirsty, popMemeber.CurrentThirst, null);
-                AddDataPoint(BarCategory.category_ill, popMemeber.CurrentHealth, null);
-                AddDataPoint(BarCategory.category_hungry, popMemeber.CurrentHunger, null);
+                AddDataPoint(BarCategory.category_tooCold, popMemeber.CurrentColdTemp, popMemeber.GraphTexture);
+                AddDataPoint(BarCategory.category_tooHot, popMemeber.CurrentHotTemp, popMemeber.GraphTexture);
+                AddDataPoint(BarCategory.category_thirsty, popMemeber.CurrentThirst, popMemeber.GraphTexture);
+                AddDataPoint(BarCategory.category_ill, popMemeber.CurrentHealth, popMemeber.GraphTexture);
+                AddDataPoint(BarCategory.category_hungry, popMemeber.CurrentHunger, popMemeber.GraphTexture);
             }
         }
 
