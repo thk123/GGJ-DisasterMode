@@ -193,7 +193,7 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
                 ProcessingBucket[] adjacentBuckets = buckets.getNeighbours(gridLocation.X, gridLocation.Y);
                 foreach (ProcessingBucket bucket in adjacentBuckets)
                 {
-                    nearbyCivilians.AddRange(bucket.GetCivilians());
+                    nearbyCivilians.AddRange(bucket.GetCivilians().Where(member => member.IsDead == false));
                 }
 
                 currentResultsScreen= new AudioResultsScreen(nearbyCivilians, gridLocation.Y >= 9);
@@ -271,9 +271,9 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
             switch (actionType)
             {
                 case ActionType.ListenAction:
-                    return new Rectangle(uiOffset + 135 - 75 + 200, 155, 150, 150);
+                    return new Rectangle(uiOffset + 82, 184 + 9, 102, 102);
                 case ActionType.DirectAction:
-                    return new Rectangle(uiOffset + 135 - 75, 155, 150, 150);
+                    return new Rectangle(uiOffset + 246, 184 + 9, 102, 102);
                 default:
                     throw new Exception("Unrecognised action type");
             }
