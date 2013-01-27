@@ -5,6 +5,7 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Audio;
 
 using GGJ_DisasterMode.Codebase.Characters;
 
@@ -44,6 +45,11 @@ namespace GGJ_DisasterMode.Codebase.Screens
 
         List<Civilian> civilians;
 
+        SoundEffectInstance foodLow;
+        SoundEffectInstance heatLow;
+        SoundEffectInstance healthLow;
+        SoundEffectInstance thirstlow;
+
         public AudioResultsScreen(List<Civilian> civiliansToReportOn, bool top)
         {
             uiposition = new Vector2(36.0f, top ? 36.0f : 9.0f + 270.0f);
@@ -61,6 +67,8 @@ namespace GGJ_DisasterMode.Codebase.Screens
             civilians = civiliansToReportOn;
         }
 
+        
+
         public void UpdateData()
         {
             foreach (List<BarEntry> dataEntryList in data)
@@ -68,6 +76,67 @@ namespace GGJ_DisasterMode.Codebase.Screens
                 dataEntryList.Clear();
             }
             CrunchData(civilians);
+
+            if (tooHungry >= data[0].Count / 2)
+            {
+                if (foodLow.State != SoundState.Playing)
+                {
+                    foodLow.Play();
+                }
+            }
+            else
+            {
+                if (foodLow.State != SoundState.Playing)
+                {
+                    foodLow.Stop();
+                }
+            }
+
+            if (tooThirsty >= data[0].Count / 2)
+            {
+                if (thirstlow.State != SoundState.Playing)
+                {
+                    thirstlow.Play();
+                }
+            }
+            else
+            {
+                if (thirstlow.State != SoundState.Playing)
+                {
+                    thirstlow.Stop();
+                }
+            }
+
+
+            if (tooIll >= data[0].Count / 2)
+            {
+                if (healthLow.State != SoundState.Playing)
+                {
+                    healthLow.Play();
+                }
+            }
+            else
+            {
+                if (healthLow.State != SoundState.Playing)
+                {
+                    healthLow.Stop();
+                }
+            }
+
+            if (tooHot >= data[0].Count / 2 || tooCold >= data[0].Count / 2)
+            {
+                if (heatLow.State != SoundState.Playing)
+                {
+                    heatLow.Play();
+                }
+            }
+            else
+            {
+                if (heatLow.State != SoundState.Playing)
+                {
+                    heatLow.Stop();
+                }
+            }
         }
 
         public override void LoadContent()
@@ -78,6 +147,30 @@ namespace GGJ_DisasterMode.Codebase.Screens
             background = content.Load<Texture2D>("Graphics//UI//background");
             closeButton = content.Load<Texture2D>("Graphics//UI//close");
             face = content.Load<Texture2D>("Graphics//ListenPeople//adult_0");
+
+            foodLow = content.Load<SoundEffect>("Audio//people//baby_cry").CreateInstance();
+            healthLow = content.Load<SoundEffect>("Audio//people//cough").CreateInstance();
+            heatLow = content.Load<SoundEffect>("Audio//people//groan").CreateInstance();
+            thirstlow = content.Load<SoundEffect>("Audio//people//womanCry").CreateInstance();
+
+            /*foodLow.IsLooped = true;
+            heatLow.IsLooped = true;
+            healthLow.IsLooped = true;
+            thirstlow.IsLooped = true;*/
+
+            foodLow.Volume = 0.6f;
+            healthLow.Volume = 0.6f;
+            heatLow.Volume = 0.6f;
+            thirstlow.Volume = 0.6f;
+        }
+
+        public override void UnloadContent()
+        {
+            base.UnloadContent();
+            heatLow.Stop();
+            healthLow.Stop();
+            thirstlow.Stop();
+            foodLow.Stop();
         }
 
         public override void HandleInput(InputState input)
@@ -127,15 +220,46 @@ namespace GGJ_DisasterMode.Codebase.Screens
             base.Draw(gameTime);
         }
 
+        int tooCold;
+        int tooHot;
+        int tooThirsty;
+        int tooIll;
+        int tooHungry;
+
         private void CrunchData(List<Civilian> civilians)
         {
+            tooCold = 0;
+            tooHot = 0;
+            tooThirsty = 0;
+            tooIll = 0;
+            tooHungry = 0;
             foreach (Civilian popMemeber in civilians)
             {
                 AddDataPoint(BarCategory.category_tooCold, popMemeber.CurrentColdTemp, popMemeber.GraphTexture);
+                if(popMemeber.CurrentColdTemp < 50.0f)
+                {
+                    ++tooCold;
+                }
                 AddDataPoint(BarCategory.category_tooHot, popMemeber.CurrentHotTemp, popMemeber.GraphTexture);
+                if (popMemeber.CurrentHotTemp < 50.0f)
+                {
+                    ++tooHot;
+                }
                 AddDataPoint(BarCategory.category_thirsty, popMemeber.CurrentThirst, popMemeber.GraphTexture);
+                if (popMemeber.CurrentThirst< 50.0f)
+                {
+                    ++tooThirsty;
+                }
                 AddDataPoint(BarCategory.category_ill, popMemeber.CurrentHealth, popMemeber.GraphTexture);
+                if (popMemeber.CurrentHealth< 50.0f)
+                {
+                    ++tooIll;
+                }
                 AddDataPoint(BarCategory.category_hungry, popMemeber.CurrentHunger, popMemeber.GraphTexture);
+                if (popMemeber.CurrentHunger< 50.0f)
+                {
+                    ++tooHungry;
+                }
             }
         }
 
