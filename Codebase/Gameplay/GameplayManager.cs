@@ -284,9 +284,17 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
 
         private void DisplayClock(SpriteBatch spriteBatch)
         {
-            string s = string.Format("DAY {0}", dayCount);
+            string s;
+            if (gameMode == GameMode.REALTIME)
+            {
+                s = string.Format("DAY {0}", dayCount);
+            }
+            else
+            {
+                s = string.Format("NIGHT {0}", dayCount);
+            }
             Vector2 stringSize = gameFont.MeasureString(s);
-            spriteBatch.DrawString(gameFont, s, new Vector2(uiOffset + 224 - (stringSize.X / 2.0f), 59 - (stringSize.Y / 2.0f)), Color.Red);
+            spriteBatch.DrawString(gameFont, s, new Vector2(uiOffset + 224 - (stringSize.X / 2.0f), 59 - (stringSize.Y / 2.0f)), Color.Black);
 
             int secondsInADay = 60 * 60 * 24;
             double secondsRemaining = remainingTime.TotalSeconds;
@@ -297,7 +305,7 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
 
             string timer = string.Format("{0}:{1}", ofADay.Hours, ofADay.Minutes);
             Vector2 stringTimeSize = gameFont.MeasureString(timer);
-            spriteBatch.DrawString(gameFont, timer, new Vector2(uiOffset + 224 - (stringTimeSize.X / 2.0f), 109 - (stringTimeSize.Y / 2.0f)), Color.Red);
+            spriteBatch.DrawString(gameFont, timer, new Vector2(uiOffset + 224 - (stringTimeSize.X / 2.0f), 109 - (stringTimeSize.Y / 2.0f)), Color.Black);
         }
     }
 }

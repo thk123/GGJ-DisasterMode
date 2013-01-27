@@ -21,6 +21,8 @@ namespace GGJ_DisasterMode.Codebase.Characters
         private Vector2 goal;
         private Vector2 currentPosition;
 
+        private static Texture2D gravestone = null;
+
         public Vector2? NearestKnownWaterSource
         {
             get;
@@ -208,6 +210,11 @@ namespace GGJ_DisasterMode.Codebase.Characters
         {
             this.civilianTexture = content.Load<Texture2D>(characterProperties.dotTexturePath);
             this.GraphTexture = content.Load<Texture2D>(characterProperties.graphTexturePath);
+
+            if (gravestone == null)
+            {
+                gravestone = content.Load<Texture2D>("Graphics//People//tombstone");
+            }
         }
 
         public void ProcessDay()
@@ -274,6 +281,9 @@ namespace GGJ_DisasterMode.Codebase.Characters
 
         public void Update(GameTime gameTime)
         {
+            if (IsDead)
+                return;
+
             if (currentPosition.X < 0)
             {
                 currentPosition.X += SCALE_FACTOR;
@@ -291,6 +301,33 @@ namespace GGJ_DisasterMode.Codebase.Characters
                 currentPosition.Y -= SCALE_FACTOR;
             }
 
+            if ((this.NearestKnownWaterSource.HasValue) &&
+                (Vector2.DistanceSquared(currentPosition,
+NearestKnownWaterSource.Value) < 30000)
+                && CurrentThirst < 100.0f)
+            {
+                CurrentThirst += 0.05f;
+            }
+            if ((this.NearestKnownTempSource.HasValue) &&
+                (Vector2.DistanceSquared(currentPosition, NearestKnownTempSource.Value) < 30000))
+            {
+                if (CurrentHotTemp < 100.0f) { CurrentHotTemp += 5.0f; }
+                if (CurrentColdTemp < 100.0f) { CurrentColdTemp += 5.0f; }
+            }
+            if ((this.NearestKnownHealthSource.HasValue) &&
+                (Vector2.DistanceSquared(currentPosition, NearestKnownHealthSource.Value) < 30000)
+                && CurrentHealth < 100.0f)
+            {
+                CurrentHealth += 0.05f;
+            }
+            if ((this.NearestKnownFoodSource.HasValue) &&
+                (Vector2.DistanceSquared(currentPosition,
+NearestKnownWaterSource.Value) < 30000)
+                && CurrentHunger < 100.0f)
+            {
+                CurrentHunger += 0.05f;
+            }
+
             Needs CurrentNeeds = new Needs();
             CurrentNeeds.Cold = CurrentColdTemp;
             CurrentNeeds.Health = CurrentHealth;
@@ -300,17 +337,8 @@ namespace GGJ_DisasterMode.Codebase.Characters
 
             bool HasUrgentNeeds = CurrentNeeds.AreUrgent();
 
-            if ( !HasUrgentNeeds && (Vector2.DistanceSquared(currentPosition, goal) > 64000) )
-            {
-                goal = DecisionProcessing.RandomGoal(currentPosition);
-            }
-            else if ( !HasUrgentNeeds && NearestKnownWaterSource.HasValue && 
-                (Vector2.DistanceSquared(currentPosition, NearestKnownWaterSource.Value) > 24000) )
-            {
-                goal = NearestKnownWaterSource.Value;
-            }
-            else if (!HasUrgentNeeds && (RANDOM.Next(100) < 5) &&
-                (Math.Abs(currentPosition.X - goal.X) < 2) && (Math.Abs(currentPosition.Y - goal.Y) < 2))
+            float speedMultiplier = 0.0f;
+            if (!HasUrgentNeeds && (Vector2.DistanceSquared(currentPosition, goal) > 64000))
             {
                 goal = DecisionProcessing.RandomGoal(currentPosition);
             }
@@ -321,10 +349,10 @@ namespace GGJ_DisasterMode.Codebase.Characters
                 {
                     CurrentBehaviour = Behaviour.Rebellious;
                 }
-                
+
                 KnowledgeModel Knowledge = new KnowledgeModel();
-                Knowledge.ClosestWater = 
-                    (NearestKnownWaterSource.HasValue) ? NearestKnownWaterSource.Value : (Vector2?) null;
+                Knowledge.ClosestWater =
+                    (NearestKnownWaterSource.HasValue) ? NearestKnownWaterSource.Value : (Vector2?)null;
                 Knowledge.ClostestFood =
                     (NearestKnownFoodSource.HasValue) ? NearestKnownFoodSource.Value : (Vector2?)null;
                 Knowledge.ClosestMedicine =
@@ -334,15 +362,16 @@ namespace GGJ_DisasterMode.Codebase.Characters
                 Knowledge.ClosestGameAction =
                     (NearestInstructionDirection.HasValue) ? NearestInstructionDirection.Value : (Vector2?)null;
 
-                goal = DecisionProcessing.Run(currentPosition, Knowledge, CurrentNeeds, CurrentBehaviour); 
+                goal = DecisionProcessing.Run(currentPosition, Knowledge, CurrentNeeds, CurrentBehaviour);
+                speedMultiplier = 3.0f;
             }
 
             Vector2 direction = goal - currentPosition;
 
-            if ( (Vector2.DistanceSquared(goal, currentPosition) > 2.5) )
+            if ((Vector2.DistanceSquared(goal, currentPosition) > 2.5))
             {
                 direction.Normalize();
-                currentPosition += direction;
+                currentPosition += (direction * speedMultiplier);
             }
         }
 
@@ -350,13 +379,25 @@ namespace GGJ_DisasterMode.Codebase.Characters
         {
             if (!IsDead)
             {
+                Rectangle sourceRectangle;
+                if (CurrentTrust < 33.0f)
+                {
+                    sourceRectangle = new Rectangle(45, 0, 15, 15);
+                }
+                else
+                {
+                    sourceRectangle = new Rectangle(0, 0, 15, 15);
+                }
+
                 spriteBatch.Draw(this.civilianTexture, new Vector2(14.0f + (this.currentPosition.X * 0.31166f),
                         14.0f + (this.currentPosition.Y * 0.30166f)),
-                        null, Color.White, 0.0f, new Vector2(), 1.0f, SpriteEffects.None, 1.0f);
+                        sourceRectangle, Color.White, 0.0f, new Vector2(), 1.0f, SpriteEffects.None, 1.0f);
             }
             else
             {
-                //draw gravestone?
+                spriteBatch.Draw(gravestone, new Vector2(14.0f + (this.currentPosition.X * 0.31166f),
+                        14.0f + (this.currentPosition.Y * 0.30166f)),
+                        null, Color.White, 0.0f, new Vector2(), 1.0f, SpriteEffects.None, 1.0f);
             }
         }
 

@@ -29,6 +29,7 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
         private List<Civilian> civilians;
 
         SpriteFont defaultFont;
+        SpriteFont actionFont;
 
         Buckets buckets;        
 
@@ -125,6 +126,7 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
             
 
             defaultFont = content.Load<SpriteFont>("Fonts//gamefont");
+            actionFont = content.Load<SpriteFont>("Fonts//actionCountFond");
 
             this.buckets = new Buckets(this.grid, new List<GameAction>(), new List<Civilian>(), 
                 new List<Dropoff>(), new List<Water>());
@@ -186,6 +188,10 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
 
         public void UpdateReal(GameTime gameTime, out bool missionRunning, bool isActive)
         {
+            if (realTimeState == RealTimeState.DisplayingListen)
+            {
+                currentResultsScreen.UpdateData();
+            }
             if (realTimeState == RealTimeState.DisplayingListen && isActive)
             {
                 realTimeState = RealTimeState.Idle;
@@ -262,7 +268,7 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
             }
 
             Vector2 halfTextLength = defaultFont.MeasureString(actionsRemaining.ToString()) * 0.5f;
-            spriteBatch.DrawString(defaultFont, actionsRemaining.ToString(), new Vector2(uiOffset + 230 - halfTextLength.X, 200 - halfTextLength.Y), Color.Red);
+            spriteBatch.DrawString(actionFont, actionsRemaining.ToString(), new Vector2(uiOffset + 210 - (halfTextLength.X / 2.0f), 213 - (halfTextLength.Y / 2.0f)), Color.Black);
 
         }
 

@@ -42,6 +42,8 @@ namespace GGJ_DisasterMode.Codebase.Screens
 
         Rectangle closeButtonPosition;
 
+        List<Civilian> civilians;
+
         public AudioResultsScreen(List<Civilian> civiliansToReportOn, bool top)
         {
             uiposition = new Vector2(36.0f, top ? 36.0f : 9.0f + 270.0f);
@@ -56,7 +58,16 @@ namespace GGJ_DisasterMode.Codebase.Screens
             data[(int)BarCategory.category_tooHot] = new List<BarEntry>();
             data[(int)BarCategory.category_ill] = new List<BarEntry>();
 
-            CrunchData(civiliansToReportOn);
+            civilians = civiliansToReportOn;
+        }
+
+        public void UpdateData()
+        {
+            foreach (List<BarEntry> dataEntryList in data)
+            {
+                dataEntryList.Clear();
+            }
+            CrunchData(civilians);
         }
 
         public override void LoadContent()

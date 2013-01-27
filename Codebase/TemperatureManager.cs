@@ -62,7 +62,7 @@ namespace GGJ_DisasterMode.Codebase
 
         public static void DrawDiamond(SpriteBatch spriteBatch, float uiOffset)
         {
-            spriteBatch.Draw(diamondTexture, new Vector2(uiOffset + 392 + 9 - (diamondTexture.Width / 2.0f), 59 + 200 - (Temperature*4)), Color.White);
+            spriteBatch.Draw(diamondTexture, new Vector2(uiOffset + 396 + 9 - (diamondTexture.Width / 2.0f), 59 + 200 - (Temperature*4)), Color.White);
         }
     }
 }
