@@ -38,6 +38,11 @@ namespace GGJ_DisasterMode.Codebase.Gameplay.Grid
             }
         }
 
+        public List<Civilian> GetCivilians()
+        {
+            return civilians;
+        }
+
         public bool hasWater()
         {
             return (this.Water != null);

@@ -70,7 +70,7 @@ namespace GGJ_DisasterMode.Codebase.Gameplay.Grid
             return grid.GetGridPointFromMousePosition(new Point(x,y));
         }
 
-        private ProcessingBucket[] getNeighbours(int x, int y)
+        public ProcessingBucket[] getNeighbours(int x, int y)
         {
             ProcessingBucket[] neighbours = 
             { 

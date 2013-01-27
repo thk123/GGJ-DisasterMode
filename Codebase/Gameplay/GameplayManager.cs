@@ -44,10 +44,12 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
         }
         DragState currentState;
 
+        GameScreen parentScreen;
 
-        public GameplayManager(ContentManager content)
+        public GameplayManager(ContentManager content, GameScreen screen)
         {
             this.gameMode = GameMode.REALTIME;
+            this.parentScreen = screen;
             this.missionRunning = true;
 
             StartDay();
@@ -60,6 +62,7 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
         public void LoadContent(ContentManager content)
         {
             gameFont = content.Load<SpriteFont>("Fonts//gamefont");
+            uiTexture = content.Load<Texture2D>("Graphics//UI//GUI_temp");
             Dropoffs.ClockDrawer.LoadContent(content);
             LoadContentReal(content);
             LoadContentDecision(content);
@@ -71,11 +74,11 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
         }
 
 
-        public void Update(GameTime gameTime, out bool missionRunning)
+        public void Update(GameTime gameTime, bool active, out bool missionRunning)
         {
             if (this.gameMode == GameMode.REALTIME)
             {
-                UpdateReal(gameTime, out missionRunning);
+                UpdateReal(gameTime, out missionRunning, active);
             }
             else if (this.gameMode == GameMode.DECISION)
             {
@@ -91,11 +94,12 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
         {
             spriteBatch.Begin();
             grid.Draw(spriteBatch);
-            if (this.gameMode == GameMode.REALTIME)
+            spriteBatch.Draw(uiTexture, new Vector2(uiOffset, 9), Color.White);
+            //if (this.gameMode == GameMode.REALTIME)
             {
                 DrawReal(gameTime, spriteBatch);
             }
-            else if (this.gameMode == GameMode.DECISION)
+            //else if (this.gameMode == GameMode.DECISION)
             {
                 DrawDecision(gameTime, spriteBatch);
             }
@@ -177,9 +181,7 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
                     }
                     else
                     {
-                        //Return the object to the shop
-                        currentState = DragState.Idle;
-                        currentlyDragging.EndDrag(null, null);
+                        EndDrag();
                     }
                 }
             }
@@ -229,7 +231,9 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
         private void EndDay()
         {
             // go from day (real time instruction placing) -> night, placing pick ups
-            
+            EndDrag();
+           
+
             RealTimeProcessEndDay();
             DecisionProcessEndDay();
 
@@ -247,6 +251,8 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
 
         private void EndNight()
         {
+            EndDrag();
+
             DecisionProcessEndNight();
             RealTimeProcessEndNight();
 
@@ -260,6 +266,15 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
 
         }
 
+        private void EndDrag()
+        {
+            if (currentState == DragState.Dragging)
+            {
+                //Return the object to the shop
+                currentState = DragState.Idle;
+                currentlyDragging.EndDrag();
+            }
+        }
 
         private void DisplayClock(SpriteBatch spriteBatch)
         {

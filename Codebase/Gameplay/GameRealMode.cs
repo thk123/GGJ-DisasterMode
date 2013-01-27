@@ -36,10 +36,12 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
         {
             Idle,
             SelectingDestionation,
+            DisplayingListen,
         }
         RealTimeState realTimeState;
         GameAction actionToPoint;
         Point actionToPointLocation;
+        AudioResultsScreen currentResultsScreen;
 
         private const int actionCount = 2;
         private List<Actions.GameAction> actions;
@@ -78,6 +80,16 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
             {
                 civ.ProcessDay();
                 civ.UpdateTemperature(TemperatureManager.Temperature);
+            }
+
+            if (realTimeState == RealTimeState.SelectingDestionation)
+            {
+                actionToPoint.CancelPlaceAction();
+                realTimeState = RealTimeState.Idle;
+            }
+            else if (realTimeState == RealTimeState.DisplayingListen)
+            {
+                currentResultsScreen.ExitScreen();
             }
         }
 
@@ -134,9 +146,12 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
             }
         }
 
-        public void UpdateReal(GameTime gameTime, out bool missionRunning)
+        public void UpdateReal(GameTime gameTime, out bool missionRunning, bool isActive)
         {
-            
+            if (realTimeState == RealTimeState.DisplayingListen && isActive)
+            {
+                realTimeState = RealTimeState.Idle;
+            }
             foreach (Actions.GameAction action in actions)
             {
                 action.Update(gameTime);
@@ -174,11 +189,24 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
                 //And replensh the ui
                 actions.Add(GameAction.CreateNewActionFromAction(droppedAction, GetUiPosition(droppedAction.ActionType)));
 
-                //Are we done for today?
-                if (actionsRemaining == 0)
+                List<Civilian> nearbyCivilians = new List<Civilian>();
+                ProcessingBucket[] adjacentBuckets = buckets.getNeighbours(gridLocation.X, gridLocation.Y);
+                foreach (ProcessingBucket bucket in adjacentBuckets)
+                {
+                    nearbyCivilians.AddRange(bucket.GetCivilians());
+                }
+
+                currentResultsScreen= new AudioResultsScreen(nearbyCivilians, gridLocation.Y >= 9);
+
+                parentScreen.ScreenManager.AddScreen(currentResultsScreen, parentScreen.ControllingPlayer);
+
+                realTimeState = RealTimeState.DisplayingListen;
+
+                //Are we done for today? -- NO PEOPLE CAN STILL MOVE
+                /*if (actionsRemaining == 0)
                 {
                     EndDay();
-                }
+                }*/
             }
         }
         
@@ -192,7 +220,7 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
             
             foreach (Actions.GameAction action in actions)
             {
-                action.Draw(spriteBatch);
+                action.Draw(spriteBatch, gameMode == GameMode.REALTIME && realTimeState == RealTimeState.Idle);
             }
 
             Vector2 halfTextLength = defaultFont.MeasureString(actionsRemaining.ToString()) * 0.5f;

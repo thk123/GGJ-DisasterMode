@@ -162,9 +162,9 @@ namespace GGJ_DisasterMode.Codebase.Dropoffs
             }
         }
 
-        public virtual void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        public virtual void Draw(GameTime gameTime, SpriteBatch spriteBatch, bool enabled)
         {
-            base.Draw(spriteBatch);
+            base.Draw(spriteBatch, enabled);
 
             
             if (CurrentState == DropoffState.Placed)

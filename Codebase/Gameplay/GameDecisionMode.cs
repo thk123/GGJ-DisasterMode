@@ -54,7 +54,7 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
         {
             foreach (Dropoffs.Dropoff dropoff in dropoffs)
             {
-                dropoff.Draw(gameTime, spriteBatch);
+                dropoff.Draw(gameTime, spriteBatch, gameMode == GameMode.DECISION);
             }
         }
 
@@ -65,9 +65,19 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
 
         private void DecisionProcessEndDay()
         {
+            List<Dropoff> decayedDropoffs = new List<Dropoff>();
             foreach (Dropoffs.Dropoff dropoff in dropoffs)
             {
                 dropoff.ProcessDay();
+                if (dropoff.CurrentState == DropoffState.Decayed)
+                {
+                    decayedDropoffs.Add(dropoff);
+                }
+            }
+
+            foreach (Dropoff decayedDropoff in decayedDropoffs)
+            {
+                dropoffs.Remove(decayedDropoff);
             }
         }
 
@@ -78,6 +88,14 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
 
         private void DecisionProcessEndNight()
         {
+            foreach (Dropoff dropoff in dropoffs)
+            {
+                //if we have placed these drops, they then have been ordered
+                if (dropoff.CurrentState == DropoffState.Placed)
+                {
+                    dropoff.FixLocation();
+                }
+            }
         }
 
         /// <summary>
@@ -156,7 +174,7 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
                 default:
                     break;
             }
-            return new Rectangle(uiOffset + 128 + ((34 + 16) * i), 383 + ((34 + 16)* j), 17, 17);
+            return new Rectangle(uiOffset + 130 + ((34 + 25) * i), 393 + ((34 + 16)* j), 34, 34);
         }
 
     }
