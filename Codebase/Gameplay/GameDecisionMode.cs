@@ -38,9 +38,9 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
             }
         }
 
-        private void DropoffPlaced(Dropoffs.Dropoff dropoff, Rectangle dropoffPoint)
+        private void DropoffPlaced(Dropoffs.Dropoff dropoff, Rectangle dropoffRectangle, Point dropoffPoint)
         {
-            dropoff.PlaceDropoff(dropoffPoint);
+            dropoff.PlaceDropoff(dropoffRectangle, buckets, dropoffPoint);
             dropoffs.Add(Dropoffs.Dropoff.CreateNewDropoffFromDropoff(dropoff, GetStoreSlot(dropoff.DropoffType)));
         }
 

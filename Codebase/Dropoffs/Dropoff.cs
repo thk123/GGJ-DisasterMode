@@ -108,6 +108,9 @@ namespace GGJ_DisasterMode.Codebase.Dropoffs
 
         DropoffProperties dropoffProperties;
 
+        Gameplay.Grid.Buckets buckets;
+        Point gridPoint;
+
         public Dropoff(DropoffProperties properties, Rectangle storeSlot)
             :base(storeSlot)
         {
@@ -118,13 +121,15 @@ namespace GGJ_DisasterMode.Codebase.Dropoffs
 
         public virtual void LoadContent(ContentManager content)
         {
-            base.SetContent(dropoffProperties.shopTexture, dropoffProperties.draggingTexture);
+            base.SetContent(dropoffProperties.shopTexture, dropoffProperties.draggingTexture, dropoffProperties.draggingTexture);
         }
 
-        public virtual void PlaceDropoff(Rectangle gridRectangle)
+        public virtual void PlaceDropoff(Rectangle gridRectangle, Gameplay.Grid.Buckets bucketSystem, Point gridPoint)
         {
             CurrentState = DropoffState.Placed;
             gridPosition = gridRectangle;
+            this.gridPoint = gridPoint;
+            buckets = bucketSystem;
         }
 
         public virtual void ProcessDay()
@@ -143,6 +148,9 @@ namespace GGJ_DisasterMode.Codebase.Dropoffs
                     if (DaysToDelivery == 0)
                     {
                         CurrentState = DropoffState.Delivered;
+
+                        //alert the grid to our arrival 
+                        buckets.addNewDrop(this, gridPoint.X, gridPoint.Y);
                     }
                     break;
                 case DropoffState.Delivered:
@@ -196,7 +204,7 @@ namespace GGJ_DisasterMode.Codebase.Dropoffs
         public static Dropoff CreateNewDropoffFromDropoff(Dropoff oldDropoff, Rectangle uiPosition)
         {
             Dropoff newDropoff = new Dropoff(Dropoff.dropoffTypes[oldDropoff.dropoffProperties.type], uiPosition);
-            newDropoff.SetContent(oldDropoff.dropoffProperties.shopTexture, oldDropoff.dropoffProperties.draggingTexture);
+            newDropoff.SetContent(oldDropoff.dropoffProperties.shopTexture, oldDropoff.dropoffProperties.draggingTexture, oldDropoff.dropoffProperties.draggingTexture);
 
             return newDropoff;
         }
