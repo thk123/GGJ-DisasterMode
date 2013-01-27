@@ -55,6 +55,14 @@ namespace GGJ_DisasterMode.Codebase.Characters
             private set;
         }
 
+        public void ResetKnowledge()
+        {
+            NearestKnownFoodSource = null;
+            NearestKnownHealthSource = null;
+            NearestKnownTempSource = null;
+            NearestKnownWaterSource = null;
+        }
+
         public void SetNearestKnownWaterSource(Vector2 waterScreenLocation)
         {
             this.NearestKnownWaterSource = 

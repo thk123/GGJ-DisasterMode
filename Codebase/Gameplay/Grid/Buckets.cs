@@ -277,6 +277,11 @@ namespace GGJ_DisasterMode.Codebase.Gameplay.Grid
             {
                 for (int j = 0; j < buckets.GetLength(1); j++)
                 {
+                    foreach (Civilian civ in buckets[i, j].GetCivilians())
+                    {
+                        civ.ResetKnowledge();
+                    }
+                    
                     Point? cleanWaterPosition = buckets[i, j].CleanWaterLocation;
                     Point? foodPosition = buckets[i, j].FoodLocation;
                     Point? medsPosition = buckets[i, j].MedsLocation;
