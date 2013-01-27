@@ -215,6 +215,8 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
                 actionToPoint = droppedAction;
                 actionToPointLocation = gridLocation;
 
+                this.buckets.addNewAction(droppedAction, gridLocation.X, gridLocation.Y);
+
             }
             else
             {

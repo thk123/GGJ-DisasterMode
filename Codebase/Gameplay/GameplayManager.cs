@@ -33,7 +33,7 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
         TimeSpan remainingTime;
 
         Draggable currentlyDragging;
-
+        tewr
         int dayCount;
 
 
@@ -173,6 +173,8 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
                         currentState = DragState.Idle;
                         /*this.buckets.addWater(cellRect.X + (cellRect.Width / 2), 
                             cellRect.Y + (cellRect.Height / 2));*/
+                        //this.buckets.addWater(cellRect.X + (cellRect.Width / 2), 
+                        //    cellRect.Y + (cellRect.Height / 2));
 
                         if (gameMode == GameMode.REALTIME)
                         {
