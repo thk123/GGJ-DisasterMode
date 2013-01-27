@@ -121,7 +121,7 @@ namespace GGJ_DisasterMode.Codebase.Dropoffs
 
         public virtual void LoadContent(ContentManager content)
         {
-            base.SetContent(dropoffProperties.shopTexture, dropoffProperties.draggingTexture, dropoffProperties.draggingTexture);
+            base.SetContent(dropoffProperties.shopTexture, dropoffProperties.draggingTexture);
         }
 
         public virtual void PlaceDropoff(Rectangle gridRectangle, Gameplay.Grid.Buckets bucketSystem, Point gridPoint)
@@ -204,7 +204,7 @@ namespace GGJ_DisasterMode.Codebase.Dropoffs
         public static Dropoff CreateNewDropoffFromDropoff(Dropoff oldDropoff, Rectangle uiPosition)
         {
             Dropoff newDropoff = new Dropoff(Dropoff.dropoffTypes[oldDropoff.dropoffProperties.type], uiPosition);
-            newDropoff.SetContent(oldDropoff.dropoffProperties.shopTexture, oldDropoff.dropoffProperties.draggingTexture, oldDropoff.dropoffProperties.draggingTexture);
+            newDropoff.SetContent(oldDropoff.dropoffProperties.shopTexture, oldDropoff.dropoffProperties.draggingTexture);
 
             return newDropoff;
         }
