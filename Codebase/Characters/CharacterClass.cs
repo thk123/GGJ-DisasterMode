@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Media;
 using Microsoft.Xna.Framework.Graphics;
 using GGJ_DisasterMode.Codebase.Characters.Decision;
 
@@ -308,6 +310,10 @@ NearestKnownWaterSource.Value) < 30000)
             {
                 CurrentThirst += 0.05f;
             }
+            else
+            {
+                CurrentThirst -= 0.005f;
+            }
             if ((this.NearestKnownTempSource.HasValue) &&
                 (Vector2.DistanceSquared(currentPosition, NearestKnownTempSource.Value) < 30000))
             {
@@ -320,12 +326,20 @@ NearestKnownWaterSource.Value) < 30000)
             {
                 CurrentHealth += 0.05f;
             }
+            else
+            {
+                CurrentHealth -= 0.005f;
+            }
             if ((this.NearestKnownFoodSource.HasValue) &&
                 (Vector2.DistanceSquared(currentPosition,
 NearestKnownWaterSource.Value) < 30000)
                 && CurrentHunger < 100.0f)
             {
                 CurrentHunger += 0.05f;
+            }
+            else
+            {
+                CurrentHunger -= 0.005f;
             }
 
             Needs CurrentNeeds = new Needs();
