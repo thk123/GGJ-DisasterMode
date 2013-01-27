@@ -126,7 +126,7 @@ namespace GGJ_DisasterMode.Codebase.Screens
             spriteBatch = new SpriteBatch(GraphicsDevice);
             font = content.Load<SpriteFont>("fonts//title");
             blankTexture = content.Load<Texture2D>("graphics//blank");
-            loadingSong = content.Load<Song>("Audio//Songs//load");
+            //loadingSong = content.Load<Song>("Audio//Songs//load");
 
             // Tell each of the screens to load their content.
             foreach (GameScreen screen in screens)
