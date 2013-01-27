@@ -273,15 +273,15 @@ namespace GGJ_DisasterMode.Codebase.Gameplay.Grid
 
         public void ProcessCivilianKnowledgeModel()
         {
+            foreach (Civilian civ in civilians)
+            {
+                civ.ResetKnowledge();
+            }
+            
             for (int i = 0; i < buckets.GetLength(0); i++)
             {
                 for (int j = 0; j < buckets.GetLength(1); j++)
-                {
-                    foreach (Civilian civ in buckets[i, j].GetCivilians())
-                    {
-                        civ.ResetKnowledge();
-                    }
-                    
+                {                    
                     Point? cleanWaterPosition = buckets[i, j].CleanWaterLocation;
                     Point? foodPosition = buckets[i, j].FoodLocation;
                     Point? medsPosition = buckets[i, j].MedsLocation;
