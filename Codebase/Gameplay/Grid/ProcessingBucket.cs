@@ -42,6 +42,26 @@ namespace GGJ_DisasterMode.Codebase.Gameplay.Grid
             }
         }
 
+        public Point? MedsLocation
+        {
+            get
+            {
+                Point? p = null;
+                hasMeds(out p);
+                return p;
+            }
+        }
+
+        public Point? ShelterLocation
+        {
+            get
+            {
+                Point? p = null;
+                hasShelter(out p);
+                return p;
+            }
+        }
+
         public ProcessingBucket()
         {
             this.actions = new List<GameAction>();
@@ -63,6 +83,22 @@ namespace GGJ_DisasterMode.Codebase.Gameplay.Grid
             foreach (Civilian civilian in civilians)
             {
                 civilian.SetNearestKnownFoodSource(nearestFood);
+            }
+        }
+
+        public void InformCiviliansNearestMeds(Vector2 nearestMeds)
+        {
+            foreach (Civilian civilian in civilians)
+            {
+                civilian.SetNearestKnownHealthSource(nearestMeds);
+            }
+        }
+
+        public void InformCiviliansNearestShelter(Vector2 nearestShelter)
+        {
+            foreach (Civilian civilian in civilians)
+            {
+                civilian.SetNearestKnownTempSource(nearestShelter);
             }
         }
 
@@ -107,6 +143,38 @@ namespace GGJ_DisasterMode.Codebase.Gameplay.Grid
                 if (d.DropoffType == DropoffType.Dropoff_Food_Low ||
                     d.DropoffType == DropoffType.Dropoff_Food_Medium ||
                     d.DropoffType == DropoffType.Dropoff_Food_High)
+                {
+                    location = d.Position;
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private bool hasMeds(out Point? location)
+        {
+            location = null;
+            foreach (Dropoff d in drops.Where(drop => drop.IsAvaliable))
+            {
+                if (d.DropoffType == DropoffType.Dropoff_Health_Low ||
+                    d.DropoffType == DropoffType.Dropoff_Health_Medium ||
+                    d.DropoffType == DropoffType.Dropoff_Health_High)
+                {
+                    location = d.Position;
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private bool hasShelter(out Point? location)
+        {
+            location = null;
+            foreach (Dropoff d in drops.Where(drop => drop.IsAvaliable))
+            {
+                if (d.DropoffType == DropoffType.Dropoff_Temperature_Low ||
+                    d.DropoffType == DropoffType.Dropoff_Temperature_Medium ||
+                    d.DropoffType == DropoffType.Dropoff_Temperature_High)
                 {
                     location = d.Position;
                     return true;

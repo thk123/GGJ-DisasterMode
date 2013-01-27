@@ -32,6 +32,18 @@ namespace GGJ_DisasterMode.Codebase.Characters
             private set;
         }
 
+        public Vector2? NearestKnownHealthSource
+        {
+            get;
+            private set;
+        }
+
+        public Vector2? NearestKnownTempSource
+        {
+            get;
+            private set;
+        }
+
         public void SetNearestKnownWaterSource(Vector2 waterScreenLocation)
         {
             this.NearestKnownWaterSource = 
@@ -45,6 +57,22 @@ namespace GGJ_DisasterMode.Codebase.Characters
             this.NearestKnownFoodSource =
                 new Vector2(((foodScreenLocation.X - 14) / 0.31166f),
                 ((foodScreenLocation.Y - 14) / 0.30166f));
+            this.color = Color.Red;
+        }
+
+        public void SetNearestKnownHealthSource(Vector2 healthScreenLocation)
+        {
+            this.NearestKnownHealthSource =
+                new Vector2(((healthScreenLocation.X - 14) / 0.31166f),
+                ((healthScreenLocation.Y - 14) / 0.30166f));
+            this.color = Color.Red;
+        }
+
+        public void SetNearestKnownTempSource(Vector2 tempScreenLocation)
+        {
+            this.NearestKnownTempSource =
+                new Vector2(((tempScreenLocation.X - 14) / 0.31166f),
+                ((tempScreenLocation.Y - 14) / 0.30166f));
             this.color = Color.Red;
         }
 
@@ -270,8 +298,10 @@ namespace GGJ_DisasterMode.Codebase.Characters
                     (NearestKnownWaterSource.HasValue) ? NearestKnownWaterSource.Value : (Vector2?) null;
                 Knowledge.ClostestFood =
                     (NearestKnownFoodSource.HasValue) ? NearestKnownFoodSource.Value : (Vector2?)null;
-                Knowledge.ClosestMedicine = null;
-                Knowledge.ClosestShelter = null;
+                Knowledge.ClosestMedicine =
+                    (NearestKnownHealthSource.HasValue) ? NearestKnownHealthSource.Value : (Vector2?)null;
+                Knowledge.ClosestShelter =
+                    (NearestKnownTempSource.HasValue) ? NearestKnownTempSource.Value : (Vector2?)null;
                 Knowledge.ClosestGameAction = null;
 
                 goal = DecisionProcessing.Run(currentPosition, Knowledge, CurrentNeeds, CurrentBehaviour); 

@@ -265,6 +265,8 @@ namespace GGJ_DisasterMode.Codebase.Gameplay.Grid
                 {
                     Point? cleanWaterPosition = null;
                     Point? foodPosition = null;
+                    Point? medsPosition = null;
+                    Point? shelterPosition = null;
                     
                     ProcessingBucket[] localArea = getNeighbours(i, j);
                     for (int k = 1; k < localArea.GetLength(0); k++)
@@ -277,6 +279,16 @@ namespace GGJ_DisasterMode.Codebase.Gameplay.Grid
                         if (foodPosition == null)
                         {
                             foodPosition = localArea[k].FoodLocation;
+                        }
+
+                        if (medsPosition == null)
+                        {
+                            medsPosition = localArea[k].MedsLocation;
+                        }
+
+                        if (shelterPosition == null)
+                        {
+                            shelterPosition = localArea[k].ShelterLocation;
                         }
                         
                     }
@@ -298,6 +310,18 @@ namespace GGJ_DisasterMode.Codebase.Gameplay.Grid
                     {
                         this.buckets[i,j].InformCiviliansNearestFood(
                             new Vector2(foodPosition.Value.X, foodPosition.Value.Y));
+                    }
+
+                    if (medsPosition.HasValue)
+                    {
+                        this.buckets[i, j].InformCiviliansNearestMeds(
+                            new Vector2(medsPosition.Value.X, medsPosition.Value.Y));
+                    }
+
+                    if (shelterPosition.HasValue)
+                    {
+                        this.buckets[i, j].InformCiviliansNearestShelter(
+                            new Vector2(shelterPosition.Value.X, shelterPosition.Value.Y));
                     }
                 }
             }
