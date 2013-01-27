@@ -62,7 +62,7 @@ namespace GGJ_DisasterMode.Codebase.Gameplay.Grid
             }
         }
 
-        public Point? InstructionLocation
+        /*public Point? InstructionLocation
         {
             get
             {
@@ -70,7 +70,7 @@ namespace GGJ_DisasterMode.Codebase.Gameplay.Grid
                 hasInstruction(out p);
                 return p;
             }
-        }
+        }*/
 
         public ProcessingBucket()
         {
@@ -109,6 +109,14 @@ namespace GGJ_DisasterMode.Codebase.Gameplay.Grid
             foreach (Civilian civilian in civilians)
             {
                 civilian.SetNearestKnownTempSource(nearestShelter);
+            }
+        }
+
+        public void InformCiviliansTarget(Vector2 target)
+        {
+            foreach (Civilian civilian in civilians)
+            {
+                civilian.SetNearestInstructionDirection(target);
             }
         }
 
@@ -201,7 +209,7 @@ namespace GGJ_DisasterMode.Codebase.Gameplay.Grid
             return false;
         }
 
-        private bool hasInstruction(out Point? location)
+        /*private bool hasInstruction(out Point? location)
         {
             foreach (GameAction a in actions.Where(action => action.ActionType == ActionType.DirectAction))
             {
@@ -211,7 +219,7 @@ namespace GGJ_DisasterMode.Codebase.Gameplay.Grid
 
             location = null;
             return false;
-        }
+        }*/
 
         public void Clear()
         {

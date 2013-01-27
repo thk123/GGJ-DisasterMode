@@ -182,12 +182,25 @@ namespace GGJ_DisasterMode.Codebase.Gameplay.Grid
 
         public void addNewAction(GameAction action, int xCoordinate, int yCoordinate)
         {
-            Point? nullBucket = getBucketID(xCoordinate, yCoordinate);
+            /*Point? nullBucket = getBucketID(xCoordinate, yCoordinate);
             if (nullBucket == null) return;
-            Point bucket = (Point)nullBucket;
+            Point bucket = (Point)nullBucket;*/
+            if (action.ActionType == ActionType.DirectAction)
+            {
+                this.actions.Add(action);
+                this.buckets[xCoordinate, yCoordinate].addAction(action);
 
-            this.actions.Add(action);
-            this.buckets[bucket.X, bucket.Y].addAction(action);
+                ProcessingBucket[] localArea = getNeighbours(xCoordinate, yCoordinate);
+
+                foreach (ProcessingBucket adjacentBucked in localArea)
+                {
+                    Rectangle targetPoint = grid.GetGridRectangleFromGridPoint(action.ActionDirection.Value);
+                    adjacentBucked.InformCiviliansTarget(
+                        new Vector2(targetPoint.Center.X, targetPoint.Center.Y)); ;
+                }
+            }
+
+         
         }
 
         public void addNewDrop(Dropoffs.Dropoff drop, int xCoordinate, int yCoordinate)
@@ -268,7 +281,7 @@ namespace GGJ_DisasterMode.Codebase.Gameplay.Grid
                     Point? foodPosition = buckets[i, j].FoodLocation;
                     Point? medsPosition = buckets[i, j].MedsLocation;
                     Point? shelterPosition = buckets[i, j].ShelterLocation;
-                    Point? instructionDestination = buckets[i, j].InstructionLocation;
+                    //Point? instructionDestination = buckets[i, j].InstructionLocation;
                     
                     
 
@@ -298,15 +311,6 @@ namespace GGJ_DisasterMode.Codebase.Gameplay.Grid
                             localArea[k].InformCiviliansNearestShelter(
                                 new Vector2(shelterPosition.Value.X, shelterPosition.Value.Y));
                         }
-
-                        if (instructionDestination == null)
-                        {
-                            //TODO: inform civilians of destination
-                            //instructionDestination = localArea[k].InstructionLocation;
-    /*(
-                                new Vector2(shelterPosition.Value.X, shelterPosition.Value.Y));*/
-                        }
-                        
                     }
                 }
             }

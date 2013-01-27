@@ -33,7 +33,7 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
         TimeSpan remainingTime;
 
         Draggable currentlyDragging;
-        tewr
+        
         int dayCount;
 
 

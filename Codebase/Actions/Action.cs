@@ -110,7 +110,7 @@ namespace GGJ_DisasterMode.Codebase.Actions
 
             ActionState = Actions.ActionState.Active;
 
-            bucketSystem.addNewAction(this, (int)actualPosition.X, (int)actualPosition.Y);
+            bucketSystem.addNewAction(this, (int)mapLocation.X, (int)mapLocation.Y);
         }
 
         public void CancelPlaceAction()
