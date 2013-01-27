@@ -93,7 +93,7 @@ namespace GGJ_DisasterMode.Codebase.Screens
 
         public Point? GetGridPointFromMousePosition(Point mousePosition)
         {
-            return GetGridPointFromMousePosition(mousePosition, false);
+            return GetGridPointFromMousePosition(mousePosition, true);
         }
 
         public Point? GetGridPointFromMousePosition(Point mousePosition, bool allowedInEdge)
@@ -105,8 +105,8 @@ namespace GGJ_DisasterMode.Codebase.Screens
                 gridPoint.X = mousePosition.X - gridRectangle.X;
                 gridPoint.Y = mousePosition.Y - gridRectangle.Y;
 
-                double xPos = gridPoint.X / (float)CellWidth;
-                double yPos = gridPoint.Y / (float)CellHeight;
+                double xPos = gridPoint.X / CellWidth;
+                double yPos = gridPoint.Y / CellHeight;
 
                 //Round the floating values
                 xPos = Math.Floor(xPos);

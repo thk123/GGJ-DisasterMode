@@ -72,19 +72,111 @@ namespace GGJ_DisasterMode.Codebase.Gameplay.Grid
 
         public ProcessingBucket[] getNeighbours(int x, int y)
         {
-            ProcessingBucket[] neighbours = 
-            { 
-                buckets[x,y], 
-                buckets[x,y+1], 
-                buckets[x,y-1], 
-                buckets[x+1,y], 
-                buckets[x+1,y+1],
-                buckets[x+1,y-1],
-                buckets[x-1,y], 
-                buckets[x-1,y+1], 
-                buckets[x-1,y-1]                
-            };
-            return neighbours;
+            ProcessingBucket[] neighbours;
+            
+            if ((x == 0) & (y == 0))
+            {
+                return new ProcessingBucket[] 
+                { 
+                    buckets[x,y], 
+                    buckets[x,y+1], 
+                    buckets[x+1,y], 
+                    buckets[x+1,y+1],              
+                };
+            }
+            else if ( ( x == 0 )  && ( y == 17 ) )
+            {
+                return new ProcessingBucket[] 
+                { 
+                    buckets[x,y], 
+                    buckets[x,y-1], 
+                    buckets[x+1,y], 
+                    buckets[x+1,y-1],              
+                };
+            }
+            else if ((x == 17) && (y == 0))
+            {
+                return new ProcessingBucket[] 
+                { 
+                    buckets[x,y], 
+                    buckets[x,y+1], 
+                    buckets[x-1,y], 
+                    buckets[x-1,y+1],              
+                };
+            }
+            else if ((x == 17) && (y == 17))
+            {
+                return new ProcessingBucket[] 
+                { 
+                    buckets[x,y], 
+                    buckets[x,y-1], 
+                    buckets[x-1,y], 
+                    buckets[x-1,y-1],              
+                };
+            }
+            else if ((x > 0) && (x < 17) && (y == 0))
+            {
+                return new ProcessingBucket[] 
+                { 
+                    buckets[x,y], 
+                    buckets[x,y+1],
+                    buckets[x+1,y], 
+                    buckets[x+1,y+1], 
+                    buckets[x-1,y], 
+                    buckets[x-1,y+1],              
+                };
+            }
+            else if ((x > 0) && (x < 17) && (y == 17))
+            {
+                return new ProcessingBucket[] 
+                { 
+                    buckets[x,y], 
+                    buckets[x,y-1],
+                    buckets[x+1,y], 
+                    buckets[x+1,y-1], 
+                    buckets[x-1,y], 
+                    buckets[x-1,y-1],              
+                };
+            }
+            else if ((y > 0) && (y < 17) && (x == 0))
+            {
+                return new ProcessingBucket[] 
+                { 
+                    buckets[x,y], 
+                    buckets[x+1,y],
+                    buckets[x,y+1], 
+                    buckets[x+1,y+1], 
+                    buckets[x,y-1], 
+                    buckets[x+1,y-1],              
+                };
+            }
+            else if ((y > 0) && (y < 17) && (x == 17))
+            {
+                return new ProcessingBucket[] 
+                { 
+                    buckets[x,y], 
+                    buckets[x-1,y],
+                    buckets[x,y+1], 
+                    buckets[x-1,y+1], 
+                    buckets[x,y-1], 
+                    buckets[x-1,y-1],              
+                };
+            }
+            else
+            {
+                return new ProcessingBucket[] 
+                { 
+                    buckets[x,y], 
+                    buckets[x,y+1], 
+                    buckets[x,y-1], 
+                    buckets[x+1,y], 
+                    buckets[x+1,y+1],
+                    buckets[x+1,y-1],
+                    buckets[x-1,y], 
+                    buckets[x-1,y+1], 
+                    buckets[x-1,y-1]                
+                };
+            }
         }
 
 
@@ -113,9 +205,13 @@ namespace GGJ_DisasterMode.Codebase.Gameplay.Grid
             Point civilianPosition = 
                 new Point(civilian.DrawableX, civilian.DrawableY);
 
-            if (this.grid.GetGridPointFromMousePosition(civilianPosition) != null)
+            if (this.grid.GetGridPointFromMousePosition(civilianPosition, true).HasValue)
             {
                 civilians.Add(civilian);
+            }
+            else
+            {
+                throw new Exception("invalid civilian position");
             }
         }
 
@@ -163,9 +259,9 @@ namespace GGJ_DisasterMode.Codebase.Gameplay.Grid
 
         public void ProcessCivilianKnowledgeModel()
         {
-            for (int i = 1; i < buckets.GetLength(0) - 1; i++)
+            for (int i = 0; i < buckets.GetLength(0); i++)
             {
-                for (int j = 1; j < buckets.GetLength(1) - 1; j++)
+                for (int j = 0; j < buckets.GetLength(1); j++)
                 {
                     ProcessingBucket[] localArea = getNeighbours(i, j);
                     Point? cleanWaterPosition = null;
@@ -176,14 +272,15 @@ namespace GGJ_DisasterMode.Codebase.Gameplay.Grid
                             cleanWaterPosition = localArea[k].Water.Position;
                         }
                     }
-                    if (cleanWaterPosition != null)
+                    if (cleanWaterPosition.HasValue)
                     {
-                        Point cleanWater = (Point)cleanWaterPosition;
-                        for (int k = 1; k < localArea.GetLength(0); k++)
-                        {
-                            localArea[k].InformCiviliansNearestWater(new Vector2(cleanWater.X,
-                                                        cleanWater.Y));
-                        } 
+                        //Point cleanWater = (Point)cleanWaterPosition;
+                        //for (int k = 0; k < localArea.GetLength(0); k++)
+                        //{
+                            this.buckets[i,j].InformCiviliansNearestWater(
+                                new Vector2(cleanWaterPosition.Value.X, cleanWaterPosition.Value.Y));
+
+                        //} 
                     }
                 }
             }
