@@ -48,6 +48,7 @@ namespace GGJ_DisasterMode.Codebase.Dropoffs
         public Texture2D shopTexture;
         public Texture2D draggingTexture;
         public Texture2D placedTexture;
+        public Texture2D navTexture;
     }
 
 
@@ -179,18 +180,29 @@ namespace GGJ_DisasterMode.Codebase.Dropoffs
             }
         }
 
-        public virtual void Draw(GameTime gameTime, SpriteBatch spriteBatch, bool enabled)
+        public virtual void Draw(GameTime gameTime, SpriteBatch spriteBatch, bool enabled, bool inNavMode)
         {
-            base.Draw(spriteBatch, enabled);
-
-            
-            if (CurrentState == DropoffState.Placed)
+            if (!inNavMode)
             {
-                //draw relevant clock
-                Texture2D clockTexture = ClockDrawer.DrawClock(ClockDrawer.GetClockType(DaysToDelivery, dropoffProperties.delay));
-                Vector2 drawPos = new Vector2(gridPosition.Center.X - (clockTexture.Width / 2.0f), gridPosition.Center.Y - (clockTexture.Height / 2.0f));
-                //drawPos.Y -= 40;
-                spriteBatch.Draw(clockTexture, drawPos,Color.White);
+                base.Draw(spriteBatch, enabled);
+
+                if (CurrentState == DropoffState.Placed)
+                {
+                    //draw relevant clock
+                    Texture2D clockTexture = ClockDrawer.DrawClock(ClockDrawer.GetClockType(DaysToDelivery, dropoffProperties.delay));
+                    Vector2 drawPos = new Vector2(gridPosition.Center.X - (clockTexture.Width / 2.0f), gridPosition.Center.Y - (clockTexture.Height / 2.0f));
+                    //drawPos.Y -= 40;
+                    spriteBatch.Draw(clockTexture, drawPos, Color.White);
+                }
+            }
+            else
+            {
+                // in nav mode we hide other entites
+                if (CurrentState == DropoffState.Delivered)
+                {
+                    Vector2 drawPos = new Vector2(gridPosition.Center.X - (dropoffProperties.navTexture.Width / 2.0f), gridPosition.Center.Y - (dropoffProperties.navTexture.Height / 2.0f));
+                    spriteBatch.Draw(dropoffProperties.navTexture, drawPos, Color.White);
+                }
             }
         }
 

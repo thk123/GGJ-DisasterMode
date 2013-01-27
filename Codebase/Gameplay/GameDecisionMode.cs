@@ -54,7 +54,7 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
         {
             foreach (Dropoffs.Dropoff dropoff in dropoffs)
             {
-                dropoff.Draw(gameTime, spriteBatch, gameMode == GameMode.DECISION);
+                dropoff.Draw(gameTime, spriteBatch, gameMode == GameMode.DECISION, realTimeState == RealTimeState.SelectingDestionation);
             }
         }
 
