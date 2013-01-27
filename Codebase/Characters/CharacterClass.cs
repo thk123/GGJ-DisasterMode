@@ -115,6 +115,19 @@ namespace GGJ_DisasterMode.Codebase.Characters
             private set;
         }
 
+        bool isDead;
+        public bool IsDead
+        {
+            get
+            {
+                return isDead;
+            }
+            set
+            {
+                isDead = value;
+            }
+        }
+
         public Civilian(CivilianClassProperties characterProperties, int startX, int startY, Texture2D texture)
         {
             this.characterProperties = characterProperties;
@@ -135,6 +148,15 @@ namespace GGJ_DisasterMode.Codebase.Characters
             CurrentHunger -= characterProperties.hungerDecay;
             CurrentThirst -= characterProperties.thirstDecay;
             CurrentHealth -= characterProperties.healthDecay;
+
+            if (CurrentHunger <= 0 ||
+                CurrentThirst <= 0 ||
+                CurrentHealth <= 0 ||
+                CurrentColdTemp <= 0 ||
+                CurrentHotTemp <= 0)
+            {
+                IsDead = true;
+            }
         }
 
         public void UpdateTemperature(float temperature)
@@ -251,9 +273,16 @@ namespace GGJ_DisasterMode.Codebase.Characters
 
         public void Draw(SpriteBatch spriteBatch, Matrix transform)
         {
-            spriteBatch.Draw(this.civilianTexture, new Vector2(14.0f + (this.currentPosition.X * 0.31166f),
-                    14.0f + (this.currentPosition.Y * 0.30166f)), 
-                    null, this.color, 0.0f, new Vector2(), 5.0f, SpriteEffects.None, 1.0f);
+            if (!IsDead)
+            {
+                spriteBatch.Draw(this.civilianTexture, new Vector2(14.0f + (this.currentPosition.X * 0.31166f),
+                        14.0f + (this.currentPosition.Y * 0.30166f)),
+                        null, this.color, 0.0f, new Vector2(), 5.0f, SpriteEffects.None, 1.0f);
+            }
+            else
+            {
+                //draw gravestone?
+            }
         }
 
         private void ResetLevelsToDefaultValues()
