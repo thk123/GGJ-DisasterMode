@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
+using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Media;
 using Microsoft.Xna.Framework.Graphics;
 using GGJ_DisasterMode.Codebase.Characters.Decision;
 
@@ -290,9 +292,8 @@ namespace GGJ_DisasterMode.Codebase.Characters
 
         public void ApplyHealthPenalty(float penalty)
         {
-            CurrentHealth -= penalty * characterProperties.healthVulnerability;
+            CurrentHealth -= penalty * characterProperties.healthVulnerability * 0.0001f;
         }
-
 
         public void Update(GameTime gameTime)
         {
@@ -323,11 +324,41 @@ NearestKnownWaterSource.Value) < 30000)
             {
                 CurrentThirst += 0.05f;
             }
+            else
+            {
+                CurrentThirst -= 0.001f * characterProperties.thirstDecay;
+            }
             if ((this.NearestKnownTempSource.HasValue) &&
                 (Vector2.DistanceSquared(currentPosition, NearestKnownTempSource.Value) < 30000))
             {
                 if (CurrentHotTemp < 100.0f) { CurrentHotTemp += 5.0f; }
                 if (CurrentColdTemp < 100.0f) { CurrentColdTemp += 5.0f; }
+            }
+            else if ( (CurrentHotTemp < 80.0f) )
+            {
+                if (RANDOM.Next(2) == 0)
+                {
+                    CurrentHotTemp += (float) (RANDOM.NextDouble() * (0.05 * characterProperties.hotTempMultiplier));
+                    //CurrentColdTemp += (float) (RANDOM.NextDouble() * (0.05 * characterProperties.coldTempMultiplier));
+                }
+                else
+                {
+                    CurrentHotTemp -= (float) (RANDOM.NextDouble() * (0.05 * characterProperties.hotTempMultiplier));
+                    //CurrentColdTemp += (float) (RANDOM.NextDouble() * (0.05 * characterProperties.coldTempMultiplier));
+                }
+            }
+            else if (CurrentColdTemp < 80.0f)
+            {
+                if (RANDOM.Next(2) == 0)
+                {
+                    //CurrentHotTemp += (float)(RANDOM.NextDouble() * (0.05 * characterProperties.hotTempMultiplier));
+                    CurrentColdTemp += (float)(RANDOM.NextDouble() * (0.05 * characterProperties.coldTempMultiplier));
+                }
+                else
+                {
+                    //CurrentHotTemp += (float)(RANDOM.NextDouble() * (0.05 * characterProperties.hotTempMultiplier));
+                    CurrentColdTemp -= (float)(RANDOM.NextDouble() * (0.05 * characterProperties.coldTempMultiplier));
+                }
             }
             if ((this.NearestKnownHealthSource.HasValue) &&
                 (Vector2.DistanceSquared(currentPosition, NearestKnownHealthSource.Value) < 30000)
@@ -335,12 +366,20 @@ NearestKnownWaterSource.Value) < 30000)
             {
                 CurrentHealth += 0.05f;
             }
+            else
+            {
+                
+            }
             if ((this.NearestKnownFoodSource.HasValue) &&
                 (Vector2.DistanceSquared(currentPosition,
 NearestKnownWaterSource.Value) < 30000)
                 && CurrentHunger < 100.0f)
             {
                 CurrentHunger += 0.05f;
+            }
+            else
+            {
+                CurrentHunger -= (0.001f * characterProperties.hungerDecay);
             }
 
             Needs CurrentNeeds = new Needs();

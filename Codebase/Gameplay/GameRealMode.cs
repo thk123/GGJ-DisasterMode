@@ -203,6 +203,8 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
 
             buckets.PopulateBuckets();
 
+
+            buckets.ApplyDensityIllnessPenalty();
             foreach (Civilian civilian in civilians)
             {
                 civilian.Update(gameTime);
