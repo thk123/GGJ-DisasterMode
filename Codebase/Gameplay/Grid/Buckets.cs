@@ -263,15 +263,26 @@ namespace GGJ_DisasterMode.Codebase.Gameplay.Grid
             {
                 for (int j = 0; j < buckets.GetLength(1); j++)
                 {
-                    ProcessingBucket[] localArea = getNeighbours(i, j);
                     Point? cleanWaterPosition = null;
+                    Point? foodPosition = null;
+                    
+                    ProcessingBucket[] localArea = getNeighbours(i, j);
                     for (int k = 1; k < localArea.GetLength(0); k++)
                     {
-                        if (localArea[k].hasCleanWater())
+                        if (cleanWaterPosition == null)
                         {
-                            cleanWaterPosition = localArea[k].Water.Position;
+                            cleanWaterPosition = localArea[k].CleanWaterLocation;
                         }
+
+                        if (foodPosition == null)
+                        {
+                            foodPosition = localArea[k].FoodLocation;
+                        }
+                        
                     }
+
+                    //add rules here
+
                     if (cleanWaterPosition.HasValue)
                     {
                         //Point cleanWater = (Point)cleanWaterPosition;
@@ -281,6 +292,12 @@ namespace GGJ_DisasterMode.Codebase.Gameplay.Grid
                                 new Vector2(cleanWaterPosition.Value.X, cleanWaterPosition.Value.Y));
 
                         //} 
+                    }
+
+                    if (foodPosition.HasValue)
+                    {
+                        this.buckets[i,j].InformCiviliansNearestFood(
+                            new Vector2(foodPosition.Value.X, foodPosition.Value.Y));
                     }
                 }
             }

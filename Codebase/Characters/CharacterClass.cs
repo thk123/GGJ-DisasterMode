@@ -26,11 +26,25 @@ namespace GGJ_DisasterMode.Codebase.Characters
             private set;
         }
 
+        public Vector2? NearestKnownFoodSource
+        {
+            get;
+            private set;
+        }
+
         public void SetNearestKnownWaterSource(Vector2 waterScreenLocation)
         {
             this.NearestKnownWaterSource = 
                 new Vector2( ((waterScreenLocation.X - 14) / 0.31166f),
                 ((waterScreenLocation.Y - 14) / 0.30166f) );
+            this.color = Color.Red;
+        }
+
+        public void SetNearestKnownFoodSource(Vector2 foodScreenLocation)
+        {
+            this.NearestKnownFoodSource =
+                new Vector2(((foodScreenLocation.X - 14) / 0.31166f),
+                ((foodScreenLocation.Y - 14) / 0.30166f));
             this.color = Color.Red;
         }
 
@@ -254,7 +268,8 @@ namespace GGJ_DisasterMode.Codebase.Characters
                 KnowledgeModel Knowledge = new KnowledgeModel();
                 Knowledge.ClosestWater = 
                     (NearestKnownWaterSource.HasValue) ? NearestKnownWaterSource.Value : (Vector2?) null;
-                Knowledge.ClostestFood = null;
+                Knowledge.ClostestFood =
+                    (NearestKnownFoodSource.HasValue) ? NearestKnownFoodSource.Value : (Vector2?)null;
                 Knowledge.ClosestMedicine = null;
                 Knowledge.ClosestShelter = null;
                 Knowledge.ClosestGameAction = null;

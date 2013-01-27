@@ -98,10 +98,19 @@ namespace GGJ_DisasterMode.Codebase.Dropoffs
             private set;
         }
 
-        public int RemainingUses
+        private int RemainingUses
         {
             get;
-            private set;
+            set;
+        }
+
+        public bool IsAvaliable
+        {
+            get
+            {
+                //either infinite uses of more than 0     && not decayed...
+                return (RemainingUses > 0 || RemainingUses == -1) && (CurrentState != DropoffState.Decayed);
+            }
         }
 
         Rectangle gridPosition;
@@ -150,7 +159,7 @@ namespace GGJ_DisasterMode.Codebase.Dropoffs
                         CurrentState = DropoffState.Delivered;
 
                         //alert the grid to our arrival 
-                        buckets.addNewDrop(this, gridPoint.X, gridPoint.Y);
+                        buckets.addNewDrop(this, gridPosition.Center.X, gridPosition.Center.Y);
                     }
                     break;
                 case DropoffState.Delivered:
