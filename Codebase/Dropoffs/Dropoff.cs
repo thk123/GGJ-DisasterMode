@@ -179,8 +179,8 @@ namespace GGJ_DisasterMode.Codebase.Dropoffs
             {
                 //draw relevant clock
                 Texture2D clockTexture = ClockDrawer.DrawClock(ClockDrawer.GetClockType(DaysToDelivery, dropoffProperties.delay));
-                Vector2 drawPos = new Vector2(gridPosition.Center.X - (clockTexture.Width / 2.0f), gridPosition.Center.Y);
-                drawPos.Y -= 40;
+                Vector2 drawPos = new Vector2(gridPosition.Center.X - (clockTexture.Width / 2.0f), gridPosition.Center.Y - (clockTexture.Height / 2.0f));
+                //drawPos.Y -= 40;
                 spriteBatch.Draw(clockTexture, drawPos,Color.White);
             }
         }

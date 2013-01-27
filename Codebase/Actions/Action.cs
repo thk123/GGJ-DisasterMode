@@ -48,6 +48,9 @@ namespace GGJ_DisasterMode.Codebase.Actions
 
         Rectangle uiLocation;
 
+        Texture2D shopImage = null;
+        Texture2D dragImage = null;
+
         public GameAction(ActionType actionType, Rectangle uiLocation)
             :base(uiLocation)
         {
@@ -66,8 +69,17 @@ namespace GGJ_DisasterMode.Codebase.Actions
         public void LoadContent(ContentManager content)
         {
             //Load textures for different types of actions 
-            Texture2D uiTexture = content.Load<Texture2D>("Graphics/Dropoffs/Dropoff_FirstAid_Basic");
-            base.SetContent(uiTexture, null);
+            if (ActionType == Actions.ActionType.DirectAction)
+            {
+                shopImage = content.Load<Texture2D>("Graphics/GUIElements/gotoButton");
+                dragImage = content.Load<Texture2D>("Graphics/GUIElements/goto");
+            }
+            else
+            {
+                shopImage = content.Load<Texture2D>("Graphics/GUIElements/listenButton");
+                dragImage = content.Load<Texture2D>("Graphics/GUIElements/listen");
+            }
+            base.SetContent(shopImage, dragImage, dragImage);
         }
 
 
@@ -113,8 +125,9 @@ namespace GGJ_DisasterMode.Codebase.Actions
         public static GameAction CreateNewActionFromAction(GameAction oldAction, Rectangle uiLocation)
         {
             GameAction newAction = new GameAction(oldAction.ActionType, uiLocation);
-            newAction.SetContent(oldAction.staticTexture, oldAction.draggingTexture);
-
+            newAction.SetContent(oldAction.shopImage, oldAction.dragImage, oldAction.dragImage);
+            newAction.dragImage = oldAction.dragImage;
+            newAction.shopImage = oldAction.shopImage;
             return newAction;
         }
     }

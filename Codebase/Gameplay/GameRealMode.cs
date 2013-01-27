@@ -95,7 +95,12 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
 
         public void RealTimeProcessStartNight()
         {
-
+            //Get actions on the board
+            List<GameAction> redundantActions = actions.Where(action => action.ActionState == ActionState.Active).ToList(); ;
+            foreach (GameAction action in redundantActions)
+            {
+                actions.Remove(action);
+            }
         }
 
         public void RealTimeProcessEndNight()

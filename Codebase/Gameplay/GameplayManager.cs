@@ -27,8 +27,8 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
         private GraphicsDevice graphics;
 
 
-        TimeSpan realTimeMaxDuration = new TimeSpan(0, 0, 100);
-        TimeSpan decisionMaxDuration = new TimeSpan(0, 0, 10);
+        TimeSpan realTimeMaxDuration = new TimeSpan(0, 0, 15);
+        TimeSpan decisionMaxDuration = new TimeSpan(0, 0, 15);
 
         TimeSpan remainingTime;
 
@@ -52,17 +52,18 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
             this.parentScreen = screen;
             this.missionRunning = true;
 
-            StartDay();
-
             dayCount = 1;
 
             ConstructReal();
+
+            StartDay();
         }
   
         public void LoadContent(ContentManager content)
         {
             gameFont = content.Load<SpriteFont>("Fonts//gamefont");
             uiTexture = content.Load<Texture2D>("Graphics//UI//GUI_temp");
+            backgroundTexture = content.Load<Texture2D>("Graphics//Backgrounds//background");
             Dropoffs.ClockDrawer.LoadContent(content);
             LoadContentReal(content);
             LoadContentDecision(content);
@@ -93,6 +94,7 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             spriteBatch.Begin();
+            spriteBatch.Draw(backgroundTexture, new Rectangle(9, 9, backgroundTexture.Width, backgroundTexture.Height), Color.White);
             grid.Draw(spriteBatch);
             spriteBatch.Draw(uiTexture, new Vector2(uiOffset, 9), Color.White);
             //if (this.gameMode == GameMode.REALTIME)
@@ -165,10 +167,10 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
                     {
                         //Drop the dropoff in this grid#
                         Rectangle cellRect = grid.GetGridRectangleFromGridPoint(gridPoint.Value);
-                        currentlyDragging.EndDrag(cellRect, null);
+                        currentlyDragging.EndDrag(cellRect);
                         currentState = DragState.Idle;
-                        this.buckets.addWater(cellRect.X + (cellRect.Width / 2), 
-                            cellRect.Y + (cellRect.Height / 2));
+                        /*this.buckets.addWater(cellRect.X + (cellRect.Width / 2), 
+                            cellRect.Y + (cellRect.Height / 2));*/
 
                         if (gameMode == GameMode.REALTIME)
                         {
@@ -176,7 +178,7 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
                         }
                         else
                         {
-                            DropoffPlaced((Dropoffs.Dropoff)currentlyDragging, cellRect);
+                            DropoffPlaced((Dropoffs.Dropoff)currentlyDragging, cellRect, gridPoint.Value);
                         }
                     }
                     else
@@ -278,9 +280,9 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
 
         private void DisplayClock(SpriteBatch spriteBatch)
         {
-            string s = string.Format("DAY: {0}", dayCount);
+            string s = string.Format("DAY {0}", dayCount);
             Vector2 stringSize = gameFont.MeasureString(s);
-            spriteBatch.DrawString(gameFont, s, new Vector2(uiOffset + 215 - (stringSize.X / 2.0f), 50 - (stringSize.Y / 2.0f)), Color.Red);
+            spriteBatch.DrawString(gameFont, s, new Vector2(uiOffset + 224 - (stringSize.X / 2.0f), 59 - (stringSize.Y / 2.0f)), Color.Red);
 
             int secondsInADay = 60 * 60 * 24;
             double secondsRemaining = remainingTime.TotalSeconds;
@@ -289,9 +291,9 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
             double secondsThrough = secondsInADay * invervtedPercentage;
             TimeSpan ofADay = new TimeSpan(0, 0, (int)secondsThrough);
 
-            string timer = string.Format("{2}:{1}:{0}", ofADay.Seconds, ofADay.Minutes, ofADay.Hours);
+            string timer = string.Format("{0}:{1}", ofADay.Hours, ofADay.Minutes);
             Vector2 stringTimeSize = gameFont.MeasureString(timer);
-            spriteBatch.DrawString(gameFont, timer, new Vector2(uiOffset + 215 - (stringTimeSize.X / 2.0f), 100 - (stringTimeSize.Y / 2.0f)), Color.Red);
+            spriteBatch.DrawString(gameFont, timer, new Vector2(uiOffset + 224 - (stringTimeSize.X / 2.0f), 109 - (stringTimeSize.Y / 2.0f)), Color.Red);
         }
     }
 }
