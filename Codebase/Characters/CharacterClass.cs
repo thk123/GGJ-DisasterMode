@@ -4,13 +4,15 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using GGJ_DisasterMode.Codebase.Characters.Decision;
 
 namespace GGJ_DisasterMode.Codebase.Characters
 {
     public abstract class Civilian
     {
+        private static Random RANDOM = new Random(1000);
+        
         const float ambientTemperatureRange = 10.0f;
-        public static Random RANDOM = new Random(1000);
 
         public const int SCALE_FACTOR = 1800;
 
@@ -125,7 +127,7 @@ namespace GGJ_DisasterMode.Codebase.Characters
             this.NearestKnownWaterSource = null;
 
             ResetLevelsToDefaultValues();
-            setRandomGoal();
+            this.goal = DecisionProcessing.RandomGoal(currentPosition);
         }
 
         public void ProcessDay()
@@ -133,39 +135,6 @@ namespace GGJ_DisasterMode.Codebase.Characters
             CurrentHunger -= characterProperties.hungerDecay;
             CurrentThirst -= characterProperties.thirstDecay;
             CurrentHealth -= characterProperties.healthDecay;
-        }
-
-
-        public void setRandomGoal()
-        {
-            const int MIN = 10;
-            const int MAX = 250;
-            
-            float xGoal, yGoal;
-            int direction = RANDOM.Next(4);
-
-            if (direction == 0)
-            {
-                xGoal = currentPosition.X + RANDOM.Next(MIN, MAX);
-                yGoal = currentPosition.Y + RANDOM.Next(MIN, MAX);
-            }
-            else if (direction == 1)
-            {
-                xGoal = currentPosition.X - RANDOM.Next(MIN, MAX);
-                yGoal = currentPosition.Y - RANDOM.Next(MIN, MAX);
-            }
-            else if (direction == 2)
-            {
-                xGoal = currentPosition.X - RANDOM.Next(MIN, MAX);
-                yGoal = currentPosition.Y + RANDOM.Next(MIN, MAX);
-            }
-            else
-            {
-                xGoal = currentPosition.X + RANDOM.Next(MIN, MAX);
-                yGoal = currentPosition.Y - RANDOM.Next(MIN, MAX);
-            }
-            this.goal = new Vector2(xGoal, yGoal); 
-            
         }
 
         public void UpdateTemperature(float temperature)
@@ -229,20 +198,46 @@ namespace GGJ_DisasterMode.Codebase.Characters
                 currentPosition.Y -= SCALE_FACTOR;
             }
 
+            Needs CurrentNeeds = new Needs();
+            CurrentNeeds.Cold = CurrentColdTemp;
+            CurrentNeeds.Health = CurrentHealth;
+            CurrentNeeds.Hot = CurrentHotTemp;
+            CurrentNeeds.Thirst = CurrentThirst;
+            CurrentNeeds.Hunger = CurrentHunger;
 
-            if (Vector2.DistanceSquared(currentPosition, goal) > 600)
+            bool HasUrgentNeeds = CurrentNeeds.AreUrgent();
+
+            if ( !HasUrgentNeeds && (Vector2.DistanceSquared(currentPosition, goal) > 64000) )
             {
-                setRandomGoal();
+                goal = DecisionProcessing.RandomGoal(currentPosition);
             }
-
-            if (NearestKnownWaterSource.HasValue && 
+            else if ( !HasUrgentNeeds && NearestKnownWaterSource.HasValue && 
                 (Vector2.DistanceSquared(currentPosition, NearestKnownWaterSource.Value) > 24000) )
             {
                 goal = NearestKnownWaterSource.Value;
             }
-            else if ( (RANDOM.Next(100) < 5) && (Math.Abs(currentPosition.X - goal.X) < 2) && (Math.Abs(currentPosition.Y - goal.Y) < 2))
+            else if (!HasUrgentNeeds && (RANDOM.Next(100) < 5) &&
+                (Math.Abs(currentPosition.X - goal.X) < 2) && (Math.Abs(currentPosition.Y - goal.Y) < 2))
             {
-                setRandomGoal();
+                goal = DecisionProcessing.RandomGoal(currentPosition);
+            }
+            else
+            {
+                Behaviour CurrentBehaviour = Behaviour.Conforming;
+                if (CurrentTrust <= 33.0f)
+                {
+                    CurrentBehaviour = Behaviour.Rebellious;
+                }
+                
+                KnowledgeModel Knowledge = new KnowledgeModel();
+                Knowledge.ClosestWater = 
+                    (NearestKnownWaterSource.HasValue) ? NearestKnownWaterSource.Value : (Vector2?) null;
+                Knowledge.ClostestFood = null;
+                Knowledge.ClosestMedicine = null;
+                Knowledge.ClosestShelter = null;
+                Knowledge.ClosestGameAction = null;
+
+                goal = DecisionProcessing.Run(currentPosition, Knowledge, CurrentNeeds, CurrentBehaviour); 
             }
 
             Vector2 direction = goal - currentPosition;

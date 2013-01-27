@@ -27,7 +27,7 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
         private GraphicsDevice graphics;
 
 
-        TimeSpan realTimeMaxDuration = new TimeSpan(0, 0, 1);
+        TimeSpan realTimeMaxDuration = new TimeSpan(0, 0, 100);
         TimeSpan decisionMaxDuration = new TimeSpan(0, 0, 10);
 
         TimeSpan remainingTime;

@@ -43,9 +43,7 @@ namespace GGJ_DisasterMode.Codebase.Screens
         public GameplayScreen()
         {
             TransitionOnTime = TimeSpan.FromSeconds(1.5);
-            TransitionOffTime = TimeSpan.FromSeconds(0.5);
-
-            
+            TransitionOffTime = TimeSpan.FromSeconds(0.5);           
         }
 
 
