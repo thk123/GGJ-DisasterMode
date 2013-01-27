@@ -189,7 +189,14 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
                 //And replensh the ui
                 actions.Add(GameAction.CreateNewActionFromAction(droppedAction, GetUiPosition(droppedAction.ActionType)));
 
-                currentResultsScreen= new AudioResultsScreen(new List<Civilian>(), gridLocation.Y >= 9);
+                List<Civilian> nearbyCivilians = new List<Civilian>();
+                ProcessingBucket[] adjacentBuckets = buckets.getNeighbours(gridLocation.X, gridLocation.Y);
+                foreach (ProcessingBucket bucket in adjacentBuckets)
+                {
+                    nearbyCivilians.AddRange(bucket.GetCivilians());
+                }
+
+                currentResultsScreen= new AudioResultsScreen(nearbyCivilians, gridLocation.Y >= 9);
 
                 parentScreen.ScreenManager.AddScreen(currentResultsScreen, parentScreen.ControllingPlayer);
 

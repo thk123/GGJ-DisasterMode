@@ -37,6 +37,7 @@ namespace GGJ_DisasterMode.Codebase.Screens
 
         Texture2D background;
         Texture2D closeButton;
+        Texture2D face;
         Vector2 uiposition;
 
         Rectangle closeButtonPosition;
@@ -65,6 +66,7 @@ namespace GGJ_DisasterMode.Codebase.Screens
             ContentManager content = new ContentManager(ScreenManager.Game.Services, "Content");
             background = content.Load<Texture2D>("Graphics//UI//background");
             closeButton = content.Load<Texture2D>("Graphics//UI//close");
+            face = content.Load<Texture2D>("Graphics//ListenPeople//adult_0");
         }
 
         public override void HandleInput(InputState input)
@@ -89,19 +91,22 @@ namespace GGJ_DisasterMode.Codebase.Screens
             spriteBatch.Draw(closeButton, closeButtonPosition, Color.White);
             foreach (BarCategory b in Enum.GetValues(typeof(BarCategory)))
             {
-                List<BarEntry> entries = data[(int)b];
-                float xOffset = 0.0f;
-                foreach (BarEntry barEntry in entries)
+                //if (b == BarCategory.category_tooHot)
                 {
-                    Vector2 position = GetStartPoint(b);
-                    position.Y += barEntry.value * 32.0f;
-                    position.X += xOffset;
-                    spriteBatch.Draw(barEntry.graphIcon, position, Color.White);
+                    List<BarEntry> entries = data[(int)b];
+                    float xOffset = 0.0f;
+                    foreach (BarEntry barEntry in entries)
+                    {
+                        Vector2 position = GetStartPoint(b);
+                        position.Y += (1 - (barEntry.value / 100.0f)) * 150.0f;
+                        position.X += xOffset;
+                        spriteBatch.Draw(face/*barEntry.graphIcon*/, position, Color.White);
 
-                    //Loop the offset
-                    xOffset += 32.0f;
-                    if (xOffset >= 64.0f)
-                        xOffset = -64.0f;
+                        //Loop the offset
+                        xOffset += 12.0f;
+                        if (xOffset >= 44.0f)
+                            xOffset = -44.0f;
+                    }
                 }
             }
             spriteBatch.End();
@@ -127,7 +132,7 @@ namespace GGJ_DisasterMode.Codebase.Screens
 
         private Vector2 GetStartPoint(BarCategory category)
         {
-            return new Vector2((int)category * 50, 100);
+            return uiposition + new Vector2(44 + (int)category * 105, 32.0f);
         }
 
     }
