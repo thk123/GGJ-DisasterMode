@@ -62,6 +62,16 @@ namespace GGJ_DisasterMode.Codebase.Gameplay.Grid
             }
         }
 
+        public Point? InstructionLocation
+        {
+            get
+            {
+                Point? p = null;
+                hasInstruction(out p);
+                return p;
+            }
+        }
+
         public ProcessingBucket()
         {
             this.actions = new List<GameAction>();
@@ -188,6 +198,18 @@ namespace GGJ_DisasterMode.Codebase.Gameplay.Grid
                     return true;
                 }
             }
+            return false;
+        }
+
+        private bool hasInstruction(out Point? location)
+        {
+            foreach (GameAction a in actions.Where(action => action.ActionType == ActionType.DirectAction))
+            {
+                location = a.ActionPosition;
+                return true;
+            }
+
+            location = null;
             return false;
         }
 

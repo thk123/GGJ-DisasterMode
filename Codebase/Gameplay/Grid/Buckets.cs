@@ -217,8 +217,10 @@ namespace GGJ_DisasterMode.Codebase.Gameplay.Grid
 
         public void PopulateBuckets()
         {
+            //20ms
             ClearBuckets();
 
+            //20ms
             foreach (Civilian civilian in civilians)
             {
                 Point civilianPosition = new Point(civilian.DrawableX, civilian.DrawableY);
@@ -238,8 +240,7 @@ namespace GGJ_DisasterMode.Codebase.Gameplay.Grid
             {
                 if (action.ActionState == ActionState.Active)
                 {
-                    Point position = (Point) action.ActionPosition;
-                    Point gridPosition = (Point) this.grid.GetGridPointFromMousePosition(position);
+                    Point gridPosition = (Point) action.ActionPosition;
                     buckets[gridPosition.X, gridPosition.Y].addAction(action);
                 }
             }
@@ -263,65 +264,49 @@ namespace GGJ_DisasterMode.Codebase.Gameplay.Grid
             {
                 for (int j = 0; j < buckets.GetLength(1); j++)
                 {
-                    Point? cleanWaterPosition = null;
-                    Point? foodPosition = null;
-                    Point? medsPosition = null;
-                    Point? shelterPosition = null;
+                    Point? cleanWaterPosition = buckets[i, j].CleanWaterLocation;
+                    Point? foodPosition = buckets[i, j].FoodLocation;
+                    Point? medsPosition = buckets[i, j].MedsLocation;
+                    Point? shelterPosition = buckets[i, j].ShelterLocation;
+                    Point? instructionDestination = buckets[i, j].InstructionLocation;
                     
+                    
+
                     ProcessingBucket[] localArea = getNeighbours(i, j);
                     for (int k = 1; k < localArea.GetLength(0); k++)
                     {
-                        if (cleanWaterPosition == null)
+                        if (cleanWaterPosition != null)
                         {
-                            cleanWaterPosition = localArea[k].CleanWaterLocation;
+                            localArea[k].InformCiviliansNearestWater(
+                                new Vector2(cleanWaterPosition.Value.X, cleanWaterPosition.Value.Y)); ;
                         }
 
-                        if (foodPosition == null)
+                        if (foodPosition != null)
                         {
-                            foodPosition = localArea[k].FoodLocation;
+                            localArea[k].InformCiviliansNearestFood(
+                                new Vector2(foodPosition.Value.X, foodPosition.Value.Y));
                         }
 
-                        if (medsPosition == null)
+                        if (medsPosition != null)
                         {
-                            medsPosition = localArea[k].MedsLocation;
+                            localArea[k].InformCiviliansNearestMeds(
+                                new Vector2(medsPosition.Value.X, medsPosition.Value.Y));
                         }
 
-                        if (shelterPosition == null)
+                        if (shelterPosition != null)
                         {
-                            shelterPosition = localArea[k].ShelterLocation;
+                            localArea[k].InformCiviliansNearestShelter(
+                                new Vector2(shelterPosition.Value.X, shelterPosition.Value.Y));
+                        }
+
+                        if (instructionDestination == null)
+                        {
+                            //TODO: inform civilians of destination
+                            //instructionDestination = localArea[k].InstructionLocation;
+    /*(
+                                new Vector2(shelterPosition.Value.X, shelterPosition.Value.Y));*/
                         }
                         
-                    }
-
-                    //add rules here
-
-                    if (cleanWaterPosition.HasValue)
-                    {
-                        //Point cleanWater = (Point)cleanWaterPosition;
-                        //for (int k = 0; k < localArea.GetLength(0); k++)
-                        //{
-                            this.buckets[i,j].InformCiviliansNearestWater(
-                                new Vector2(cleanWaterPosition.Value.X, cleanWaterPosition.Value.Y));
-
-                        //} 
-                    }
-
-                    if (foodPosition.HasValue)
-                    {
-                        this.buckets[i,j].InformCiviliansNearestFood(
-                            new Vector2(foodPosition.Value.X, foodPosition.Value.Y));
-                    }
-
-                    if (medsPosition.HasValue)
-                    {
-                        this.buckets[i, j].InformCiviliansNearestMeds(
-                            new Vector2(medsPosition.Value.X, medsPosition.Value.Y));
-                    }
-
-                    if (shelterPosition.HasValue)
-                    {
-                        this.buckets[i, j].InformCiviliansNearestShelter(
-                            new Vector2(shelterPosition.Value.X, shelterPosition.Value.Y));
                     }
                 }
             }

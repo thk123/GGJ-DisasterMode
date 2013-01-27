@@ -84,19 +84,21 @@ namespace GGJ_DisasterMode.Codebase.Actions
 
 
 
-        public void PlaceAction(Point mapLocation)
+        public void PlaceAction(Point mapLocation, Gameplay.Grid.Buckets bucketSystem, Rectangle gridLocation)
         {
             if (ActionType == Actions.ActionType.DirectAction)
             {
                 throw new Exception("Tried to place direct action without a direction");
             }
 
+            bucketSystem.addNewAction(this, gridLocation.Center.X, gridLocation.Center.Y);
+
             ActionPosition = mapLocation;
 
             ActionState = Actions.ActionState.Active;
         }
 
-        public void PlaceAction(Point mapLocation, Point targetLocation)
+        public void PlaceAction(Point mapLocation, Point targetLocation, Vector2 actualPosition, Gameplay.Grid.Buckets bucketSystem)
         {
             if (ActionType == Actions.ActionType.ListenAction)
             {
@@ -107,6 +109,8 @@ namespace GGJ_DisasterMode.Codebase.Actions
             ActionDirection = targetLocation;
 
             ActionState = Actions.ActionState.Active;
+
+            bucketSystem.addNewAction(this, (int)actualPosition.X, (int)actualPosition.Y);
         }
 
         public void CancelPlaceAction()

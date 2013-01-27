@@ -27,8 +27,8 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
         private GraphicsDevice graphics;
 
 
-        TimeSpan realTimeMaxDuration = new TimeSpan(0, 0, 15);
-        TimeSpan decisionMaxDuration = new TimeSpan(0, 0, 15);
+        TimeSpan realTimeMaxDuration = new TimeSpan(0, 0, 10);
+        TimeSpan decisionMaxDuration = new TimeSpan(0, 0, 10);
 
         TimeSpan remainingTime;
 
@@ -176,7 +176,7 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
 
                         if (gameMode == GameMode.REALTIME)
                         {
-                            ActionPlaced((Actions.GameAction)currentlyDragging, gridPoint.Value);
+                            ActionPlaced((Actions.GameAction)currentlyDragging, gridPoint.Value, cellRect);
                         }
                         else
                         {

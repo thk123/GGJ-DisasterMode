@@ -45,6 +45,12 @@ namespace GGJ_DisasterMode.Codebase.Characters
             private set;
         }
 
+        public Vector2? NearestInstructionDirection
+        {
+            get;
+            private set;
+        }
+
         public void SetNearestKnownWaterSource(Vector2 waterScreenLocation)
         {
             this.NearestKnownWaterSource = 
@@ -77,6 +83,13 @@ namespace GGJ_DisasterMode.Codebase.Characters
             this.color = Color.Red;
         }
 
+        public void SetNearestInstructionDirection(Vector2 instructionDestinationScreenLocation)
+        {
+            this.NearestInstructionDirection =
+                new Vector2(((instructionDestinationScreenLocation.X - 14) / 0.31166f),
+                ((instructionDestinationScreenLocation.Y - 14) / 0.30166f));
+            this.color = Color.Red;
+        }
 
         public int X
         {
@@ -318,7 +331,8 @@ namespace GGJ_DisasterMode.Codebase.Characters
                     (NearestKnownHealthSource.HasValue) ? NearestKnownHealthSource.Value : (Vector2?)null;
                 Knowledge.ClosestShelter =
                     (NearestKnownTempSource.HasValue) ? NearestKnownTempSource.Value : (Vector2?)null;
-                Knowledge.ClosestGameAction = null;
+                Knowledge.ClosestGameAction =
+                    (NearestInstructionDirection.HasValue) ? NearestInstructionDirection.Value : (Vector2?)null;
 
                 goal = DecisionProcessing.Run(currentPosition, Knowledge, CurrentNeeds, CurrentBehaviour); 
             }

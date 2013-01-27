@@ -206,7 +206,7 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
             missionRunning = this.missionRunning;
         }
 
-        private void ActionPlaced(GameAction droppedAction, Point gridLocation)
+        private void ActionPlaced(GameAction droppedAction, Point gridLocation, Rectangle gridPosition)
         {
             if (droppedAction.ActionType == ActionType.DirectAction)
             {
@@ -219,7 +219,7 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
             else
             {
                 //we are done for this action
-                droppedAction.PlaceAction(gridLocation);
+                droppedAction.PlaceAction(gridLocation, buckets, gridPosition);
 
                 // Decrease remaining actions
                 --actionsRemaining;
@@ -285,7 +285,8 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
                     Point? mousePoint = grid.GetGridPointFromMousePosition(input.GetMousePosition());
                     if(mousePoint.HasValue)
                     {
-                        actionToPoint.PlaceAction(actionToPointLocation, mousePoint.Value);
+                        Rectangle actualPosition = grid.GetGridRectangleFromGridPoint(mousePoint.Value);
+                        actionToPoint.PlaceAction(actionToPointLocation, mousePoint.Value, new Vector2(actualPosition.X, actualPosition.Y), buckets);
 
                         realTimeState = RealTimeState.Idle;
 
