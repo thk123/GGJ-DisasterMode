@@ -76,10 +76,13 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
         public void RealTimeProcessEndDay()
         {
             TemperatureManager.ProcessDay();
+
+            buckets.ApplyDensityIllnessPenalty();
+
             foreach (Civilian civ in civilians)
             {
-                civ.ProcessDay();
                 civ.UpdateTemperature(TemperatureManager.Temperature);
+                civ.ProcessDay();
             }
 
             if (realTimeState == RealTimeState.SelectingDestionation)
@@ -95,7 +98,12 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
 
         public void RealTimeProcessStartNight()
         {
-
+            //Get actions on the board
+            List<GameAction> redundantActions = actions.Where(action => action.ActionState == ActionState.Active).ToList(); ;
+            foreach (GameAction action in redundantActions)
+            {
+                actions.Remove(action);
+            }
         }
 
         public void RealTimeProcessEndNight()
@@ -121,27 +129,57 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
             this.buckets = new Buckets(this.grid, new List<GameAction>(), new List<Civilian>(), 
                 new List<Dropoff>(), new List<Water>());
 
-            PopulateCivilians(this.civilians, pixelTexture);
+            PopulateCivilians(this.civilians, pixelTexture, content);
            
         }
 
-        private void PopulateCivilians(List<Civilian> civilians, Texture2D texture)
+        private void PopulateCivilians(List<Civilian> civilians, Texture2D texture, ContentManager content)
         {
             Random randomGen = new Random(1000);
 
             for (int i = 0; i < 500; i++)
             {
-                civilians.Add(new ChildCharacter(randomGen.Next(0, Civilian.SCALE_FACTOR), 
-                    randomGen.Next(0, Civilian.SCALE_FACTOR), texture));
+                int type = randomGen.Next(6);
+                switch (type)
+                {
+                    case 0:
+                        civilians.Add(new ChildMaleCharacter(randomGen.Next(0, Civilian.SCALE_FACTOR),
+                    randomGen.Next(0, Civilian.SCALE_FACTOR)));
+                        break;
+                    case 1:
+                        civilians.Add(new ChildFemaleCharacter(randomGen.Next(0, Civilian.SCALE_FACTOR),
+                    randomGen.Next(0, Civilian.SCALE_FACTOR)));
+                        break;
+
+                    case 2:
+                        civilians.Add(new AdultMaleCharacter(randomGen.Next(0, Civilian.SCALE_FACTOR),
+                    randomGen.Next(0, Civilian.SCALE_FACTOR)));
+                        break;
+                    case 3:
+                        civilians.Add(new AdultFemaleCharacter(randomGen.Next(0, Civilian.SCALE_FACTOR),
+                    randomGen.Next(0, Civilian.SCALE_FACTOR)));
+                        break;
+
+                    case 4:
+                        civilians.Add(new OldMaleCharacter(randomGen.Next(0, Civilian.SCALE_FACTOR),
+                    randomGen.Next(0, Civilian.SCALE_FACTOR)));
+                        break;
+                    case 5:
+                        civilians.Add(new OldFemaleCharacter(randomGen.Next(0, Civilian.SCALE_FACTOR),
+                    randomGen.Next(0, Civilian.SCALE_FACTOR)));
+                        break;
+                }
+                
             }
 
-            civilians.Add(new ChildCharacter(0, 0, texture));
-            civilians.Add(new ChildCharacter(1800, 0, texture));
-            civilians.Add(new ChildCharacter(0, 1800, texture));
-            civilians.Add(new ChildCharacter(1800, 1800, texture));
+            civilians.Add(new ChildMaleCharacter(0, 0));
+            civilians.Add(new ChildMaleCharacter(1800, 0));
+            civilians.Add(new ChildMaleCharacter(0, 1800));
+            civilians.Add(new ChildMaleCharacter(1800, 1800));
 
             foreach (Civilian civilian in civilians)
             {
+                civilian.LoadContent(content);
                 buckets.addNewCivilian(civilian);
             }
         }

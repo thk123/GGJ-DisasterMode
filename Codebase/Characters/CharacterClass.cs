@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using GGJ_DisasterMode.Codebase.Characters.Decision;
 
@@ -26,11 +27,53 @@ namespace GGJ_DisasterMode.Codebase.Characters
             private set;
         }
 
+        public Vector2? NearestKnownFoodSource
+        {
+            get;
+            private set;
+        }
+
+        public Vector2? NearestKnownHealthSource
+        {
+            get;
+            private set;
+        }
+
+        public Vector2? NearestKnownTempSource
+        {
+            get;
+            private set;
+        }
+
         public void SetNearestKnownWaterSource(Vector2 waterScreenLocation)
         {
             this.NearestKnownWaterSource = 
                 new Vector2( ((waterScreenLocation.X - 14) / 0.31166f),
                 ((waterScreenLocation.Y - 14) / 0.30166f) );
+            this.color = Color.Red;
+        }
+
+        public void SetNearestKnownFoodSource(Vector2 foodScreenLocation)
+        {
+            this.NearestKnownFoodSource =
+                new Vector2(((foodScreenLocation.X - 14) / 0.31166f),
+                ((foodScreenLocation.Y - 14) / 0.30166f));
+            this.color = Color.Red;
+        }
+
+        public void SetNearestKnownHealthSource(Vector2 healthScreenLocation)
+        {
+            this.NearestKnownHealthSource =
+                new Vector2(((healthScreenLocation.X - 14) / 0.31166f),
+                ((healthScreenLocation.Y - 14) / 0.30166f));
+            this.color = Color.Red;
+        }
+
+        public void SetNearestKnownTempSource(Vector2 tempScreenLocation)
+        {
+            this.NearestKnownTempSource =
+                new Vector2(((tempScreenLocation.X - 14) / 0.31166f),
+                ((tempScreenLocation.Y - 14) / 0.30166f));
             this.color = Color.Red;
         }
 
@@ -76,6 +119,11 @@ namespace GGJ_DisasterMode.Codebase.Characters
 
 
         private Texture2D civilianTexture;
+        public Texture2D GraphTexture
+        {
+            get;
+            private set;
+        }
         private Color color;
 
         CivilianClassProperties characterProperties;
@@ -128,12 +176,12 @@ namespace GGJ_DisasterMode.Codebase.Characters
             }
         }
 
-        public Civilian(CivilianClassProperties characterProperties, int startX, int startY, Texture2D texture)
+        public Civilian(CivilianClassProperties characterProperties, int startX, int startY)
         {
             this.characterProperties = characterProperties;
 
             this.currentPosition = new Vector2(startX, startY);
-            this.civilianTexture = texture;
+            
 
             this.color = Color.Black;
 
@@ -143,11 +191,16 @@ namespace GGJ_DisasterMode.Codebase.Characters
             this.goal = DecisionProcessing.RandomGoal(currentPosition);
         }
 
+        public void LoadContent(ContentManager content)
+        {
+            this.civilianTexture = content.Load<Texture2D>(characterProperties.dotTexturePath);
+            this.GraphTexture = content.Load<Texture2D>(characterProperties.graphTexturePath);
+        }
+
         public void ProcessDay()
         {
             CurrentHunger -= characterProperties.hungerDecay;
             CurrentThirst -= characterProperties.thirstDecay;
-            CurrentHealth -= characterProperties.healthDecay;
 
             if (CurrentHunger <= 0 ||
                 CurrentThirst <= 0 ||
@@ -161,7 +214,7 @@ namespace GGJ_DisasterMode.Codebase.Characters
 
         public void UpdateTemperature(float temperature)
         {
-            if (Math.Abs(temperature) > ambientTemperatureRange)
+            if (Math.Abs(temperature) > TemperatureManager.GetAmbientTemperatureRange())
             {
                 if (temperature < 0)
                 {
@@ -198,6 +251,11 @@ namespace GGJ_DisasterMode.Codebase.Characters
             {
                 CurrentTrust += trustDelta * Math.Abs(1 / characterProperties.trustMultiplier);
             }            
+        }
+
+        public void ApplyHealthPenalty(float penalty)
+        {
+            CurrentHealth -= penalty * characterProperties.healthVulnerability;
         }
 
 
@@ -254,9 +312,12 @@ namespace GGJ_DisasterMode.Codebase.Characters
                 KnowledgeModel Knowledge = new KnowledgeModel();
                 Knowledge.ClosestWater = 
                     (NearestKnownWaterSource.HasValue) ? NearestKnownWaterSource.Value : (Vector2?) null;
-                Knowledge.ClostestFood = null;
-                Knowledge.ClosestMedicine = null;
-                Knowledge.ClosestShelter = null;
+                Knowledge.ClostestFood =
+                    (NearestKnownFoodSource.HasValue) ? NearestKnownFoodSource.Value : (Vector2?)null;
+                Knowledge.ClosestMedicine =
+                    (NearestKnownHealthSource.HasValue) ? NearestKnownHealthSource.Value : (Vector2?)null;
+                Knowledge.ClosestShelter =
+                    (NearestKnownTempSource.HasValue) ? NearestKnownTempSource.Value : (Vector2?)null;
                 Knowledge.ClosestGameAction = null;
 
                 goal = DecisionProcessing.Run(currentPosition, Knowledge, CurrentNeeds, CurrentBehaviour); 
@@ -277,7 +338,7 @@ namespace GGJ_DisasterMode.Codebase.Characters
             {
                 spriteBatch.Draw(this.civilianTexture, new Vector2(14.0f + (this.currentPosition.X * 0.31166f),
                         14.0f + (this.currentPosition.Y * 0.30166f)),
-                        null, this.color, 0.0f, new Vector2(), 5.0f, SpriteEffects.None, 1.0f);
+                        null, Color.White, 0.0f, new Vector2(), 1.0f, SpriteEffects.None, 1.0f);
             }
             else
             {
@@ -303,7 +364,7 @@ namespace GGJ_DisasterMode.Codebase.Characters
         public float hungerDecay;
         public float hotTempMultiplier;
         public float coldTempMultiplier;
-        public float healthDecay;
+        public float healthVulnerability;
 
         public float thirstLevel;
         public float hungerLevel;
@@ -313,5 +374,8 @@ namespace GGJ_DisasterMode.Codebase.Characters
 
         public float trustLevel;
         public float trustMultiplier;
+
+        public string dotTexturePath;
+        public string graphTexturePath;
     }
 }

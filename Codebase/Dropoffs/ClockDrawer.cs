@@ -16,7 +16,6 @@ namespace GGJ_DisasterMode.Codebase.Dropoffs
         oneTwo,
         twoTwo,
         oneOne,
-        zero,
     }
     class ClockDrawer
     {
@@ -42,9 +41,6 @@ namespace GGJ_DisasterMode.Codebase.Dropoffs
             //int deysElapsed = daysTotal - daysRemaining;
             switch (daysRemaining)
             {
-                case 0:
-                    return clockTypes.zero;
-
                 case 3:
                     return clockTypes.threeThree;
 
@@ -94,8 +90,6 @@ namespace GGJ_DisasterMode.Codebase.Dropoffs
                     return "2_2";
                 case clockTypes.oneOne:
                     return "1_1";
-                case clockTypes.zero:
-                    return "0";
                 default:
                     throw new Exception("Unknown Clock");
             }

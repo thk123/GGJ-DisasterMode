@@ -23,6 +23,7 @@ namespace GGJ_DisasterMode.Codebase.Dropoffs
             properties.shopTexture = content.Load<Texture2D>("Graphics//Dropoffs//food_0");
             properties.draggingTexture = content.Load<Texture2D>("Graphics//Dropoffs//food_0");
             properties.placedTexture = content.Load<Texture2D>("Graphics//Dropoffs//Dropoff_FirstAid_Basic");
+            properties.navTexture = content.Load<Texture2D>("Graphics//Dropoffs//resourcesSign_food_0");
 
             return properties;
         }
@@ -40,6 +41,7 @@ namespace GGJ_DisasterMode.Codebase.Dropoffs
             properties.shopTexture = content.Load<Texture2D>("Graphics//Dropoffs//food_1");
             properties.draggingTexture = content.Load<Texture2D>("Graphics//Dropoffs//food_1");
             properties.placedTexture = content.Load<Texture2D>("Graphics//Dropoffs//Dropoff_FirstAid_Basic");
+            properties.navTexture = content.Load<Texture2D>("Graphics//Dropoffs//resourcesSign_food_1");
 
             return properties;
         }
@@ -57,6 +59,7 @@ namespace GGJ_DisasterMode.Codebase.Dropoffs
             properties.shopTexture = content.Load<Texture2D>("Graphics//Dropoffs//food_2");
             properties.draggingTexture = content.Load<Texture2D>("Graphics//Dropoffs//food_2");
             properties.placedTexture = content.Load<Texture2D>("Graphics//Dropoffs//food_2");
+            properties.navTexture = content.Load<Texture2D>("Graphics//Dropoffs//resourcesSign_food_2");
 
             return properties;
         }
@@ -74,6 +77,7 @@ namespace GGJ_DisasterMode.Codebase.Dropoffs
             properties.shopTexture = content.Load<Texture2D>("Graphics//Dropoffs//health_0");
             properties.draggingTexture = content.Load<Texture2D>("Graphics//Dropoffs//health_0");
             properties.placedTexture = content.Load<Texture2D>("Graphics//Dropoffs//health_1");
+            properties.navTexture = content.Load<Texture2D>("Graphics//Dropoffs//resourcesSign_health_0");
 
             return properties;
         }
@@ -91,6 +95,7 @@ namespace GGJ_DisasterMode.Codebase.Dropoffs
             properties.shopTexture = content.Load<Texture2D>("Graphics//Dropoffs//health_1");
             properties.draggingTexture = content.Load<Texture2D>("Graphics//Dropoffs//health_1");
             properties.placedTexture = content.Load<Texture2D>("Graphics//Dropoffs//Dropoff_FirstAid_Basic");
+            properties.navTexture = content.Load<Texture2D>("Graphics//Dropoffs//resourcesSign_health_1");
 
             return properties;
         }
@@ -108,6 +113,7 @@ namespace GGJ_DisasterMode.Codebase.Dropoffs
             properties.shopTexture = content.Load<Texture2D>("Graphics//Dropoffs//health_2");
             properties.draggingTexture = content.Load<Texture2D>("Graphics//Dropoffs//health_2");
             properties.placedTexture = content.Load<Texture2D>("Graphics//Dropoffs//Dropoff_FirstAid_Basic");
+            properties.navTexture = content.Load<Texture2D>("Graphics//Dropoffs//resourcesSign_health_2");
 
             return properties;
         }
@@ -125,6 +131,7 @@ namespace GGJ_DisasterMode.Codebase.Dropoffs
             properties.shopTexture = content.Load<Texture2D>("Graphics//Dropoffs//temperature_0");
             properties.draggingTexture = content.Load<Texture2D>("Graphics//Dropoffs//temperature_0");
             properties.placedTexture = content.Load<Texture2D>("Graphics//Dropoffs//Dropoff_FirstAid_Basic");
+            properties.navTexture = content.Load<Texture2D>("Graphics//Dropoffs//resourcesSign_temperature_0");
 
             return properties;
         }
@@ -142,6 +149,7 @@ namespace GGJ_DisasterMode.Codebase.Dropoffs
             properties.shopTexture = content.Load<Texture2D>("Graphics//Dropoffs//temperature_1");
             properties.draggingTexture = content.Load<Texture2D>("Graphics//Dropoffs//temperature_1");
             properties.placedTexture = content.Load<Texture2D>("Graphics//Dropoffs//Dropoff_FirstAid_Basic");
+            properties.navTexture = content.Load<Texture2D>("Graphics//Dropoffs//resourcesSign_temperature_1");
 
             return properties;
         }
@@ -159,6 +167,7 @@ namespace GGJ_DisasterMode.Codebase.Dropoffs
             properties.shopTexture = content.Load<Texture2D>("Graphics//Dropoffs//temperature_2");
             properties.draggingTexture = content.Load<Texture2D>("Graphics//Dropoffs//temperature_2");
             properties.placedTexture = content.Load<Texture2D>("Graphics//Dropoffs//Dropoff_FirstAid_Basic");
+            properties.navTexture = content.Load<Texture2D>("Graphics//Dropoffs//resourcesSign_temperature_2");
 
             return properties;
         }
@@ -176,6 +185,7 @@ namespace GGJ_DisasterMode.Codebase.Dropoffs
             properties.shopTexture = content.Load<Texture2D>("Graphics//Dropoffs//water_0");
             properties.draggingTexture = content.Load<Texture2D>("Graphics//Dropoffs//water_0");
             properties.placedTexture = content.Load<Texture2D>("Graphics//Dropoffs//Dropoff_FirstAid_Basic");
+            properties.navTexture = content.Load<Texture2D>("Graphics//Dropoffs//resourcesSign_Water_0");
 
             return properties;
         }
@@ -193,6 +203,7 @@ namespace GGJ_DisasterMode.Codebase.Dropoffs
             properties.shopTexture = content.Load<Texture2D>("Graphics//Dropoffs//Water_1");
             properties.draggingTexture = content.Load<Texture2D>("Graphics//Dropoffs//Water_1");
             properties.placedTexture = content.Load<Texture2D>("Graphics//Dropoffs//Dropoff_FirstAid_Basic");
+            properties.navTexture = content.Load<Texture2D>("Graphics//Dropoffs//resourcesSign_Water_1");
 
             return properties;
         }
@@ -210,6 +221,7 @@ namespace GGJ_DisasterMode.Codebase.Dropoffs
             properties.shopTexture = content.Load<Texture2D>("Graphics//Dropoffs//Water_2");
             properties.draggingTexture = content.Load<Texture2D>("Graphics//Dropoffs//Water_2");
             properties.placedTexture = content.Load<Texture2D>("Graphics//Dropoffs//Dropoff_FirstAid_Basic");
+            properties.navTexture = content.Load<Texture2D>("Graphics//Dropoffs//resourcesSign_Water_2");
 
             return properties;
         }

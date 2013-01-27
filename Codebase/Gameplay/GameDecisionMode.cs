@@ -54,7 +54,7 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
         {
             foreach (Dropoffs.Dropoff dropoff in dropoffs)
             {
-                dropoff.Draw(gameTime, spriteBatch, gameMode == GameMode.DECISION);
+                dropoff.Draw(gameTime, spriteBatch, gameMode == GameMode.DECISION, realTimeState == RealTimeState.SelectingDestionation);
             }
         }
 
@@ -124,15 +124,15 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
             switch (dropoffType)
             {
                 case DropoffType.Dropoff_Health_Low:
-                    i = 1;
+                    i = 3;
                     j = 0;
                     break;
                 case DropoffType.Dropoff_Food_Low:
-                    i = 2;
+                    i = 1;
                     j = 0;
                     break;
                 case DropoffType.Dropoff_Water_Low:
-                    i = 3;
+                    i = 2;
                     j = 0;
                     break;
                 case DropoffType.Dropoff_Temperature_Low:
@@ -140,15 +140,15 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
                     j = 0;
                     break;
                 case DropoffType.Dropoff_Health_Medium:
-                    i = 1;
+                    i = 3;
                     j = 1;
                     break;
                 case DropoffType.Dropoff_Food_Medium:
-                    i = 2;
+                    i = 1;
                     j = 1;
                     break;
                 case DropoffType.Dropoff_Water_Medium:
-                    i = 3;
+                    i = 2;
                     j = 1;
                     break;
                 case DropoffType.Dropoff_Temperature_Medium:
@@ -156,15 +156,15 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
                     j = 1;
                     break;
                 case DropoffType.Dropoff_Health_High:
-                    i = 1;
+                    i = 3;
                     j = 2;
                     break;
                 case DropoffType.Dropoff_Food_High:
-                    i = 2;
+                    i = 1;
                     j = 2;
                     break;
                 case DropoffType.Dropoff_Water_High:
-                    i = 3;
+                    i = 2;
                     j = 2;
                     break;
                 case DropoffType.Dropoff_Temperature_High:
@@ -174,7 +174,7 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
                 default:
                     break;
             }
-            return new Rectangle(uiOffset + 130 + ((34 + 25) * i), 393 + ((34 + 16)* j), 34, 34);
+            return new Rectangle(uiOffset + 130 + 2 +((34 + 25) * i), 393 + 2 + ((34 + 16)* j), 32, 31);
         }
 
     }

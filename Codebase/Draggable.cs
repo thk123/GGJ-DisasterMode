@@ -33,6 +33,7 @@ namespace GGJ_DisasterMode.Codebase
         
         protected Texture2D staticTexture;
         protected Texture2D draggingTexture;
+        protected Texture2D gridTexture;
 
         protected bool Redraggable
         {
@@ -52,10 +53,10 @@ namespace GGJ_DisasterMode.Codebase
 
         public void SetContent(Texture2D staticTexture)
         {
-            SetContent(staticTexture, null);
+            SetContent(staticTexture);
         }
 
-        public void SetContent(Texture2D staticTexture, Texture2D draggingTexture)
+        public void SetContent(Texture2D staticTexture, Texture2D draggingTexture, Texture2D gridTexture)
         {
             this.staticTexture = staticTexture;
             if (draggingTexture == null)
@@ -65,6 +66,21 @@ namespace GGJ_DisasterMode.Codebase
             else
             {
                 this.draggingTexture = draggingTexture;
+            }
+            if (gridTexture != null)
+            {
+                this.gridTexture = gridTexture;
+            }
+            else
+            {
+                if (draggingTexture == null)
+                {
+                    this.gridTexture = staticTexture;
+                }
+                else
+                {
+                    this.gridTexture = draggingTexture;
+                }
             }
         }
 
@@ -113,7 +129,7 @@ namespace GGJ_DisasterMode.Codebase
 
         public void EndDrag(Rectangle newStaticLocation)
         {
-            EndDrag(newStaticLocation, null);
+            EndDrag(newStaticLocation, gridTexture);
         }
 
         public void EndDrag(Texture2D newStaticTexture)
@@ -170,7 +186,7 @@ namespace GGJ_DisasterMode.Codebase
                     }
                     else
                     {
-			spriteBatch.Draw(staticTexture, currentPosition, ColorAdapter.getTransparentColor(Color.White, 0.2f));
+			            spriteBatch.Draw(staticTexture, currentPosition, ColorAdapter.getTransparentColor(Color.White, 0.2f));
 
                     }
                     break;

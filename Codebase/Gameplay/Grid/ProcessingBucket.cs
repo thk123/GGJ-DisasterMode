@@ -22,6 +22,46 @@ namespace GGJ_DisasterMode.Codebase.Gameplay.Grid
             set;
         }
 
+        public Point? CleanWaterLocation
+        {
+            get
+            {
+                Point? p = null;
+                hasCleanWater(out p);
+                return p;
+            }
+        }
+
+        public Point? FoodLocation
+        {
+            get
+            {
+                Point? p = null;
+                hasFood(out p);
+                return p;
+            }
+        }
+
+        public Point? MedsLocation
+        {
+            get
+            {
+                Point? p = null;
+                hasMeds(out p);
+                return p;
+            }
+        }
+
+        public Point? ShelterLocation
+        {
+            get
+            {
+                Point? p = null;
+                hasShelter(out p);
+                return p;
+            }
+        }
+
         public ProcessingBucket()
         {
             this.actions = new List<GameAction>();
@@ -38,6 +78,38 @@ namespace GGJ_DisasterMode.Codebase.Gameplay.Grid
             }
         }
 
+        public void InformCiviliansNearestFood(Vector2 nearestFood)
+        {
+            foreach (Civilian civilian in civilians)
+            {
+                civilian.SetNearestKnownFoodSource(nearestFood);
+            }
+        }
+
+        public void InformCiviliansNearestMeds(Vector2 nearestMeds)
+        {
+            foreach (Civilian civilian in civilians)
+            {
+                civilian.SetNearestKnownHealthSource(nearestMeds);
+            }
+        }
+
+        public void InformCiviliansNearestShelter(Vector2 nearestShelter)
+        {
+            foreach (Civilian civilian in civilians)
+            {
+                civilian.SetNearestKnownTempSource(nearestShelter);
+            }
+        }
+
+        public void InflictCiviliansHealthPenalty()
+        {
+            foreach (Civilian civilian in civilians)
+            {
+                civilian.ApplyHealthPenalty(civilians.Count);
+            }
+        }
+
         public List<Civilian> GetCivilians()
         {
             return civilians;
@@ -48,9 +120,75 @@ namespace GGJ_DisasterMode.Codebase.Gameplay.Grid
             return (this.Water != null);
         }
 
-        public bool hasCleanWater()
+        private bool hasCleanWater(out Point? location)
         {
-            return (this.Water != null) && (this.Water.IsClean());
+            location = null;
+            if((this.Water != null) && (this.Water.IsClean()))
+            {
+                location = this.Water.Position;
+                return true;
+            }
+
+            foreach (Dropoff d in drops.Where(drop => drop.IsAvaliable))
+            {
+                if (d.DropoffType == DropoffType.Dropoff_Water_Low ||
+                    d.DropoffType == DropoffType.Dropoff_Water_Medium ||
+                    d.DropoffType == DropoffType.Dropoff_Water_High)
+                {
+                    location = d.Position;
+                    return true;
+                }
+            }
+            location = null;
+            return false;
+        }
+
+        private bool hasFood(out Point? location)
+        {
+            location = null;
+            foreach (Dropoff d in drops.Where(drop => drop.IsAvaliable))
+            {
+                if (d.DropoffType == DropoffType.Dropoff_Food_Low ||
+                    d.DropoffType == DropoffType.Dropoff_Food_Medium ||
+                    d.DropoffType == DropoffType.Dropoff_Food_High)
+                {
+                    location = d.Position;
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private bool hasMeds(out Point? location)
+        {
+            location = null;
+            foreach (Dropoff d in drops.Where(drop => drop.IsAvaliable))
+            {
+                if (d.DropoffType == DropoffType.Dropoff_Health_Low ||
+                    d.DropoffType == DropoffType.Dropoff_Health_Medium ||
+                    d.DropoffType == DropoffType.Dropoff_Health_High)
+                {
+                    location = d.Position;
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        private bool hasShelter(out Point? location)
+        {
+            location = null;
+            foreach (Dropoff d in drops.Where(drop => drop.IsAvaliable))
+            {
+                if (d.DropoffType == DropoffType.Dropoff_Temperature_Low ||
+                    d.DropoffType == DropoffType.Dropoff_Temperature_Medium ||
+                    d.DropoffType == DropoffType.Dropoff_Temperature_High)
+                {
+                    location = d.Position;
+                    return true;
+                }
+            }
+            return false;
         }
 
         public void Clear()
@@ -104,6 +242,5 @@ namespace GGJ_DisasterMode.Codebase.Gameplay.Grid
         {
             this.Water = water;
         }
-    
     }
 }

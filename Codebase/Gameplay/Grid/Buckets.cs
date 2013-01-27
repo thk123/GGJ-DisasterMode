@@ -263,15 +263,38 @@ namespace GGJ_DisasterMode.Codebase.Gameplay.Grid
             {
                 for (int j = 0; j < buckets.GetLength(1); j++)
                 {
-                    ProcessingBucket[] localArea = getNeighbours(i, j);
                     Point? cleanWaterPosition = null;
+                    Point? foodPosition = null;
+                    Point? medsPosition = null;
+                    Point? shelterPosition = null;
+                    
+                    ProcessingBucket[] localArea = getNeighbours(i, j);
                     for (int k = 1; k < localArea.GetLength(0); k++)
                     {
-                        if (localArea[k].hasCleanWater())
+                        if (cleanWaterPosition == null)
                         {
-                            cleanWaterPosition = localArea[k].Water.Position;
+                            cleanWaterPosition = localArea[k].CleanWaterLocation;
                         }
+
+                        if (foodPosition == null)
+                        {
+                            foodPosition = localArea[k].FoodLocation;
+                        }
+
+                        if (medsPosition == null)
+                        {
+                            medsPosition = localArea[k].MedsLocation;
+                        }
+
+                        if (shelterPosition == null)
+                        {
+                            shelterPosition = localArea[k].ShelterLocation;
+                        }
+                        
                     }
+
+                    //add rules here
+
                     if (cleanWaterPosition.HasValue)
                     {
                         //Point cleanWater = (Point)cleanWaterPosition;
@@ -282,6 +305,35 @@ namespace GGJ_DisasterMode.Codebase.Gameplay.Grid
 
                         //} 
                     }
+
+                    if (foodPosition.HasValue)
+                    {
+                        this.buckets[i,j].InformCiviliansNearestFood(
+                            new Vector2(foodPosition.Value.X, foodPosition.Value.Y));
+                    }
+
+                    if (medsPosition.HasValue)
+                    {
+                        this.buckets[i, j].InformCiviliansNearestMeds(
+                            new Vector2(medsPosition.Value.X, medsPosition.Value.Y));
+                    }
+
+                    if (shelterPosition.HasValue)
+                    {
+                        this.buckets[i, j].InformCiviliansNearestShelter(
+                            new Vector2(shelterPosition.Value.X, shelterPosition.Value.Y));
+                    }
+                }
+            }
+        }
+
+        public void ApplyDensityIllnessPenalty()
+        {
+            for (int i = 0; i < buckets.GetLength(0); i++)
+            {
+                for (int j = 0; j < buckets.GetLength(1); j++)
+                {
+                    buckets[i, j].InflictCiviliansHealthPenalty();
                 }
             }
         }
