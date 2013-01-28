@@ -38,21 +38,30 @@ namespace GGJ_DisasterMode.Codebase.Screens
             : base("Main Menu")
         {
             // Create our menu entries.
-            MenuEntry playGameMenuEntry = new MenuEntry("Start Demo");
-            MenuEntry optionsMenuEntry = new MenuEntry("Options");
-            MenuEntry exitMenuEntry = new MenuEntry("Quit");
+            /*MenuEntry playGameMenuEntry = new MenuEntry("Launch Game");
+            MenuEntry instructionsEntry = new MenuEntry("Instructions");*/
+            //MenuEntry optionsMenuEntry = new MenuEntry("Options");
+            //MenuEntry exitMenuEntry = new MenuEntry("Quit");
 
             // Hook up menu event handlers.
-            playGameMenuEntry.Selected += PlayGameMenuEntrySelected;
-            optionsMenuEntry.Selected += OptionsMenuEntrySelected;
-            exitMenuEntry.Selected += OnCancel;
+            /*playGameMenuEntry.Selected += PlayGameMenuEntrySelected;
+            instructionsEntry.Selected += new EventHandler<PlayerIndexEventArgs>(instructionsEntry_Selected);*/
+            /*optionsMenuEntry.Selected += OptionsMenuEntrySelected;
+            exitMenuEntry.Selected += OnCancel;*/
 
             // Add entries to the menu.
-            MenuEntries.Add(playGameMenuEntry);
-            MenuEntries.Add(optionsMenuEntry);
-            MenuEntries.Add(exitMenuEntry);       
+            //MenuEntries.Add(playGameMenuEntry);
+            //MenuEntries.Add(instructionsEntry);
+            /*MenuEntries.Add(optionsMenuEntry);
+            MenuEntries.Add(exitMenuEntry);       */
         }
 
+        void instructionsEntry_Selected(object sender, PlayerIndexEventArgs e)
+        {
+            BriefingGameplayScreen instructionScreen = new BriefingGameplayScreen();
+            ScreenManager.AddScreen(instructionScreen, ControllingPlayer);
+        }
+        Texture2D background;
         public override void LoadContent()
         {
             base.LoadContent();
@@ -60,9 +69,20 @@ namespace GGJ_DisasterMode.Codebase.Screens
             if (content == null)
                 content = new ContentManager(ScreenManager.Game.Services, "Content");
 
-            this.backgroundMusic = content.Load<Song>("Audio//Songs//menu");
-            MediaPlayer.Play(backgroundMusic);
-            MediaPlayer.IsRepeating = true;
+
+            background = content.Load<Texture2D>("Graphics//StartAndEndScreens//mainMenu");
+            //this.backgroundMusic = content.Load<Song>("Audio//Songs//menu");
+            /*MediaPlayer.Play(backgroundMusic);
+            MediaPlayer.IsRepeating = true;*/
+        }
+
+        public override void Draw(GameTime gameTime)
+        {
+            SpriteBatch spriteBatch = ScreenManager.SpriteBatch;
+            spriteBatch.Begin();
+            spriteBatch.Draw(background, new Rectangle(0,0, 1024, 576), Color.White);
+            spriteBatch.End();
+            base.Draw(gameTime);
         }
 
 
@@ -77,7 +97,7 @@ namespace GGJ_DisasterMode.Codebase.Screens
         void PlayGameMenuEntrySelected(object sender, PlayerIndexEventArgs e)
         {
             LoadingScreen.Load(ScreenManager, true, e.PlayerIndex, false,
-                               new BriefingGameplayScreen());
+                               new GameplayScreen());
         }
 
 
@@ -117,6 +137,16 @@ namespace GGJ_DisasterMode.Codebase.Screens
         {
             //MediaPlayer.Stop();
             base.UnloadContent();
+        }
+
+        public override void HandleInput(InputState input)
+        {
+            base.HandleInput(input);
+            if (input.GetMouseJustDown())
+            {
+                LoadingScreen.Load(ScreenManager, true, PlayerIndex.One, false,
+                               new GameplayScreen());
+            }
         }
 
 

@@ -153,6 +153,11 @@ namespace GGJ_DisasterMode.Codebase.Gameplay.Grid
             Water = false;
             Shelter = false;
             Meds = false;
+
+            FoodLocation = null;
+            CleanWaterLocation = null;
+            ShelterLocation = null;
+            MedsLocation = null;
         }
 
         public void ClearActions()

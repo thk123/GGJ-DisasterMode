@@ -34,8 +34,8 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
         SoundEffectInstance background3;
         SoundEffectInstance background4;
 
-        TimeSpan realTimeMaxDuration = new TimeSpan(0, 0, 10);
-        TimeSpan decisionMaxDuration = new TimeSpan(0, 0, 10);
+        TimeSpan realTimeMaxDuration = new TimeSpan(0, 0, 30);
+        TimeSpan decisionMaxDuration = new TimeSpan(0, 0, 30);
 
         TimeSpan remainingTime;
 

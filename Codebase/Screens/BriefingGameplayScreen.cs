@@ -93,14 +93,14 @@ namespace GGJ_DisasterMode.Codebase.Screens
         {
             base.Update(gameTime, otherScreenHasFocus, coveredByOtherScreen);
 
-            if (IsActive)
+            /*if (IsActive)
             {
                 bool missionRunning;
                 briefingManager.Update(gameTime, out missionRunning);
 
                 if (!missionRunning)
                     LoadingScreen.Load(ScreenManager, true, PlayerIndex.One, true, new GameplayScreen());
-            }
+            }*/
         }
 
         /// <summary>
@@ -109,7 +109,7 @@ namespace GGJ_DisasterMode.Codebase.Screens
         /// </summary>
         public override void HandleInput(InputState input)
         {
-            if (input == null)
+            /*if (input == null)
                 throw new ArgumentNullException("input");
 
             // Look up inputs for the active player profile.
@@ -132,6 +132,11 @@ namespace GGJ_DisasterMode.Codebase.Screens
             else
             {
                 briefingManager.HandleInput(gamePadState);
+            }*/
+            PlayerIndex index;
+            if (input.IsNewKeyPress(Keys.Escape, PlayerIndex.One, out index))
+            {
+                this.ExitScreen();
             }
         }
 

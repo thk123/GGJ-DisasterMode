@@ -47,7 +47,7 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
         private const int actionCount = 2;
         private List<Actions.GameAction> actions;
 
-        const int totalActionsPerDay = 12;
+        const int totalActionsPerDay = 6;
         int actionsRemaining;
 
         private void ConstructReal()
@@ -139,7 +139,7 @@ namespace GGJ_DisasterMode.Codebase.Gameplay
         {
             Random randomGen = new Random(1000);
 
-            for (int i = 0; i < 500; i++)
+            for (int i = 0; i < 200; i++)
             {
                 int type = randomGen.Next(6);
                 switch (type)

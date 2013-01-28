@@ -174,6 +174,15 @@ namespace GGJ_DisasterMode.Codebase
             Redraggable = false;
         }
 
+        public void SetRectangle(Rectangle rectangle)
+        {
+            currentPosition.Width = rectangle.Width;
+            currentPosition.Height = rectangle.Height;
+
+            currentPosition.X += rectangle.X;
+            currentPosition.Y += rectangle.Y;
+        }
+
         public virtual void Draw(SpriteBatch spriteBatch, bool buttonEnabled)
         {
             switch (dragState)

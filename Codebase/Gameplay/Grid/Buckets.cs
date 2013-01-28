@@ -275,7 +275,10 @@ namespace GGJ_DisasterMode.Codebase.Gameplay.Grid
         {
             foreach (Civilian civ in civilians)
             {
-                civ.ResetKnowledge();
+                
+                
+                    civ.ResetKnowledge();
+                
             }
             
             for (int i = 0; i < buckets.GetLength(0); i++)

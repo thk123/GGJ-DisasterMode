@@ -32,6 +32,7 @@ namespace GGJ_DisasterMode.Codebase
 
             graphics.PreferredBackBufferWidth = 1024;
             graphics.PreferredBackBufferHeight = 576;
+            //graphics.IsFullScreen = true;
             base.IsMouseVisible = true;
 
             // Create the screen manager component.
@@ -43,9 +44,9 @@ namespace GGJ_DisasterMode.Codebase
 
             // Activate the first screens.
 
-            screenManager.AddScreen(new GameplayScreen(), PlayerIndex.One);
+            //screenManager.AddScreen(new GameplayScreen(), PlayerIndex.One);
             //screenManager.AddScreen(new BackgroundScreen(), null);
-            //screenManager.AddScreen(new MainMenuScreen(), null);
+            screenManager.AddScreen(new MainMenuScreen(), null);
 
             //
             Components.Add(new FrameRateCounter(this));

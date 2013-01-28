@@ -96,6 +96,8 @@ namespace GGJ_DisasterMode.Codebase.Actions
             ActionPosition = mapLocation;
 
             ActionState = Actions.ActionState.Active;
+
+            SetRectangle(new Rectangle(-33, -32, 96, 93));
         }
 
         public void PlaceAction(Point mapLocation, Point targetLocation, Vector2 actualPosition, Gameplay.Grid.Buckets bucketSystem)
@@ -111,6 +113,8 @@ namespace GGJ_DisasterMode.Codebase.Actions
             ActionState = Actions.ActionState.Active;
 
             bucketSystem.addNewAction(this, (int)mapLocation.X, (int)mapLocation.Y);
+
+            SetRectangle(new Rectangle(-33, -32, 96, 93));
         }
 
         public void CancelPlaceAction()
